@@ -34,7 +34,7 @@ public class Program
             if(process.ProcessName.Contains("java"))
                 ServerUtility.javaProcessCount++;
 
-        //ServerUtility.serverProcess = ServerUtility.StartServer();
+        ServerUtility.serverProcess = ServerUtility.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
