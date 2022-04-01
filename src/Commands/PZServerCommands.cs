@@ -1,7 +1,4 @@
-﻿using Discord;
-using Discord.Commands;
-using System;
-using System.Diagnostics;
+﻿using Discord.Commands;
 using System.Threading.Tasks;
 
 public class PZServerCommands : ModuleBase<SocketCommandContext>
@@ -71,6 +68,12 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
                 await Task.Delay(250);
 
             await StartServer();
+        }
+        else
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await ReplyAsync("Server is not running. Start the server first.");
+            return;
         }
     }
 
@@ -230,7 +233,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("add_item")]
-    [Summary("Gives an item to the player. (!add_item \"<username>\" \"<module.item>)\"")]
+    [Summary("Gives an item to the player. (!add_item \"<username>\" \"<module.item>\")")]
     public async Task AddItem(string username, string item)
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("additem \"{0}\" \"{1}\"", username, item));
