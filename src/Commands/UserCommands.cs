@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -54,7 +54,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     public async Task ServerStatus()
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await ReplyAsync(ServerUtility.IsServerRunning() ? "Server is **running**!" : "Server is **dead**!");
+        await ReplyAsync(ServerUtility.IsServerRunning() ? "Server is **running** :hamster:" : "Server is **dead** :skull:");
     }
 
     [Command("debug")]
