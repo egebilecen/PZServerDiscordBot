@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System;
 using System.Diagnostics;
@@ -12,7 +12,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("servermsg \"{0}\"", message));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - server_msg] Caller: {0}, Params: {1}", Context.User.ToString(), message));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - server_msg] Caller: {0}, Params: {1}", Context.User.ToString(), message));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -24,14 +24,15 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is already running.");
+            await ReplyAsync("Server is already running.");
         }
         else
         {
             ServerUtility.serverProcess = ServerUtility.StartServer();
-
+            
+            Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - start_server] Caller: {0}", Context.User.ToString()));
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute.");
+            await ReplyAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute.");
         }
     }
 
@@ -42,12 +43,13 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(!ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is already stopped.");
+            await ReplyAsync("Server is already stopped.");
+            return;
         }
 
         ServerUtility.serverProcess.StandardInput.WriteLine("quit");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - stopserver] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - stop_server] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -58,13 +60,15 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         if(ServerUtility.IsServerRunning())
         {
+            Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - restart_server] Caller: {0}", Context.User.ToString()));
+            
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
             await ReplyAsync("Restarting server.");
 
             await StopServer();
 
             while(ServerUtility.IsServerRunning())
-                await Task.Delay(25);
+                await Task.Delay(250);
 
             await StartServer();
         }
@@ -76,7 +80,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine("save");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - save] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - save] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -87,7 +91,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("adduser \"{0}\" \"{1}\"", username, password));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - add_user] Caller: {0}, Params: {1}", Context.User.ToString(), username+","+password));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - add_user] Caller: {0}, Params: {1}", Context.User.ToString(), username+","+password));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -98,7 +102,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     public async Task AddUserToWhiteList(string username)
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("addusertowhitelist \"{0}\"", username));
-        Logger.WriteLog(string.Format("[PZServerCommand - addusertowhitelist] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - addusertowhitelist] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -110,7 +114,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("removeuserfromwhitelist \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - remove_user_from_whitelist] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - remove_user_from_whitelist] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -121,7 +125,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("banid \"{0}\"", id.ToString()));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - ban_steamid] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - ban_steamid] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -132,7 +136,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("unbanid \"{0}\"", id.ToString()));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - unban_steamid] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - unban_steamid] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -143,7 +147,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("banuser \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - ban_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - ban_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -154,7 +158,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("unbanuser \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - unban_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - unban_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -165,7 +169,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("grantadmin \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - make_admin] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - make_admin] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -176,7 +180,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("removeadmin \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - remove_admin] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - remove_admin] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -187,7 +191,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("kickuser \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - kick_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - kick_user] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -198,7 +202,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine("startrain");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - start_rain] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - start_rain] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -209,7 +213,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine("stoprain");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - stop_rain] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - stop_rain] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -220,7 +224,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("teleport \"{0}\" \"{1}\"", username1, username2));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - teleport] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - teleport] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -231,7 +235,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("additem \"{0}\" \"{1}\"", username, item));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - add_item] User: {0}, Params: {1}", Context.User.ToString(), username+","+item));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - add_item] User: {0}, Params: {1}", Context.User.ToString(), username+","+item));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -242,7 +246,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("addxp \"{0}\" \"{1}={2}\"", username, perk, xp));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - add_xp] Caller: {0}, Params: {1}", Context.User.ToString(), username+","+perk+","+xp));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - add_xp] Caller: {0}, Params: {1}", Context.User.ToString(), username+","+perk+","+xp));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -253,7 +257,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine("chopper");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - chopper] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - chopper] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -264,7 +268,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("godmode \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - godmode] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - godmode] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -275,7 +279,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("invisible \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - invisible] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - invisible] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
@@ -286,7 +290,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         ServerUtility.serverProcess.StandardInput.WriteLine(string.Format("noclip \"{0}\"", username));
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog(string.Format("[PZServerCommand - noclip] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - noclip] Caller: {0}, Params: {1}", Context.User.ToString(), username));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }

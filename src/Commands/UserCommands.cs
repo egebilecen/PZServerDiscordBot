@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,6 +62,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     [Remarks("skip")]
     public async Task Debug()
     {
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - debug] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
 }
