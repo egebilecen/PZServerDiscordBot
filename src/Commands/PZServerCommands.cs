@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using System;
 using System.Diagnostics;
@@ -60,6 +60,8 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         {
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
             await ReplyAsync("Restarting server.");
+
+            await StopServer();
 
             while(ServerUtility.IsServerRunning())
                 await Task.Delay(25);
