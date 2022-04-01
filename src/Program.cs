@@ -32,7 +32,7 @@ public class Program
 
         foreach(Process process in Process.GetProcesses())
             if(process.ProcessName.Contains("java"))
-                ServerUtility.javaProcessCount++;
+                ServerUtility.initialJavaProcessCount++;
 
         ServerUtility.serverProcess = ServerUtility.StartServer();
 

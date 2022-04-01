@@ -2,9 +2,9 @@
 
 public static class ServerUtility
 {
-    private const string  serverFile       = ".\\server.bat";
-    public static Process serverProcess    = null;
-    public static int     javaProcessCount = 0;
+    private const string  serverFile              = ".\\server.bat";
+    public static Process serverProcess           = null;
+    public static int     initialJavaProcessCount = 0;
 
     public static Process StartServer()
     {
@@ -30,6 +30,6 @@ public static class ServerUtility
                 javaProcess++;
         }
 
-        return javaProcess > javaProcessCount;
+        return javaProcess > initialJavaProcessCount;
     }
 }
