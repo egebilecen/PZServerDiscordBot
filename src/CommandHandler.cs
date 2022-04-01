@@ -55,6 +55,10 @@ public class CommandHandler
 
         var context = new SocketCommandContext(_client, message);
 
+        if(_botSettings.BotChannelId == 0
+        && context.Message.Content != "!pzbot_set_channel")
+            return;
+
         await _commands.ExecuteAsync(context : context, 
                                      argPos  : argPos,
                                      services: _services);

@@ -34,14 +34,14 @@ public class Program
             if(process.ProcessName.Contains("java"))
                 ServerUtility.javaProcessCount++;
 
-        ServerUtility.serverProcess = ServerUtility.StartServer();
+        //ServerUtility.serverProcess = ServerUtility.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
         services = new ServiceCollection()
                    .AddSingleton(botSettings)
                    .AddSingleton(commands)
-		           .BuildServiceProvider();
+                   .BuildServiceProvider();
         commandHandler = new CommandHandler(client, commands, services, botSettings);
 
         await commandHandler.SetupAsync();
@@ -59,10 +59,22 @@ public class Program
                 botSettings.Save();
             }
 
+        channelCheck:
             if(botSettings.BotChannelId == 0)
                 guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to work in using **!pzbot_set_channel** command.");
             else
-                guild.GetTextChannel(botSettings.BotChannelId).SendMessageAsync("Bot is started. :zombie:");
+            {
+                SocketTextChannel textChannel = guild.GetTextChannel(botSettings.BotChannelId);
+
+                if(textChannel == null)
+                {
+                    botSettings.BotChannelId = 0;
+                    botSettings.Save();
+                    goto channelCheck;
+                }
+
+                textChannel.SendMessageAsync("Bot is started. :zombie:");
+            }
 
             return Task.CompletedTask;
         };
