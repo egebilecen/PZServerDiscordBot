@@ -9,13 +9,7 @@ using System.Threading.Tasks;
 
 public static class BotUtility
 {
-    static Model.BotSettings botSettings = null;
     static Dictionary<string, List<KeyValuePair<string, string>>> commandList = new Dictionary<string, List<KeyValuePair<string, string>>>();
-
-    public static void Init(Model.BotSettings _botSettings)
-    {
-        botSettings = _botSettings;
-    }
 
     public static class Discord
     {
@@ -23,46 +17,46 @@ public static class BotUtility
         {
             var guild = client.Guilds.ElementAt(0);
 
-            if(botSettings.GuildId == 0)
+            if(Application.botSettings.GuildId == 0)
             {
-                botSettings.GuildId = guild.Id;
-                botSettings.Save();
+                Application.botSettings.GuildId = guild.Id;
+                Application.botSettings.Save();
             }
 
             bool warningMessage = false;
 
         commandChannelCheck:
-            if(botSettings.CommandChannelId == 0)
+            if(Application.botSettings.CommandChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to work in using **!set_command_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(botSettings.CommandChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.CommandChannelId);
 
                 if(textChannel == null)
                 {
-                    botSettings.CommandChannelId = 0;
-                    botSettings.Save();
+                    Application.botSettings.CommandChannelId = 0;
+                    Application.botSettings.Save();
                     goto commandChannelCheck;
                 }
             }
 
         logChannelCheck:
-            if(botSettings.LogChannelId == 0)
+            if(Application.botSettings.LogChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to write logs using **!set_log_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(botSettings.LogChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.LogChannelId);
 
                 if(textChannel == null)
                 {
-                    botSettings.LogChannelId = 0;
-                    botSettings.Save();
+                    Application.botSettings.LogChannelId = 0;
+                    Application.botSettings.Save();
                     goto logChannelCheck;
                 }
 
@@ -70,19 +64,19 @@ public static class BotUtility
             }
 
         publicChannelCheck:
-            if(botSettings.PublicChannelId == 0)
+            if(Application.botSettings.PublicChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to accept commands in a public channel using **!set_public_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(botSettings.PublicChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.PublicChannelId);
 
                 if(textChannel == null)
                 {
-                    botSettings.PublicChannelId = 0;
-                    botSettings.Save();
+                    Application.botSettings.PublicChannelId = 0;
+                    Application.botSettings.Save();
                     goto publicChannelCheck;
                 }
             }
@@ -91,9 +85,9 @@ public static class BotUtility
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Bot won't accept any other commands until the steps above step(s) are completed. @everyone");
         }
 
-        public static void OrganizeCommands(CommandService commandService)
+        public static void OrganizeCommands()
         {
-            List<CommandInfo> commands = commandService.Commands.ToList();
+            List<CommandInfo> commands = Application.commands.Commands.ToList();
 
             foreach(CommandInfo command in commands)
             {
@@ -109,16 +103,23 @@ public static class BotUtility
             }
         }
 
-        public static string GetCommandModuleName(string command)
+        public static string GetCommandModuleName(string command, ulong channelId=0)
         {
             if(commandList == null) return string.Empty;
 
             foreach(KeyValuePair<string, List<KeyValuePair<string, string>>> commandModule in commandList)
             {
-                foreach(KeyValuePair<string, string> commandPair in commandModule.Value)
+                if(channelId != 0
+                && channelId == GetModuleChannelId(commandModule.Key))
+                    return commandModule.Key;
+
+                if(channelId == 0)
                 {
-                    if(commandPair.Key == command)
-                        return commandModule.Key;
+                    foreach(KeyValuePair<string, string> commandPair in commandModule.Value)
+                    {
+                        if(commandPair.Key == command)
+                            return commandModule.Key;
+                    }
                 }
             }
 
@@ -137,10 +138,10 @@ public static class BotUtility
         {
             switch(moduleName)
             {
-                case "AdminCommands":    return botSettings.CommandChannelId;
-                case "PZServerCommands": return botSettings.CommandChannelId;
-                case "BotCommands":      return botSettings.CommandChannelId;
-                case "UserCommands":     return botSettings.PublicChannelId;
+                case "AdminCommands":    return Application.botSettings.CommandChannelId;
+                case "PZServerCommands": return Application.botSettings.CommandChannelId;
+                case "BotCommands":      return Application.botSettings.CommandChannelId;
+                case "UserCommands":     return Application.botSettings.PublicChannelId;
             }
 
             return 0;

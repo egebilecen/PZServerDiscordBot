@@ -9,64 +9,53 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class Program
+public static class Application
 {
-    private Model.BotSettings   botSettings;
+    public static Settings.BotSettings botSettings;
+    public static DiscordSocketClient  client;
+    public static CommandService       commands;
+    public static IServiceProvider     services;
+    public static CommandHandler       commandHandler;
 
-    private DiscordSocketClient client;
-    private CommandService      commands;
-    private IServiceProvider    services;
-    private CommandHandler      commandHandler;
+    private static void Main(string[] args) => MainAsync().GetAwaiter().GetResult();
 
-    static void Main(string[] args) => new Program().MainAsync().GetAwaiter().GetResult();
-
-    public async Task MainAsync()
+    private static async Task MainAsync()
     {
-        if(!File.Exists(Model.BotSettings.settingsFile))
+        if(!File.Exists(Settings.BotSettings.settingsFile))
         {
-            botSettings = new Model.BotSettings();
+            botSettings = new Settings.BotSettings();
             botSettings.Save();
         }
-        else botSettings = JsonConvert.DeserializeObject<Model.BotSettings>(File.ReadAllText(Model.BotSettings.settingsFile));
+        else botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
 
         foreach(Process process in Process.GetProcesses())
             if(process.ProcessName.Contains("java"))
                 ServerUtility.initialJavaProcessCount++;
 
-        ServerLogParsers.PerkLog.Init(botSettings);
-        BotUtility.Init(botSettings);
-        ServerUtility.serverProcess = ServerUtility.StartServer();
+        Scheduler.AddItem(new ScheduleItem("ServerReboot",
+                                           Convert.ToUInt64(TimeSpan.FromHours(6).TotalMinutes),
+                                           Schedules.ServerReboot,
+                                           null));
+        Scheduler.Start();
+
+        ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
-        services = new ServiceCollection()
-                   .AddSingleton(botSettings)
-                   .BuildServiceProvider();
-        commandHandler = new CommandHandler(client, commands, services, botSettings);
+        services = null;
+        commandHandler = new CommandHandler(client, commands, services);
 
         await commandHandler.SetupAsync();
         await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN"));
         await client.StartAsync();
 
-        BotUtility.Discord.OrganizeCommands(commands);
+        BotUtility.Discord.OrganizeCommands();
 
-        //client.Log += LogAsync;
         client.Ready += async () =>
         {
             await BotUtility.Discord.DoChannelCheck(client);
         };
 
         await Task.Delay(-1);
-    }
-
-    private Task LogAsync(LogMessage log)
-    {
-        Console.WriteLine(string.Format("[{0}|{1}{2}] {3}", 
-                                        log.Source, 
-                                        log.Severity, 
-                                        log.Exception != null ? "|EXCEPTION" : "",
-                                        log.Message));
-
-        return Task.CompletedTask;
     }
 }

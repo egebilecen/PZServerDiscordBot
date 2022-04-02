@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace Model
+namespace Settings
 {
     public class ServerLogParserSettings
     {
