@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
     public async Task PerkInfo(string username)
     {
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - perk_info] Caller: {0}, Params: {1}", Context.User.ToString(), username));
-        var userPerkDataList = ServerLogParsers.PerkLog.Parse();
+        var userPerkDataList = ServerLogParsers.PerkLog.Get();
 
         if(!userPerkDataList.ContainsKey(username))
         {
