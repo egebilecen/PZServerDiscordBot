@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,6 +10,9 @@ namespace ServerLogParsers
 {
     public static class PerkLog
     {
+        static Dictionary<string, UserPerkData> perkCache = null;
+        static DateTime? lastCacheTime = null;
+
         public class UserPerkData
         {
             public string Username;
@@ -20,7 +23,7 @@ namespace ServerLogParsers
 
         public static Regex regex = new Regex(@"\[(.*?)]\ \[(\d+)\]\[(.*?)\]\[.*?\]\[(.*?)\]");
 
-        public static string GetContent(int nthFile=0)
+        private static string GetContent(int nthFile=0)
         {
             string zomboidLogDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)+"\\Zomboid\\Logs\\";
 
@@ -51,7 +54,7 @@ namespace ServerLogParsers
             return fileContent;
         }
 
-        public static Dictionary<string, UserPerkData> Parse(int nthFile=0)
+        private static Dictionary<string, UserPerkData> Parse(int nthFile=0)
         {
             string logContent = GetContent(nthFile);
 
@@ -88,6 +91,21 @@ namespace ServerLogParsers
             }
 
             return userPerkDataList;
+        }
+
+        public static Dictionary<string, UserPerkData> Get(int nthFile=0)
+        {
+            if(perkCache     == null
+            || lastCacheTime == null
+            || DateTime.Now.Subtract((DateTime)lastCacheTime).TotalMinutes >= 5)
+            {
+                perkCache     = Parse(nthFile);
+                lastCacheTime = DateTime.Now;
+
+                return perkCache;
+            }
+            
+            return perkCache;
         }
     }
 }
