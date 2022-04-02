@@ -34,7 +34,8 @@ public class Program
                 ServerUtility.initialJavaProcessCount++;
 
         ServerLogParsers.PerkLog.Init(botSettings);
-        ServerUtility.serverProcess = ServerUtility.StartServer();
+        BotUtility.Init(botSettings);
+        //ServerUtility.serverProcess = ServerUtility.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
@@ -48,35 +49,12 @@ public class Program
         await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN"));
         await client.StartAsync();
 
+        BotUtility.Discord.OrganizeCommands(commands);
+
         //client.Log += LogAsync;
-        client.Ready += () =>
+        client.Ready += async () =>
         {
-            var guild = client.Guilds.ElementAt(0);
-
-            if(botSettings.GuildId == 0)
-            {
-                botSettings.GuildId = guild.Id;
-                botSettings.Save();
-            }
-
-        channelCheck:
-            if(botSettings.BotChannelId == 0)
-                guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to work in using **!pzbot_set_channel** command.");
-            else
-            {
-                SocketTextChannel textChannel = guild.GetTextChannel(botSettings.BotChannelId);
-
-                if(textChannel == null)
-                {
-                    botSettings.BotChannelId = 0;
-                    botSettings.Save();
-                    goto channelCheck;
-                }
-
-                textChannel.SendMessageAsync("Bot is started. :zombie:");
-            }
-
-            return Task.CompletedTask;
+            await BotUtility.Discord.DoChannelCheck(client);
         };
 
         await Task.Delay(-1);

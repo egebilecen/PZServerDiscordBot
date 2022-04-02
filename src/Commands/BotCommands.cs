@@ -1,31 +1,44 @@
 ﻿using Discord.Commands;
+using Discord.WebSocket;
 using System.Threading.Tasks;
 
 public class BotCommands : ModuleBase<SocketCommandContext>
 {
     public Model.BotSettings botSettings { get; set; }
 
-    [Command("pzbot_set_channel")]
-    [Summary("Sets the channel for bot to work in. (!pzbot_set_channel)")]
-    public async Task PZBotSetChannel()
+    [Command("set_command_channel")]
+    [Summary("Sets the channel for bot to work in. (!set_command_channel <channel tag>)")]
+    public async Task PZBotSetCommandChannel(ISocketMessageChannel channel)
     {
-        botSettings.BotChannelId = Context.Channel.Id;
+        botSettings.CommandChannelId = channel.Id;
         botSettings.Save();
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - pzbot_set_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), Context.Channel.Id));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await ReplyAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", Context.Channel.Id.ToString()));
+        await ReplyAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
     }
 
-    [Command("pzbot_reset_channel")]
-    [Summary("Resets the channel for being able to set new channel for bot to work in. (!pzbot_reset_channel)")]
-    public async Task PZBotResetChannel()
+    [Command("set_log_channel")]
+    [Summary("Sets the channel for bot to work in. (!set_log_channel <channel tag>)")]
+    public async Task PZBotSetLogChannel(ISocketMessageChannel channel)
     {
-        botSettings.BotChannelId = 0;
+        botSettings.LogChannelId = channel.Id;
         botSettings.Save();
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - pzbot_reset_channel] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await ReplyAsync(string.Format("Current working channel has been reset. Please set the new channel using **!pzbot_set_channel** command.", Context.Channel.Id.ToString()));
+        await ReplyAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
+    }
+
+    [Command("set_public_channel")]
+    [Summary("Sets the channel for bot to work in. (!set_public_channel <channel tag>)")]
+    public async Task PZBotSetChannel(ISocketMessageChannel channel)
+    {
+        botSettings.PublicChannelId = channel.Id;
+        botSettings.Save();
+
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        await ReplyAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
     }
 }

@@ -12,7 +12,9 @@ namespace Model
     {
         public const string settingsFile = ".\\pzdiscordbot.conf";
         public ulong        GuildId;
-        public ulong        BotChannelId;
+        public ulong        CommandChannelId;
+        public ulong        LogChannelId;
+        public ulong        PublicChannelId;
 
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
 

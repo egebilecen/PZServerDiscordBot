@@ -47,20 +47,46 @@ public class CommandHandler
         int argPos = 0;
 
         if(!message.HasCharPrefix('!', ref argPos) 
-        || message.HasMentionPrefix(_client.CurrentUser, ref argPos)
-        || message.Author.IsBot
-        || (_botSettings.BotChannelId != 0
-            && message.Channel.Id != _botSettings.BotChannelId))
+        ||  message.HasMentionPrefix(_client.CurrentUser, ref argPos)
+        ||  message.Author.IsBot)
             return;
+
+        string command       = message.Content.Split(' ')[0];
+        string commandModule = BotUtility.Discord.GetCommandModuleName(command);
 
         var context = new SocketCommandContext(_client, message);
 
-        if(_botSettings.BotChannelId == 0
-        && context.Message.Content != "!pzbot_set_channel")
-            return;
+        if(commandModule == string.Empty)
+            goto unknownCommand;
+        else
+        {
+            // If command channel is not set, do not handle any other commands but bot commands.
+            if((_botSettings.CommandChannelId == 0
+            || _botSettings.LogChannelId      == 0
+            || _botSettings.PublicChannelId   == 0)
+            && commandModule != "BotCommands")
+            {
+                await context.Message.AddReactionAsync(EmojiList.RedCross);
+                await context.Channel.SendMessageAsync("Bot configuration haven't done yet.");
+                return;
+            }
+            // If the channel that the command has been sent doesn't match with the
+            // setted channel, do not handle it.
+            else if(_botSettings.CommandChannelId != 0
+            && _botSettings.LogChannelId          != 0
+            && _botSettings.PublicChannelId       != 0
+            && BotUtility.Discord.GetModuleChannelId(commandModule) != context.Channel.Id)
+                goto unknownCommand;
 
-        await _commands.ExecuteAsync(context : context, 
-                                     argPos  : argPos,
-                                     services: _services);
+            await _commands.ExecuteAsync(context : context, 
+                                         argPos  : argPos,
+                                         services: _services);
+            return;
+        }
+
+    unknownCommand:
+        await context.Message.AddReactionAsync(EmojiList.RedCross);
+        await context.Channel.SendMessageAsync("Unknown command.");
+        return;
     }
 }
