@@ -1,4 +1,7 @@
 ﻿using Discord.Commands;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 public class PZServerCommands : ModuleBase<SocketCommandContext>
@@ -77,15 +80,44 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         }
     }
 
-    [Command("save")]
-    [Summary("Saves the current world. (!save)")]
+    [Command("save_server")]
+    [Summary("Saves the current world. (!save_server)")]
     public async Task Save()
     {
         ServerUtility.serverProcess.StandardInput.WriteLine("save");
         ServerUtility.serverProcess.StandardInput.Flush();
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - save] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - save_server] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("perk_info")]
+    [Summary("Displays the latest logged perk information of player. (!perk_info \"<username>\")")]
+    public async Task PerkInfo(string username)
+    {
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - perk_info] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        var userPerkDataList = ServerLogParsers.PerkLog.Get();
+
+        if(!userPerkDataList.ContainsKey(username))
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await ReplyAsync(string.Format("Couldn't find any perk log related to username **{0}**.", username));
+        }
+        else
+        {
+            await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+
+            List<KeyValuePair<string, string>> perkList = new List<KeyValuePair<string, string>>();
+
+            var userPerkData = userPerkDataList[username];
+            var logTimestamp = new DateTimeOffset(DateTime.Parse(userPerkData.LogDate)).ToUnixTimeSeconds();
+
+            foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
+                perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
+
+            await ReplyAsync(string.Format("Perk Information of **{0}** (Recorded <t:{1}:R>):", username, logTimestamp));
+            await BotUtility.Discord.SendEmbeddedMessage(Context.Message, perkList);
+        }
     }
 
     [Command("add_user")]

@@ -35,13 +35,12 @@ public class Program
 
         ServerLogParsers.PerkLog.Init(botSettings);
         BotUtility.Init(botSettings);
-        //ServerUtility.serverProcess = ServerUtility.StartServer();
+        ServerUtility.serverProcess = ServerUtility.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
         services = new ServiceCollection()
                    .AddSingleton(botSettings)
-                   .AddSingleton(commands)
                    .BuildServiceProvider();
         commandHandler = new CommandHandler(client, commands, services, botSettings);
 

@@ -17,7 +17,7 @@ namespace ServerLogParsers
             public string Username;
             public ulong  SteamId;
             public string LogDate;
-            public Dictionary<string, object> Perks = new Dictionary<string, object>();
+            public Dictionary<string, int> Perks = new Dictionary<string, int>();
         }
 
         public static Regex regex = new Regex(@"\[(.*?)]\ \[(\d+)\]\[(.*?)\]\[.*?\]\[(.*?)\]");

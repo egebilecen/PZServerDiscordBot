@@ -6,46 +6,15 @@ using System.Threading.Tasks;
 
 public class UserCommands : ModuleBase<SocketCommandContext>
 {
-    public CommandService _commandService { get; set; }
-
     [Command("help")]
     [Summary("Gets the available commands list. (!help)")]
     public async Task Help()
     {
-        List<CommandInfo> commands = _commandService.Commands.ToList();
-        EmbedBuilder embedBuilder  = new EmbedBuilder();
-
-        int totalCommands  = commands.Count;
-        int fullCycleCount = 0;
-        int commandCounter = 0;
+        List<KeyValuePair<string, string>> commandModule = BotUtility.Discord.GetCommandModule("UserCommands");
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await ReplyAsync("Here is the command list:");
-
-        foreach(CommandInfo command in commands)
-        {
-            if(command.Remarks == "skip")
-            {
-                totalCommands--;
-                continue;
-            }
-
-            embedBuilder.AddField(command.Name, command.Summary ?? "No description available\n");
-
-            commandCounter++;
-
-            if(commandCounter == 25
-            || commandCounter + (25 * fullCycleCount) == totalCommands)
-            {
-                await ReplyAsync("", false, embedBuilder.Build());
-
-                if(commandCounter == 25)
-                    embedBuilder = new EmbedBuilder();
-
-                commandCounter = 0;
-                fullCycleCount++;
-            }
-        }
+        await BotUtility.Discord.SendEmbeddedMessage(Context.Message, commandModule);
     }
 
     [Command("server_status")]

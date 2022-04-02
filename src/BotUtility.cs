@@ -125,6 +125,14 @@ public static class BotUtility
             return string.Empty;
         }
 
+        public static List<KeyValuePair<string, string>> GetCommandModule(string commandModule)
+        {
+            if(!commandList.ContainsKey(commandModule))
+                return null;
+
+            return commandList[commandModule];
+        }
+
         public static ulong GetModuleChannelId(string moduleName)
         {
             switch(moduleName)
@@ -153,7 +161,7 @@ public static class BotUtility
                 if(counter == 25
                 || counter + (25 * fullCycleCount) == totalData)
                 {
-                    await context.ReplyAsync("", false, embedBuilder.Build());
+                    await context.Channel.SendMessageAsync("", false, embedBuilder.Build());
 
                     if(counter == 25)
                         embedBuilder = new EmbedBuilder();
