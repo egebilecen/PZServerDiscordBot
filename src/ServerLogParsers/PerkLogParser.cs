@@ -1,15 +1,14 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
 namespace ServerLogParsers
 {
     public static class PerkLog
     {
+        static Model.BotSettings botSettings = null;
         static Dictionary<string, UserPerkData> perkCache = null;
         static DateTime? lastCacheTime = null;
 
@@ -22,6 +21,11 @@ namespace ServerLogParsers
         }
 
         public static Regex regex = new Regex(@"\[(.*?)]\ \[(\d+)\]\[(.*?)\]\[.*?\]\[(.*?)\]");
+
+        public static void Init(Model.BotSettings _botSettings)
+        {
+            botSettings = _botSettings;
+        }
 
         private static string GetContent(int nthFile=0)
         {
@@ -97,7 +101,7 @@ namespace ServerLogParsers
         {
             if(perkCache     == null
             || lastCacheTime == null
-            || DateTime.Now.Subtract((DateTime)lastCacheTime).TotalMinutes >= 5)
+            || DateTime.Now.Subtract((DateTime)lastCacheTime).TotalMinutes >= botSettings.ServerLogParserSettings.PerkParserCacheDuration)
             {
                 perkCache     = Parse(nthFile);
                 lastCacheTime = DateTime.Now;
