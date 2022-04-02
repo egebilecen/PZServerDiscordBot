@@ -34,7 +34,7 @@ public class Program
                 ServerUtility.initialJavaProcessCount++;
 
         ServerLogParsers.PerkLog.Init(botSettings);
-        //ServerUtility.serverProcess = ServerUtility.StartServer();
+        ServerUtility.serverProcess = ServerUtility.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
