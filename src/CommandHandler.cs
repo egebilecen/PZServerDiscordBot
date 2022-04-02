@@ -51,7 +51,9 @@ public class CommandHandler
             return;
 
         string command       = message.Content.Split(' ')[0];
-        string commandModule = BotUtility.Discord.GetCommandModuleName(command, message.Channel.Id);
+        string commandModule = BotUtility.Discord.GetCommandModuleName(command, (Application.botSettings.CommandChannelId  == 0
+                                                                                || Application.botSettings.LogChannelId    == 0
+                                                                                || Application.botSettings.PublicChannelId == 0 ? 0 : message.Channel.Id));
 
         var context = new SocketCommandContext(_client, message);
 

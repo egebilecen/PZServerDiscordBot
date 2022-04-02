@@ -8,19 +8,24 @@ using System.Timers;
 public class ScheduleItem
 {
     public string               Name            { get; }
-    public ulong                IntervalMinute  { get; }
     public Action<List<object>> Function        { get; }
-    public List<object>         Args            { get; }
+    public List<object>         Args            { get; set; }
+    public ulong                IntervalMinute  { get; set; }
     public DateTime             NextExecuteTime { get; set; }
 
     public ScheduleItem(string name, ulong intervalMinute, Action<List<object>> func, List<object> args)
     {
         Name           = name;
-        IntervalMinute = intervalMinute;
         Function       = func;
         Args           = args;
 
-        NextExecuteTime = DateTime.Now.AddMinutes(intervalMinute);
+        UpdateInterval(intervalMinute);
+    }
+
+    public void UpdateInterval(ulong intervalMinute=0)
+    {
+        if(intervalMinute > 0) IntervalMinute = intervalMinute;
+        NextExecuteTime = DateTime.Now.AddMinutes(IntervalMinute);
     }
 }
 
@@ -32,7 +37,7 @@ public static class Scheduler
     public static void Start()
     {
         clock = new Timer();
-        clock.Interval = 60 * 1000;
+        clock.Interval = 60 * 1000; // every minute
         clock.Elapsed += ClockElapsed;
         clock.Start();
     }
@@ -62,7 +67,7 @@ public static class Scheduler
             if(now >= item.NextExecuteTime)
             {
                 item.Function(item.Args);
-                item.NextExecuteTime = DateTime.Now.AddMinutes(item.IntervalMinute);
+                item.UpdateInterval();
             }
         }
     }

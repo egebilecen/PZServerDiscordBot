@@ -32,13 +32,17 @@ public static class Application
             if(process.ProcessName.Contains("java"))
                 ServerUtility.initialJavaProcessCount++;
 
-        Scheduler.AddItem(new ScheduleItem("ServerReboot",
-                                           Convert.ToUInt64(TimeSpan.FromHours(6).TotalMinutes),
-                                           Schedules.ServerReboot,
+        Scheduler.AddItem(new ScheduleItem("ServerRestart",
+                                           botSettings.ServerScheduleSettings.ServerRestartSchedule,
+                                           Schedules.ServerRestart,
+                                           null));
+        Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
+                                           1,
+                                           Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.Start();
 
-        ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
+        //ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
@@ -53,7 +57,7 @@ public static class Application
 
         client.Ready += async () =>
         {
-            await BotUtility.Discord.DoChannelCheck(client);
+            await BotUtility.Discord.DoChannelCheck();
         };
 
         await Task.Delay(-1);

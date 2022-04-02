@@ -13,9 +13,19 @@ public static class BotUtility
 
     public static class Discord
     {
-        public static async Task DoChannelCheck(DiscordSocketClient client)
+        public static SocketTextChannel GetTextChannelById(ulong id)
         {
-            var guild = client.Guilds.ElementAt(0);
+            var guild = Application.client.Guilds.ElementAt(0);
+            if(guild == null) return null;
+
+            var textChannel = guild.GetTextChannel(id);
+
+            return textChannel;
+        }
+
+        public static async Task DoChannelCheck()
+        {
+            var guild = Application.client.Guilds.ElementAt(0);
 
             if(Application.botSettings.GuildId == 0)
             {
@@ -24,6 +34,8 @@ public static class BotUtility
             }
 
             bool warningMessage = false;
+
+            if(guild.TextChannels.Count < 1) return;
 
         commandChannelCheck:
             if(Application.botSettings.CommandChannelId == 0)

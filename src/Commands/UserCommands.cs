@@ -12,16 +12,16 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     public async Task ServerStatus()
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await ReplyAsync(ServerUtility.IsServerRunning() ? "Server is **running** :hamster:" : "Server is **dead** :skull:");
+        await Context.Channel.SendMessageAsync(ServerUtility.IsServerRunning() ? "Server is **running** :hamster:" : "Server is **dead** :skull:");
     }
 
-    [Command("reboot_time")]
-    [Summary("Gets the next automated reboot time. (!reboot_time)")]
+    [Command("restart_time")]
+    [Summary("Gets the next automated restart time. (!restart_time)")]
     public async Task RebootTime()
     {
-        var timestamp = new DateTimeOffset(Scheduler.GetItem("ServerReboot").NextExecuteTime).ToUnixTimeSeconds();
+        var timestamp = new DateTimeOffset(Scheduler.GetItem("ServerRestart").NextExecuteTime).ToUnixTimeSeconds();
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await ReplyAsync(string.Format("Server will automatically rebooted <t:{0}:R>.", timestamp));
+        await Context.Channel.SendMessageAsync(string.Format("Server will be restarted <t:{0}:R>.", timestamp));
     }
 }

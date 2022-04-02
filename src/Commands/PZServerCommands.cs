@@ -23,7 +23,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await ReplyAsync("Server is already running.");
+            await Context.Channel.SendMessageAsync("Server is already running.");
         }
         else
         {
@@ -31,7 +31,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             
             Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - start_server] Caller: {0}", Context.User.ToString()));
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await ReplyAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute.");
+            await Context.Channel.SendMessageAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute.");
         }
     }
 
@@ -42,7 +42,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(!ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await ReplyAsync("Server is already stopped.");
+            await Context.Channel.SendMessageAsync("Server is already stopped.");
             return;
         }
 
@@ -61,7 +61,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - restart_server] Caller: {0}", Context.User.ToString()));
             
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await ReplyAsync("Restarting server.");
+            await Context.Channel.SendMessageAsync("Restarting server.");
 
             await StopServer();
 
@@ -73,7 +73,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         else
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await ReplyAsync("Server is not running. Start the server first.");
+            await Context.Channel.SendMessageAsync("Server is not running. Start the server first.");
             return;
         }
     }
@@ -98,7 +98,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(!userPerkDataList.ContainsKey(username))
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await ReplyAsync(string.Format("Couldn't find any perk log related to username **{0}**.", username));
+            await Context.Channel.SendMessageAsync(string.Format("Couldn't find any perk log related to username **{0}**.", username));
         }
         else
         {
@@ -112,7 +112,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
-            await ReplyAsync(string.Format("Perk Information of **{0}** (Recorded <t:{1}:R>):", username, logTimestamp));
+            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}** (Recorded <t:{1}:R>):", username, logTimestamp));
             await BotUtility.Discord.SendEmbeddedMessage(Context.Message, perkList);
         }
     }
