@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,10 +37,10 @@ public static class Schedules
     public static void ServerRestartAnnouncer(List<object> args)
     {
         int[] minuteList = {
+            60,
+            30,
+            15,
             5,
-            4,
-            3,
-            2,
             1
         };
 
