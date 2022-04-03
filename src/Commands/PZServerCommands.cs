@@ -238,7 +238,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("teleport")]
-    [Summary("Teleports a player. (!teleport \"<username1>\" \"<username2>\")")]
+    [Summary("Teleports a player. (!teleport \"<username1>\" \"<username2>\") | Username 1 will be teleported to Username 2.")]
     public async Task Teleport(string username1, string username2)
     {
         ServerUtility.Commands.Teleport(username1, username2);

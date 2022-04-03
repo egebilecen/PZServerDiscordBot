@@ -1,16 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 public static class Application
 {
+    public const string                botVersion = "v0.1.1";
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
     public static CommandService       commands;
@@ -41,8 +40,7 @@ public static class Application
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.Start();
-
-        //ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
+        ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
 
         client   = new DiscordSocketClient();
         commands = new CommandService();

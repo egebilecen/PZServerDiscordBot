@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 public class UserCommands : ModuleBase<SocketCommandContext>
 {
+    // TODO: Add !info
+
     [Command("server_status")]
     [Summary("Gets the server status. (!server_status)")]
     public async Task ServerStatus()

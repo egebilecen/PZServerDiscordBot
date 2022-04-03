@@ -72,7 +72,7 @@ public static class BotUtility
                     goto logChannelCheck;
                 }
 
-                await textChannel.SendMessageAsync("Bot is started. :zombie:");
+                await textChannel.SendMessageAsync(string.Format("Bot (**{0}**) is started. :zombie:", Application.botVersion));
             }
 
         publicChannelCheck:

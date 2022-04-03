@@ -43,12 +43,13 @@ namespace ServerLogParsers
             || nthFile > perkLogFiles.Count - 1) return string.Empty;
 
             FileInfo     fileInfo     = perkLogFiles[nthFile];
-            FileStream   fileStream   = fileInfo.OpenRead();
+            FileStream   fileStream   = File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
             StreamReader streamReader = new StreamReader(fileStream);
 
             string fileContent = streamReader.ReadToEnd();
 
             streamReader.Close();
+            streamReader.Dispose();
             return fileContent;
         }
 
@@ -67,7 +68,7 @@ namespace ServerLogParsers
                 var regexMatch = regex.Match(line);
 
                 if(!regexMatch.Success
-                || !regexMatch.Groups[4].Value.Contains("Cooking=")) continue;
+                || !regexMatch.Groups[4].Value.Contains("Strength=")) continue;
 
                 if(userPerkDataList.ContainsKey(regexMatch.Groups[3].Value))
                     continue;

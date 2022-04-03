@@ -9,90 +9,82 @@ public static class Schedules
     public static void ServerRestart(List<object> args)
     {
         bool isServerRunning = ServerUtility.IsServerRunning();
-        var textChannel      = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+        var publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
+        var logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
 
-        if(textChannel != null)
+        if(logChannel != null)
         {
             if(isServerRunning)
-                textChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
+                logChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
             else
-                textChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
+                logChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
         }
 
-        if(isServerRunning) ServerUtility.Commands.RestartServer();
-        Scheduler.GetItem("ServerRestartAnnouncer").Args.Clear();
-
+        if(publicChannel != null)
+        {
+            if(isServerRunning)
+                publicChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
+            else
+                publicChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
+        }
+        
         Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", DateTime.Now.ToLocalTime(), isServerRunning.ToString()));
+
+        Scheduler.GetItem("ServerRestartAnnouncer").Args.Clear();
+        if(isServerRunning) ServerUtility.Commands.RestartServer();
+        Scheduler.GetItem("ServerRestartAnnouncer").UpdateInterval();
     }
     public static void ServerRestartAnnouncer(List<object> args)
     {
-        string message = "";
+        int[] minuteList = {
+            5,
+            4,
+            3,
+            2,
+            1
+        };
+
+        string[] messageList = { 
+            "Server will be restarted in 1 hour.",
+            "Server will be restarted in {0} minutes.",
+            "Server will be restarted in {0} minutes. Prepare to find shelter!",
+            "Server will be restarted in {0} minutes. Escape combat soon!",
+            "Server will be restarted in {0} minute. Hold tight!",
+        };
 
         ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
-        ScheduleItem self   = Scheduler.GetItem("ServerRestartAnnouncer");
+        ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
+
+        if(args == null)
+        {
+            self.Args = new List<object>();
+            self.Args.Add(minuteList.First());
+        }
+        else if(args.Count < 1)
+            self.Args.Add(minuteList.First());
 
         DateTime now        = DateTime.Now;
         var timeDiffMinutes = serverRebootSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
         var publicChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
 
-        if(timeDiffMinutes <= 5)
+        int i=0;
+        foreach(int minute in minuteList)
         {
-            if((int)args[0] == 2)
+            if(timeDiffMinutes <= minute
+            && (int)self.Args.First() == minute)
             {
-                message = "Server will be restarted in 5 minutes. Escape combat soon.";
+                string serverMsg = string.Format(messageList[i], minute.ToString());
 
-                ServerUtility.Commands.ServerMsg(message);
+                if(i != minuteList.Length - 1)
+                    self.Args[0] = minuteList[i + 1];
 
                 if(publicChannel != null)
-                    publicChannel.SendMessageAsync(message);
+                    publicChannel.SendMessageAsync(serverMsg);
 
-                self.Args[0] = 1;
+                ServerUtility.Commands.ServerMsg(serverMsg);
             }
-        }
-        else if(timeDiffMinutes <= 15)
-        {
-            if((int)args[0] == 3)
-            {
-                message = "Server will be restarted in 15 minutes. Prepare to find shelter.";
 
-                ServerUtility.Commands.ServerMsg(message);
-                
-                if(publicChannel != null)
-                    publicChannel.SendMessageAsync(message);
-
-                self.Args[0] = 2;
-            }
-        }
-        else if(timeDiffMinutes <= 30)
-        {
-            if((int)args[0] == 4)
-            {
-                message = "Server will be restarted in 30 minutes.";
-
-                ServerUtility.Commands.ServerMsg(message);
-                
-                if(publicChannel != null)
-                    publicChannel.SendMessageAsync(message);
-
-                self.Args[0] = 3;
-            }
-        }
-        else if(timeDiffMinutes <= 60)
-        {
-            if(args == null)
-                self.Args = new List<object>();
-
-            if(self.Args.Count < 1)
-            {
-                message = "Server will be restarted in 1 hour.";
-
-                ServerUtility.Commands.ServerMsg(message);
-                
-                if(publicChannel != null)
-                    publicChannel.SendMessageAsync(message);
-
-                self.Args.Add(4);
-            }
+            i++;
         }
     }
 }
