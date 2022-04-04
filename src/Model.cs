@@ -11,7 +11,7 @@ namespace Settings
 
     public class ServerScheduleSettings
     {
-        public ulong ServerRestartSchedule = Convert.ToUInt64(TimeSpan.FromHours(6).TotalMinutes);
+        public uint ServerRestartSchedule = Convert.ToUInt32(TimeSpan.FromHours(6).TotalMinutes);
     }
 
     public class BotSettings

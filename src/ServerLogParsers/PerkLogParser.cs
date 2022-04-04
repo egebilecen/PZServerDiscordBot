@@ -8,8 +8,9 @@ namespace ServerLogParsers
 {
     public static class PerkLog
     {
-        static Dictionary<string, UserPerkData> perkCache = null;
-        static DateTime? lastCacheTime = null;
+        public const  string tempLogFile = ".\\perkLog.temp";
+        public static Dictionary<string, UserPerkData> perkCache = null;
+        public static DateTime? lastCacheTime = null;
 
         public class UserPerkData
         {
@@ -42,15 +43,31 @@ namespace ServerLogParsers
             if(perkLogFiles.Count == 0
             || nthFile > perkLogFiles.Count - 1) return string.Empty;
 
-            FileInfo     fileInfo     = perkLogFiles[nthFile];
-            FileStream   fileStream   = File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            StreamReader streamReader = new StreamReader(fileStream);
+            FileInfo fileInfo = perkLogFiles[nthFile];
 
-            string fileContent = streamReader.ReadToEnd();
+            try 
+            {
+                using(FileStream fileStream     = File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using(StreamReader streamReader = new StreamReader(fileStream))
+                {
+                    string fileContent = streamReader.ReadToEnd();
+                    return fileContent;
+                }
+            }
+            catch(IOException)
+            {
+                if(File.Exists(tempLogFile))
+                    File.Delete(tempLogFile);
 
-            streamReader.Close();
-            streamReader.Dispose();
-            return fileContent;
+                File.Copy(fileInfo.FullName, tempLogFile);
+
+                using(FileStream fileStream     = File.Open(tempLogFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using(StreamReader streamReader = new StreamReader(fileStream))
+                {
+                    string fileContent = streamReader.ReadToEnd();
+                    return fileContent;
+                }
+            }
         }
 
         private static Dictionary<string, UserPerkData> Parse(int nthFile=0)

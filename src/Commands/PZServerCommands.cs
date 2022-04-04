@@ -89,13 +89,16 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("perk_info")]
-    [Summary("Displays the latest logged perk information of player. (!perk_info \"<username>\")")]
+    [Summary("Displays the perk information of player. (!perk_info \"<username>\")")]
     public async Task PerkInfo(string username)
     {
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - perk_info] Caller: {0}, Params: {1}", Context.User.ToString(), username));
+        
+        var lastCacheTime    = ServerLogParsers.PerkLog.lastCacheTime;
         var userPerkDataList = ServerLogParsers.PerkLog.Get();
 
-        if(!userPerkDataList.ContainsKey(username))
+        if(userPerkDataList == null
+        || !userPerkDataList.ContainsKey(username))
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
             await Context.Channel.SendMessageAsync(string.Format("Couldn't find any perk log related to username **{0}**.", username));
@@ -107,13 +110,18 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             List<KeyValuePair<string, string>> perkList = new List<KeyValuePair<string, string>>();
 
             var userPerkData = userPerkDataList[username];
-            var logTimestamp = new DateTimeOffset(DateTime.Parse(userPerkData.LogDate)).ToUnixTimeSeconds();
 
             foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
-            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}** (Recorded <t:{1}:R>):", username, logTimestamp));
+            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}** (Recorded at **{1}**):", username, BotUtility.GetRelativeTime(DateTime.Parse(userPerkData.LogDate), Application.startTime)));
             await BotUtility.Discord.SendEmbeddedMessage(Context.Message, perkList);
+        }
+
+        if(lastCacheTime != null)
+        {
+            await Context.Channel.SendMessageAsync(string.Format("Last cache was at **{0}**.", 
+                                                   BotUtility.GetRelativeTime(DateTime.Now, (DateTime)lastCacheTime)));
         }
     }
 
@@ -127,8 +135,8 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
 
-    [Command("addusertowhitelist")]
-    [Summary("Adds a single user connected with a password to the whitelist. (!addusertowhitelist \"<username>\")")]
+    [Command("add_user_to_whitelist")]
+    [Summary("Adds a single user connected with a password to the whitelist. (!add_user_to_whitelist \"<username>\")")]
     public async Task AddUserToWhiteList(string username)
     {
         ServerUtility.Commands.AddUserToWhiteList(username);

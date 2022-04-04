@@ -66,7 +66,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
     [Command("set_restart_interval")]
     [Summary("Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)")]
-    public async Task GetSettings(ulong intervalMinute)
+    public async Task SetRestartInterval(uint intervalMinute)
     {
         if(intervalMinute < 60)
         {
@@ -84,5 +84,29 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
+    }
+
+    [Command("set_perk_cache_duration")]
+    [Summary("Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)")]
+    public async Task SetPerkCacheDuration(uint durationMinute)
+    {
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_perk_cache_duration] Caller: {0}, Params: {1}", Context.User.ToString(), durationMinute));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Application.botSettings.ServerLogParserSettings.PerkParserCacheDuration = durationMinute;
+        Application.botSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Perk cache duration is updated.");
+    }
+
+    [Command("reset_perk_cache")]
+    [Summary("Reset the perk cache. (!reset_perk_cache)")]
+    public async Task ResetPerkCache()
+    {
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - reset_perk_cache] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        ServerLogParsers.PerkLog.perkCache = null;
+        await Context.Channel.SendMessageAsync("Perk cache has been reset.");
     }
 }

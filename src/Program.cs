@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                botVersion = "v0.1.1";
+    public const string                botVersion = "v0.1.3";
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
     public static CommandService       commands;
     public static IServiceProvider     services;
     public static CommandHandler       commandHandler;
+    public static DateTime             startTime = DateTime.Now;
 
     private static void Main(string[] args) => MainAsync().GetAwaiter().GetResult();
 
