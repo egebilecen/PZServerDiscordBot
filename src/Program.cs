@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                botVersion = "v0.1.3";
+    public const string                botVersion = "v0.1.4";
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
     public static CommandService       commands;
@@ -41,7 +41,10 @@ public static class Application
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.Start();
+        
+    #if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
+    #endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();

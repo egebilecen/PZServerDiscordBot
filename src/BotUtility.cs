@@ -160,38 +160,49 @@ public static class BotUtility
             }
         }
 
-        public static string GetCommandModuleName(string command, ulong channelId=0)
+        public static string GetCommandModuleName(string command)
         {
             if(commandList == null) return string.Empty;
 
             foreach(KeyValuePair<string, List<KeyValuePair<string, string>>> commandModule in commandList)
             {
-                if(channelId != 0
-                && channelId == GetModuleChannelId(commandModule.Key))
-                    return commandModule.Key;
-
-                if(channelId == 0)
+                foreach(KeyValuePair<string, string> commandPair in commandModule.Value)
                 {
-                    foreach(KeyValuePair<string, string> commandPair in commandModule.Value)
-                    {
-                        if(commandPair.Key == command)
-                            return commandModule.Key;
-                    }
+                    if(commandPair.Key == command)
+                        return commandModule.Key;
                 }
             }
 
             return string.Empty;
         }
 
-        public static List<KeyValuePair<string, string>> GetCommandModule(string commandModule)
+        public static Dictionary<string, List<KeyValuePair<string, string>>> GetCommandModuleList(string command)
         {
-            if(!commandList.ContainsKey(commandModule))
-                return null;
+            if(commandList == null) return null;
 
-            return commandList[commandModule];
+            var foundCommandList = new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+            foreach(KeyValuePair<string, List<KeyValuePair<string, string>>> commandModule in commandList)
+            {
+                foreach(KeyValuePair<string, string> commandPair in commandModule.Value)
+                {
+                    if(commandPair.Key == command)
+                        foundCommandList.Add(commandModule.Key, commandModule.Value);
+                }
+            }
+
+            return foundCommandList.Count > 0 ? foundCommandList : null;
         }
 
-        public static ulong GetModuleChannelId(string moduleName)
+        public static List<KeyValuePair<string, string>> GetCommandModule(string moduleName)
+        {
+            if(!commandList.ContainsKey(moduleName))
+                return null;
+
+            return commandList[moduleName];
+        }
+
+        public static ulong GetChannelIdOfCommandModule(string moduleName)
         {
             switch(moduleName)
             {
@@ -202,6 +213,14 @@ public static class BotUtility
             }
 
             return 0;
+        }
+
+        public static string GetCommandModuleOfChannelId(ulong channelId)
+        {
+            if(channelId == Application.botSettings.CommandChannelId) return "AdminCommands";
+            if(channelId == Application.botSettings.PublicChannelId)  return "UserCommands";
+
+            return string.Empty;
         }
 
         public static async Task SendEmbeddedMessage(SocketUserMessage context, List<KeyValuePair<string, string>> dataList)
