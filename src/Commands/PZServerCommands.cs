@@ -94,7 +94,6 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     {
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - perk_info] Caller: {0}, Params: {1}", Context.User.ToString(), username));
         
-        var lastCacheTime    = ServerLogParsers.PerkLog.lastCacheTime;
         var userPerkDataList = ServerLogParsers.PerkLog.Get();
 
         if(userPerkDataList == null
@@ -114,9 +113,11 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
-            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}** (Recorded at **{1}**):", username, BotUtility.GetRelativeTime(DateTime.Parse(userPerkData.LogDate), Application.startTime)));
+            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}**:", username));
             await BotUtility.Discord.SendEmbeddedMessage(Context.Message, perkList);
         }
+
+        var lastCacheTime = ServerLogParsers.PerkLog.lastCacheTime;
 
         if(lastCacheTime != null)
         {

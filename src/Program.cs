@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                botVersion = "v0.1.4";
+    public const string                botVersion = "v0.1.6";
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
     public static CommandService       commands;
