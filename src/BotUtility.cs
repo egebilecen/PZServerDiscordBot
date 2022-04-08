@@ -225,6 +225,8 @@ public static class BotUtility
 
         public static async Task SendEmbeddedMessage(SocketUserMessage context, List<KeyValuePair<string, string>> dataList)
         {
+            if(dataList == null) return;
+
             EmbedBuilder embedBuilder  = new EmbedBuilder();
             int totalData      = dataList.Count;
             int fullCycleCount = 0;

@@ -85,14 +85,23 @@ public class CommandHandler
 
                     await context.Message.AddReactionAsync(EmojiList.GreenCheck);
 
-                    await context.Channel.SendMessageAsync("Admin command list:");
-                    await BotUtility.Discord.SendEmbeddedMessage(context.Message, adminCommandModule);
+                    if(adminCommandModule != null)
+                    {
+                        await context.Channel.SendMessageAsync("Admin command list:");
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, adminCommandModule);
+                    }
 
-                    await context.Channel.SendMessageAsync("Bot command list:");
-                    await BotUtility.Discord.SendEmbeddedMessage(context.Message, botCommandModule);
+                    if(botCommandModule != null)
+                    {
+                        await context.Channel.SendMessageAsync("Bot command list:");
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, botCommandModule);
+                    }
 
-                    await context.Channel.SendMessageAsync("Project Zomboid server command list:");
-                    await BotUtility.Discord.SendEmbeddedMessage(context.Message, pzserverCommandModule);
+                    if(pzserverCommandModule != null)
+                    {
+                        await context.Channel.SendMessageAsync("Project Zomboid server command list:");
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, pzserverCommandModule);        
+                    }
                     return;
                 }
             }
