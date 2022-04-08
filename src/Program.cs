@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                botVersion = "v0.1.6";
+    private static readonly string     botToken   = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+    public const string                botVersion = "v1.0";
+
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
     public static CommandService       commands;
@@ -21,6 +23,12 @@ public static class Application
 
     private static async Task MainAsync()
     {
+        if(string.IsNullOrEmpty(botToken))
+        {
+            Console.WriteLine("Couldn't retrieve bot token from environment variable.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up environment variable.");
+            await Task.Delay(-1);
+        }
+
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
             botSettings = new Settings.BotSettings();
@@ -52,7 +60,7 @@ public static class Application
         commandHandler = new CommandHandler(client, commands, services);
 
         await commandHandler.SetupAsync();
-        await client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN"));
+        await client.LoginAsync(TokenType.Bot, botToken);
         await client.StartAsync();
 
         BotUtility.Discord.OrganizeCommands();
