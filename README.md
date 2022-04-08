@@ -16,3 +16,43 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 
 # Bot Commands
 **!help** command can be used in any of configured 3 channels which bot will respond with the available command list for *that channel*.
+
+**Public Channel**<br>
+- ``!server_status`` Gets the server status. (!server_status)
+- ``!restart_time`` Gets the next automated restart time. (!restart_time)
+
+**Command Chanel**<br>
+Bot Commands:
+- `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel <channel tag>)<br>
+- `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
+- `!get_settings` Gets the bot settings. (!get_settings)<br>
+- `!set_restart_interval` Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)<br>
+- `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
+- `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
+  
+Server Commands:
+- `!server_msg` Broadcasts a message to all players in the server. (!server_msg "[message]")<br>
+- `!start_server` Starts the server. (!start_server)<br>
+- `!stop_server` Saves and stops the server. (!stop_server)<br>
+- `!restart_server` Restarts the server. (!restart_server)<br>
+- `!save_server` Saves the current world. (!save_server)<br>
+- `!perk_info` Displays the perk information of player. (!perk_info "[username]")<br>
+- `!add_user` Adds a new user to the whitelist. (!add_user "[username]" "[password]")<br>
+- `!add_user_to_whitelist` Adds a single user connected with a password to the whitelist. (!add_user_to_whitelist "[username]")<br>
+- `!remove_user_from_white_list` Removes a single user connected with a password to the whitelist. (!remove_user_from_whitelist "[username]")<br>
+- `!ban_steamid` Bans a Steam ID. (!ban_steamid [steam id])<br>
+- `!unban_steamid` Unbans a Steam ID. (!unban_steamid [steam id])<br>
+- `!ban_user` Bans a user. (!ban_user "[username]")<br>
+- `!unban_user` Unbans a user. (!unbanuser "[username]")<br>
+- `!make_admin` Gives admin rights to a user. (!make_admin "[username]")<br>
+- `!remove_admin` Removes admin rights to a user. (!remove_admin "[username]")<br>
+- `!kick_user` Kicks a user from the server. (!kick_user "[username]")<br>
+- `!start_rain` Starts rain on the server. (!startrain)<br>
+- `!stop_rain` Stops rain on the server. (!stoprain)<br>
+- `!teleport` Teleports a player. (!teleport "[username1]" "[username2]") | Username 1 will be teleported to Username 2.<br>
+- `!add_item` Gives an item to the player. (!add_item "[username]" "[module.item]")<br>
+- `!add_xp` Gives XP to a player. (!addxp "[username]" "[perk]" [xp])<br>
+- `!chopper` Places a helicopter event on a random player. (!chopper)<br>
+- `!godmode` Makes a player invincible. (!godmode "[username]")<br>
+- `!invisible` Makes a player invisible to zombies. (!invisible "[username]")<br>
+- `!noclip` Allows a player to pass through solid objects. (!noclip "[username]")<br>
