@@ -9,6 +9,27 @@ This bot is written for people to easily manage their server using Discord. Plea
 - Perk Parser with cache system. (Bot automatically parses the last perk log file that holds the player skills when they login to server. This can be used to aid players that died to a bug but they can't remember their skills. As stated before, server logs the player skills only when they log into server. If player levels up a skill after connecting to server, it won't appear in log unless player logs into server afterwards again.) When command for perk parser is invoked, bot will parse the file and save it contents in memory until cache (in minutes) expires. This is for to increase efficiency as bot will not have to parse the same file each time. In a situation where fresh data needed, **!reset_perk_cache** command can be used to reset the cache.                
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
 
+# Installation
+
+**Creating The Bot**
+1. Go to [Applications](https://discord.com/developers/applications) section of Discord developer portal. (Be sure to login first.)
+2. Click to `New Application` button on the top right corner of screen.
+![](https://i.ibb.co/GWyfvkn/Screenshot-1.png)
+3. Enter your Bot's name in pop-up then click to create button. You will be redirected to your application's (bot's) page. In that page, you can update your bot's name, description and even load an image as avatar.
+![](https://i.ibb.co/CzwwYJT/Screenshot-2.png)
+4. Navigate to `Bot` section from left menu. Then click to `Add Bot` button. Then confirm the pop-up. You will be redirected to your bot page.
+![](https://i.ibb.co/ccyvbPb/Screenshot-3.png)
+5. Click to `Reset Token` button. Then confirm the pop-up. This will create a new token for your bot. Copy the displayed token and save it in a file. You won't able to view your bot token unless you reset it again. Also do not share this token with anyone. It's basically password of your bot. If you share it with someone else, they will have full control on your bot.
+![](https://i.ibb.co/wL0QLhs/Screenshot-4.png)
+![](https://i.ibb.co/4fNP8hx/Screenshot-5.png)
+6. Navigate to `OAuth2` section from left menu and select the `URL generator` from dropdown. Check `bot` from `Scopes` section and scroll down to `Bot Permissions`.
+![](https://i.ibb.co/S545j0z/Screenshot-6.png)
+7. Check the options shown below and copy the generated URL.
+![](https://i.ibb.co/vvFncXY/Screenshot-7.png)
+8. Open the copied link on your browser. In the page, select the server (you must be admin on the server otherwise server won't show up but you can always send the link to an admin which they can authorise the bot) that you want bot to work in. Click to `Continue` button and then to `Authorise` button. Complete the captcha if it pops-up. Now Bot has joined to your server but it's not running yet.
+![](https://i.ibb.co/553LsdH/Screenshot-8.png)
+![](https://i.ibb.co/gjBpLtH/Screenshot-9.png)
+
 # Bot Configuration
 This bot uses 3 different channels to operate. First channel is *Public* channel where users can interact with bot. Second channel is *Command* channel where must set to be only visible to server admins. This channel is used for executing server management and bot configuration commands. Third channel is *Log* channel. There aren't any commands to execute in this channel and it's set for bot to announce stuff. After the bot launched for first time (or not configured), it will ask you to configure the mentioned three channels using **!set_command_channel**, **!set_log_channel** and **!set_public_channel** commands. Those commands are very easy to use. Just reply to any channel with the tag of the channel you want the bot to be configured in. For example: `!set_public_channel #bot-public`
 
