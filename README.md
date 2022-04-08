@@ -1,5 +1,5 @@
 # Discord Bot for Managing Project Zomboid Server
-This bot is written for people to easily manage their server using Discord. Please check the **Installation** and **Bot Configuration** section. Also this mod doesn't support multiple servers.
+This bot is written for people to easily manage their server using Discord. Please check the **Installation** and **Bot Configuration** section. Also this mod doesn't support multiple discord servers and only works on **Windows** operating system. Be sure to have **.NET Framework 4.7.2** installed on the machine.
 
 # Features
 - Automated server restart schedule with ingame and discord warning. (Warnings are announced when 1 hour, 30 min, 15 min, 5 min and 1 min left until server restart. Restart interval can be configured with bot commands.)
@@ -10,8 +10,7 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
 
 # Installation
-
-**Creating The Bot**
+**Creating the Bot**
 1. Go to [Applications](https://discord.com/developers/applications) section of Discord developer portal. (Be sure to login first.)
 2. Click to `New Application` button on the top right corner of screen.
 ![](https://i.ibb.co/GWyfvkn/Screenshot-1.png)
@@ -29,6 +28,13 @@ This bot is written for people to easily manage their server using Discord. Plea
 8. Open the copied link on your browser. In the page, select the server (you must be admin on the server otherwise server won't show up but you can always send the link to an admin which they can authorise the bot) that you want bot to work in. Click to `Continue` button and then to `Authorise` button. Complete the captcha if it pops-up. Now Bot has joined to your server but it's not running yet.
 ![](https://i.ibb.co/553LsdH/Screenshot-8.png)
 ![](https://i.ibb.co/gjBpLtH/Screenshot-9.png)
+
+**Setting Up Environment Variable**<br>
+To complete this step, you must have remote access to your Windows machine.
+1. TODO
+
+**Installing Bot Files**<br>
+1. TODO
 
 # Bot Configuration
 This bot uses 3 different channels to operate. First channel is *Public* channel where users can interact with bot. Second channel is *Command* channel where must set to be only visible to server admins. This channel is used for executing server management and bot configuration commands. Third channel is *Log* channel. There aren't any commands to execute in this channel and it's set for bot to announce stuff. After the bot launched for first time (or not configured), it will ask you to configure the mentioned three channels using **!set_command_channel**, **!set_log_channel** and **!set_public_channel** commands. Those commands are very easy to use. Just reply to any channel with the tag of the channel you want the bot to be configured in. For example: `!set_public_channel #bot-public`
