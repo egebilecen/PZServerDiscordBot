@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -26,6 +26,12 @@ public static class Application
         if(string.IsNullOrEmpty(botToken))
         {
             Console.WriteLine("Couldn't retrieve bot token from environment variable.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up environment variable.");
+            await Task.Delay(-1);
+        }
+
+        if(!File.Exists("./server.bat"))
+        {
+            Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
             await Task.Delay(-1);
         }
 
