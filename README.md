@@ -1,5 +1,5 @@
 # Discord Bot for Managing Project Zomboid Server
-This bot is written for people to easily manage their server using Discord. Please check **bot configuration** section.
+This bot is written for people to easily manage their server using Discord. Please check the **Installation** and **Bot Configuration** section. Also this mod doesn't support multiple servers.
 
 # Features
 - Automated server restart schedule with ingame and discord warning. (Warnings are announced when 1 hour, 30 min, 15 min, 5 min and 1 min left until server restart. Restart interval can be configured with bot commands.)
