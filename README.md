@@ -31,7 +31,12 @@ This bot is written for people to easily manage their server using Discord. Plea
 
 **Setting Up Environment Variable**<br>
 To complete this step, you must have remote access to your Windows machine.
-1. TODO
+1. Hit to `Windows + R` button. It will open up the `Run` window. Paste `systempropertiesadvanced.exe` into text input and press enter or click to `OK` button. It will open the system properties window.   
+![](https://i.ibb.co/RzWfT7k/Screenshot-1.png)
+2. In properties window, click to `Environment Variables` buttton at bottom right. It will open a new window called `Environment Variables`. In this window, you will see two lists. We need to add our variable to `User variables` which is at the top, not `System variables`.
+![](https://i.ibb.co/1L6nqVb/Screenshot-2.png)
+3. Click to `New...` button under the user variables. It will ask you to enter a variable and a value. Variable name is `EB_DISCORD_BOT_TOKEN`. Variable value is your bot's secret token that you saved into a file in previous steps. After you filled the inputs, click `OK` in every window.
+![](https://i.ibb.co/M7xrNBD/Screenshot-3.png)
 
 **Installing Bot Files**<br>
 1. TODO
