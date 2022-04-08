@@ -1,6 +1,17 @@
 # Discord Bot for Managing Project Zomboid Server
 This bot is written for people to easily manage their server using Discord. Please check the **Installation** and **Bot Configuration** section. Also this mod doesn't support multiple discord servers and only works on **Windows** operating system. Be sure to have **.NET Framework 4.7.2** installed on the machine.
 
+## Contents
+* [Features](#features)
+* [Installation](#installation)
+  * [Creating the Bot](#creating-the-bot)
+  * [Setting Up Environment Variable](#setting-up-environment-variable)
+  * [Installing Bot Files](#installing-bot-files)
+* [Bot Configuration](#bot-configuration)
+* [Bot Commands](#bot-commands)
+  * [Public Channel](#public-channel)
+  * [Command Channel](#command-channel)
+
 # Features
 - Automated server restart schedule with ingame and discord warning. (Warnings are announced when 1 hour, 30 min, 15 min, 5 min and 1 min left until server restart. Restart interval can be configured with bot commands.)
 ![Automated Server Restart Example](https://i.ibb.co/SQWfnL1/Screenshot-1.png)
@@ -10,7 +21,7 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
 
 # Installation
-**Creating the Bot**
+#### Creating the Bot
 1. Go to [Applications](https://discord.com/developers/applications) section of Discord developer portal. (Be sure to login first.)
 2. Click to `New Application` button on the top right corner of screen.
 ![](https://i.ibb.co/GWyfvkn/Screenshot-1.png)
@@ -29,7 +40,7 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![](https://i.ibb.co/553LsdH/Screenshot-8.png)
 ![](https://i.ibb.co/gjBpLtH/Screenshot-9.png)
 
-**Setting Up Environment Variable**<br>
+#### Setting Up Environment Variable
 To complete this step, you must have remote access to your Windows machine.
 1. Hit to `Windows + R` button. It will open up the `Run` window. Paste `systempropertiesadvanced.exe` into text input and press enter or click to `OK` button. It will open the system properties window.   
 ![](https://i.ibb.co/RzWfT7k/Screenshot-1.png)
@@ -38,7 +49,7 @@ To complete this step, you must have remote access to your Windows machine.
 3. Click to `New...` button under the user variables. It will ask you to enter a variable and a value. Variable name is `EB_DISCORD_BOT_TOKEN`. Variable value is your bot's secret token that you saved into a file in previous steps. After you filled the inputs, click `OK` in every window.
 ![](https://i.ibb.co/M7xrNBD/Screenshot-3.png)
 
-**Installing Bot Files**<br>
+#### Installing Bot Files
 1. Navigate to [releases](https://github.com/egebilecen/PZServerDiscordBot/releases) and pick a binary version. I would suggest picking the latest version as it would consist new features and bug fixes.
 2. Download the `zip` archive.
 3. Extract the contents in the archive to the `Project Zomboid Dedicated Server` folder. Your directory after extraction will look like the image below.  
@@ -57,11 +68,11 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 # Bot Commands
 **!help** command can be used in any of configured 3 channels which bot will respond with the available command list for *that channel*.
 
-**Public Channel**<br>
+#### Public Channel
 - ``!server_status`` Gets the server status. (!server_status)
 - ``!restart_time`` Gets the next automated restart time. (!restart_time)
 
-**Command Chanel**<br>
+#### Command Channel
 Bot Commands:
 - `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel <channel tag>)<br>
 - `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
