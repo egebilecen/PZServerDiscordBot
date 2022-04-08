@@ -39,7 +39,15 @@ To complete this step, you must have remote access to your Windows machine.
 ![](https://i.ibb.co/M7xrNBD/Screenshot-3.png)
 
 **Installing Bot Files**<br>
-1. TODO
+1. Navigate to [releases](https://github.com/egebilecen/PZServerDiscordBot/releases) and pick a binary version. I would suggest picking the latest version as it would consist new features and bug fixes.
+2. Download the `zip` archive.
+3. Extract the contents in the archive to the `Project Zomboid Dedicated Server` folder. Your directory after extraction will look like the image below.
+![](https://i.ibb.co/P4KBXjj/folder-structure.png)
+5. Now all you need to do is running `PZServerDiscordBot.exe`. If everything setup correctly, program will automatically run the Discord bot at background and will show the Project Zomboid Server in the console. (Bot may not send the warning messages about the configuration if your discord server's last created channel is not accessable by the bot. You can just type configuration commands regardless.)
+![](https://i.ibb.co/VqcdKBS/Screenshot-2.png)
+
+**Note:**<br>
+If you never run the project zomboid server before, please run it without using bot. Because when you run the project zomboid server for the first time, it will ask you to setup an admin account. You can't send any key presses to console if you run the server through discord bot's exe file. This also means you can't execute servers commands directly using the console but I did setup all commands in discord bot.
 
 # Bot Configuration
 This bot uses 3 different channels to operate. First channel is *Public* channel where users can interact with bot. Second channel is *Command* channel where must set to be only visible to server admins. This channel is used for executing server management and bot configuration commands. Third channel is *Log* channel. There aren't any commands to execute in this channel and it's set for bot to announce stuff. After the bot launched for first time (or not configured), it will ask you to configure the mentioned three channels using **!set_command_channel**, **!set_log_channel** and **!set_public_channel** commands. Those commands are very easy to use. Just reply to any channel with the tag of the channel you want the bot to be configured in. For example: `!set_public_channel #bot-public`
