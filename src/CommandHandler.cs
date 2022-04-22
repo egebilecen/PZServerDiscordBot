@@ -13,6 +13,13 @@ public class CommandHandler
     private readonly CommandService      _commands;
     private readonly IServiceProvider    _services;
 
+    private bool IsBotConfigured()
+    {
+        return !(Application.botSettings.CommandChannelId == 0
+              || Application.botSettings.LogChannelId     == 0
+              || Application.botSettings.PublicChannelId  == 0);
+    }
+
     public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services)
     {
         _commands     = commands;
@@ -51,8 +58,9 @@ public class CommandHandler
         ||  message.Author.IsBot)
             return;
 
-        string command       = message.Content.Split(' ')[0];
-        string commandModule = BotUtility.Discord.GetCommandModuleName(command);
+        string command         = message.Content.Split(' ')[0];
+        string commandModule   = BotUtility.Discord.GetCommandModuleName(command);
+        bool   isBotConfigured = IsBotConfigured();
 
         var context = new SocketCommandContext(_client, message);
 
@@ -107,10 +115,7 @@ public class CommandHandler
             }
         }
         // If command channel is not set, do not handle any other commands but bot commands.
-        else if((Application.botSettings.CommandChannelId == 0
-        || Application.botSettings.LogChannelId      == 0
-        || Application.botSettings.PublicChannelId   == 0)
-        && commandModule != "BotCommands")
+        else if(!isBotConfigured && commandModule != "BotCommands")
         {
             await context.Message.AddReactionAsync(EmojiList.RedCross);
             await context.Channel.SendMessageAsync("Bot configuration haven't done yet.");
@@ -118,7 +123,7 @@ public class CommandHandler
         }
         // If the channel that the command has been sent doesn't match with the
         // setted channel, do not handle it.
-        else if (BotUtility.Discord.GetChannelIdOfCommandModule(commandModule) != context.Channel.Id)
+        else if(isBotConfigured && BotUtility.Discord.GetChannelIdOfCommandModule(commandModule) != context.Channel.Id)
             goto unknownCommand;
 
         await _commands.ExecuteAsync(context : context, 

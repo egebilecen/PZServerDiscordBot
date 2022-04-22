@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     private static readonly string     botToken   = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion = "v1.0";
+    public const string                botVersion = "v1.0.1";
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -29,11 +29,13 @@ public static class Application
             await Task.Delay(-1);
         }
 
+    #if !DEBUG
         if(!File.Exists("./server.bat"))
         {
             Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
             await Task.Delay(-1);
         }
+    #endif
 
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
@@ -56,9 +58,9 @@ public static class Application
                                            null));
         Scheduler.Start();
         
-    #if !DEBUG
+#if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
-    #endif
+#endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
