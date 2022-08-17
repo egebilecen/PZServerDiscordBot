@@ -61,7 +61,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "\n";
         botSettings += "**Restart Schedule Interval:** "+(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)).ToString()+" minute(s)";
         botSettings += "\n";
-        botSettings += "**Workshop Mod Check Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += "**Workshop Mod Update Checker Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
 
         await Context.Channel.SendMessageAsync(botSettings);
     }
