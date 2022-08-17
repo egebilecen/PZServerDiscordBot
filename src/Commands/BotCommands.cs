@@ -83,9 +83,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
 
         // Update v1.1.0:
-        // This value is being converted to milliseconds in Program.cs. Do not set this value in milliseconds!
+        // This value is being converted to milliseconds in Program.cs. Do not set this value in milliseconds and save it!
+        // This variable temporarily set in minutes solely for saving. Will be restored to milliseconds in below line(s).
         Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute;
         Application.botSettings.Save();
+
+        // Restore this value back to milliseconds as Scheduler uses milliseconds.
+        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
     }
