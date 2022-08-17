@@ -124,11 +124,12 @@ public static class Schedules
 
         foreach(var item in itemDetails)
         {
-            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
+            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated).LocalDateTime;
 
             if(updateDate > Application.startTime)
             {
                 // todo
+
             }
         }
     }
