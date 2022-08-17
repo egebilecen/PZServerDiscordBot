@@ -49,7 +49,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         string botSettings = "";
-        botSettings += "**Guild ID:** `"+Application.botSettings.GuildId.ToString()+"`";
+        botSettings += "**Server ID:** `"+Application.botSettings.GuildId.ToString()+"`";
         botSettings += "\n";
         botSettings += "**Command Channel ID:** `"+Application.botSettings.CommandChannelId.ToString()+"` (<#"+Application.botSettings.CommandChannelId.ToString()+">)";
         botSettings += "\n";
