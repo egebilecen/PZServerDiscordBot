@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     private static readonly string     botToken   = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion = "v1.0.1";
+    public const string                botVersion = "v1.1.0 - Beta";
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -42,7 +42,14 @@ public static class Application
             botSettings = new Settings.BotSettings();
             botSettings.Save();
         }
-        else botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+        else
+        {
+            botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+
+            // Update v1.1.0:
+            // Schedule uses milliseconds, not minutes anymore.
+            botSettings.ServerScheduleSettings.ServerRestartSchedule = Convert.ToUInt32(TimeSpan.FromMinutes(botSettings.ServerScheduleSettings.ServerRestartSchedule).TotalMilliseconds);
+        }
 
         foreach(Process process in Process.GetProcesses())
             if(process.ProcessName.Contains("java"))
@@ -53,14 +60,24 @@ public static class Application
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           1,
+                                           60 * 1000,
                                            Schedules.ServerRestartAnnouncer,
                                            null));
-        Scheduler.Start();
+        Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
+                                           60 * 1000,
+                                           Schedules.WorkshopItemUpdateChecker,
+                                           null));
+        Scheduler.Start(
+            #if !DEBUG
+                60 * 1000 // every minute
+            #else
+                1000      // every second
+            #endif
+        );
         
-#if !DEBUG
+    #if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
-#endif
+    #endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();

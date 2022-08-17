@@ -34,6 +34,7 @@ public static class Schedules
         if(isServerRunning) ServerUtility.Commands.RestartServer();
         Scheduler.GetItem("ServerRestartAnnouncer").UpdateInterval();
     }
+
     public static void ServerRestartAnnouncer(List<object> args)
     {
         int[] minuteList = {
@@ -86,5 +87,18 @@ public static class Schedules
 
             i++;
         }
+    }
+
+    public static void WorkshopItemUpdateChecker(List<object> args)
+    {
+        string configFilePath = ServerUtility.GetServerConfigIniFilePath();
+        if(string.IsNullOrEmpty(configFilePath)) return;
+
+        IniParser.IniData iniData = IniParser.Parse(configFilePath);
+        if(iniData == null) return;
+
+        string[] workshopIdList = iniData.GetValue("WorkshopItems").Split(';');
+        var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
+        var itemDetails  = fetchDetails.Result;
     }
 }

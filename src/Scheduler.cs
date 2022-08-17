@@ -10,71 +10,71 @@ public class ScheduleItem
     public string               Name            { get; }
     public Action<List<object>> Function        { get; }
     public List<object>         Args            { get; set; }
-    public ulong                IntervalMinute  { get; set; }
+    public ulong                IntervalMS      { get; set; }
     public DateTime             NextExecuteTime { get; set; }
 
-    public ScheduleItem(string name, ulong intervalMinute, Action<List<object>> func, List<object> args)
+    public ScheduleItem(string name, ulong intervalMS, Action<List<object>> func, List<object> args)
     {
         Name           = name;
         Function       = func;
         Args           = args;
 
-        UpdateInterval(intervalMinute);
+        UpdateInterval(intervalMS);
     }
 
-    public void UpdateInterval(ulong intervalMinute=0)
+    public void UpdateInterval(ulong intervalMS=0)
     {
-        if(intervalMinute > 0) IntervalMinute = intervalMinute;
-        NextExecuteTime = DateTime.Now.AddMinutes(IntervalMinute);
+        if(intervalMS > 0) IntervalMS = intervalMS;
+        NextExecuteTime = DateTime.Now.AddMilliseconds(IntervalMS);
     }
 }
 
 public static class Scheduler
-{
-    private static Timer clock;
-    private static List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
-
-    public static void Start()
     {
-        clock = new Timer();
-        clock.Interval = 60 * 1000; // every minute
-        clock.Elapsed += ClockElapsed;
-        clock.Start();
-    }
+        private static Timer clock;
+        private static List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
 
-    public static void Stop()
-    {
-        clock.Elapsed -= ClockElapsed;
-        clock.Stop();
-    }
-
-    public static void AddItem(ScheduleItem item)
-    {
-        scheduleItems.Add(item);
-    }
-
-    public static ScheduleItem GetItem(string name)
-    {
-        return scheduleItems.Find(item => item.Name == name);
-    }
-
-    private static void ClockElapsed(object sender, ElapsedEventArgs e)
-    {
-        DateTime now = DateTime.Now;
-
-        foreach(ScheduleItem item in scheduleItems)
+        public static void Start(ulong intervalMS)
         {
-            if(now >= item.NextExecuteTime)
+            clock = new Timer();
+            clock.Interval = intervalMS;
+            clock.Elapsed += new ElapsedEventHandler(ClockElapsed);
+            clock.Start();
+        }
+
+        public static void Stop()
+        {
+            clock.Elapsed -= ClockElapsed;
+            clock.Stop();
+        }
+
+        public static void AddItem(ScheduleItem item)
+        {
+            scheduleItems.Add(item);
+        }
+
+        public static ScheduleItem GetItem(string name)
+        {
+            return scheduleItems.Find(item => item.Name == name);
+        }
+
+        private static void ClockElapsed(object sender, ElapsedEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+
+            foreach(ScheduleItem item in scheduleItems)
             {
-                item.Function(item.Args);
-                item.UpdateInterval();
+                if(now >= item.NextExecuteTime)
+                {
+                    item.Function(item.Args);
+                    item.UpdateInterval();
+                }
             }
         }
-    }
 
-    public static void Dispose()
-    {
-        if(clock != null)
-            clock.Dispose();
+        public static void Dispose()
+        {
+            if(clock != null)
+                clock.Dispose();
+        }
     }
-}
