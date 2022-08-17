@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -114,10 +114,17 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)")]
     public async Task SetPerkCacheDuration(uint durationMinute)
     {
-        if(durationMinute < 1)
+        //if(durationMinute < 1)
+        //{
+        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
+        //    await Context.Channel.SendMessageAsync("Duration must be at least 1 minute(s).");
+        //    return;
+        //}
+
+        if(durationMinute < 0)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Duration must be at least 1 minute(s).");
+            await Context.Channel.SendMessageAsync("Duration cannot be smaller than 0. But it can be 0 which means there won't be any caching.");
             return;
         }
 
