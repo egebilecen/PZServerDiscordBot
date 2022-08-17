@@ -59,7 +59,9 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "\n";
         botSettings += "**Perk Parser Cache Duration:** "+Application.botSettings.ServerLogParserSettings.PerkParserCacheDuration.ToString()+" minute(s)";
         botSettings += "\n";
-        botSettings += "**Restart Schedule Interval:** "+Application.botSettings.ServerScheduleSettings.ServerRestartSchedule.ToString()+" minute(s)";;
+        botSettings += "**Restart Schedule Interval:** "+(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += "\n";
+        botSettings += "**Workshop Mod Check Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
 
         await Context.Channel.SendMessageAsync(botSettings);
     }
@@ -92,12 +94,12 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
     public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
     {
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_check_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Scheduler.GetItem("WorkshopItemUpdateChecker").UpdateInterval(intervalMinute * 60 * 1000);
 
-        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
+        Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule = intervalMinute * 60 * 1000;
         Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Workshop mod update check schedule is updated.");
