@@ -1,4 +1,4 @@
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -82,14 +82,8 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         
         Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
 
-        // Update v1.1.0:
-        // This value is being converted to milliseconds in Program.cs. Do not set this value in milliseconds and save it!
-        // This variable temporarily set in minutes solely for saving. Will be restored to milliseconds in below line(s).
-        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute;
-        Application.botSettings.Save();
-
-        // Restore this value back to milliseconds as Scheduler uses milliseconds.
         Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
+        Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
     }
@@ -98,6 +92,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
     public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
     {
+        if(intervalMinute < 1)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+            return;
+        }
+
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_check_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
@@ -113,6 +114,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)")]
     public async Task SetPerkCacheDuration(uint durationMinute)
     {
+        if(durationMinute < 1)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Duration must be at least 1 minute(s).");
+            return;
+        }
+
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_perk_cache_duration] Caller: {0}, Params: {1}", Context.User.ToString(), durationMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         

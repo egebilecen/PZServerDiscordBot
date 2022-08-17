@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    private static readonly string     botToken   = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion = "v1.1.0 - Beta";
+    private static readonly string     botToken         = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+    public const string                botVersion       = "v1.1.0 - Beta";
+    public const float                 botVersionNumber = 1.1f;
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -40,15 +41,20 @@ public static class Application
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
             botSettings = new Settings.BotSettings();
+            botSettings.VersionNumber = botVersionNumber;
             botSettings.Save();
         }
         else
         {
             botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+        }
 
-            // Update v1.1.0:
-            // Schedule uses milliseconds, not minutes anymore.
-            botSettings.ServerScheduleSettings.ServerRestartSchedule = Convert.ToUInt32(TimeSpan.FromMinutes(botSettings.ServerScheduleSettings.ServerRestartSchedule).TotalMilliseconds);
+        if(botSettings.VersionNumber == 0)
+        {
+            File.Delete(Settings.BotSettings.settingsFile);
+
+            Console.WriteLine("Please restart the bot.");
+            await Task.Delay(-1);
         }
 
         foreach(Process process in Process.GetProcesses())
@@ -60,18 +66,18 @@ public static class Application
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           60 * 1000,
+                                           60 * 1000, // Every minute
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
-                                           60 * 1000,
+                                           botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
         Scheduler.Start(
             #if !DEBUG
-                60 * 1000 // every minute
+                60 * 1000 // Every minute
             #else
-                1000      // every second
+                1000      // Every second
             #endif
         );
         

@@ -56,6 +56,8 @@ public static class Schedules
         ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
 
+        if(serverRebootSchedule == null) return;
+
         if(args == null)
         {
             self.Args = new List<object>();
@@ -91,6 +93,9 @@ public static class Schedules
 
     public static void WorkshopItemUpdateChecker(List<object> args)
     {
+        ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
+        if(serverRebootSchedule == null) return;
+
         string configFilePath = ServerUtility.GetServerConfigIniFilePath();
         if(string.IsNullOrEmpty(configFilePath)) return;
 
