@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -78,12 +78,29 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
-        Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute);
+        Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
 
+        // Update v1.1.0:
+        // This value is being converted to milliseconds in Program.cs. Do not set this value in milliseconds!
         Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute;
         Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
+    }
+
+    [Command("set_mod_update_check_interval")]
+    [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
+    public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
+    {
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Scheduler.GetItem("WorkshopItemUpdateChecker").UpdateInterval(intervalMinute * 60 * 1000);
+
+        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
+        Application.botSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Workshop mod update check schedule is updated.");
     }
 
     [Command("set_perk_cache_duration")]
