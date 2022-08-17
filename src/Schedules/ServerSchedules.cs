@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -56,7 +56,11 @@ public static class Schedules
         ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
 
-        if(serverRebootSchedule == null) return;
+        if(serverRebootSchedule == null)
+        {
+            Logger.WriteLog(string.Format("[{0}][Server Restart Announcer Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
+            return;
+        }
 
         if(args == null)
         {
@@ -94,16 +98,38 @@ public static class Schedules
     public static void WorkshopItemUpdateChecker(List<object> args)
     {
         ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
-        if(serverRebootSchedule == null) return;
+        if(serverRebootSchedule == null)
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
+            return;
+        }
 
         string configFilePath = ServerUtility.GetServerConfigIniFilePath();
-        if(string.IsNullOrEmpty(configFilePath)) return;
+        if(string.IsNullOrEmpty(configFilePath))
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] configFilePath is null or empty.", DateTime.Now.ToLocalTime()));
+            return;
+        }
 
         IniParser.IniData iniData = IniParser.Parse(configFilePath);
-        if(iniData == null) return;
+        if(iniData == null)
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData is null.", DateTime.Now.ToLocalTime()));
+            return;
+        }
 
         string[] workshopIdList = iniData.GetValue("WorkshopItems").Split(';');
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
+
+        foreach(var item in itemDetails)
+        {
+            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
+
+            if(updateDate > Application.startTime)
+            {
+                // todo
+            }
+        }
     }
 }
