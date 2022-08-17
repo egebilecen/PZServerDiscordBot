@@ -74,6 +74,7 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 
 #### Command Channel
 Bot Commands:
+- `!set_command_channel` Sets the channel for bot to work in. (!set_command_channel <channel tag>)<br>
 - `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel <channel tag>)<br>
 - `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
 - `!get_settings` Gets the bot settings. (!get_settings)<br>
