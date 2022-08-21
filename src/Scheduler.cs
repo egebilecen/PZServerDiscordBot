@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,7 +50,8 @@ public static class Scheduler
 
         public static void AddItem(ScheduleItem item)
         {
-            scheduleItems.Add(item);
+            if(item.IntervalMS != 0)
+                scheduleItems.Add(item);
         }
 
         public static ScheduleItem GetItem(string name)
