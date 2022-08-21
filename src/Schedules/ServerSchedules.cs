@@ -111,8 +111,7 @@ public static class Schedules
 
     public static void WorkshopItemUpdateChecker(List<object> args)
     {
-        if(!ServerUtility.IsServerRunning()
-        && 1 == 0)
+        if(!ServerUtility.IsServerRunning())
         {
             Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", DateTime.Now.ToLocalTime()));
             return;
@@ -160,8 +159,7 @@ public static class Schedules
         {
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated).LocalDateTime;
 
-            if(updateDate > Application.startTime
-            || 1 == 1)
+            if(updateDate > Application.startTime)
             {
                 var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
                 var  logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
