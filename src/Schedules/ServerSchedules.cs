@@ -8,6 +8,14 @@ public static class Schedules
 {
     public static void ServerRestart(List<object> args)
     {
+        ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
+
+        if(serverRestartAnnouncer == null)
+        {
+            Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] serverRestartAnnouncer is null.", DateTime.Now.ToLocalTime()));
+            return;
+        }
+
         bool isServerRunning = ServerUtility.IsServerRunning();
         var publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
         var logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
@@ -30,9 +38,9 @@ public static class Schedules
         
         Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", DateTime.Now.ToLocalTime(), isServerRunning.ToString()));
 
-        Scheduler.GetItem("ServerRestartAnnouncer").Args.Clear();
+        serverRestartAnnouncer.Args.Clear();
         if(isServerRunning) ServerUtility.Commands.RestartServer();
-        Scheduler.GetItem("ServerRestartAnnouncer").UpdateInterval();
+        serverRestartAnnouncer.UpdateInterval();
     }
 
     public static void ServerRestartAnnouncer(List<object> args)
@@ -53,10 +61,10 @@ public static class Schedules
             "Server will be restarted in {0} minute. Hold tight!",
         };
 
-        ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
+        ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
 
-        if(serverRebootSchedule == null)
+        if(serverRestartSchedule == null)
         {
             Logger.WriteLog(string.Format("[{0}][Server Restart Announcer Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
             return;
@@ -71,36 +79,62 @@ public static class Schedules
             self.Args.Add(minuteList.First());
 
         DateTime now        = DateTime.Now;
-        var timeDiffMinutes = serverRebootSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
+        var timeDiffMinutes = serverRestartSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
         var publicChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
 
         int i=0;
+        int selectedIndex = -1;
         foreach(int minute in minuteList)
         {
             if(timeDiffMinutes <= minute
             && (int)self.Args.First() == minute)
             {
-                string serverMsg = string.Format(messageList[i], minute.ToString());
+                selectedIndex = i;
 
                 if(i != minuteList.Length - 1)
                     self.Args[0] = minuteList[i + 1];
-
-                if(publicChannel != null)
-                    publicChannel.SendMessageAsync(serverMsg);
-
-                ServerUtility.Commands.ServerMsg(serverMsg);
             }
 
             i++;
+        }
+
+        if(selectedIndex > -1)
+        {
+            string serverMsg = string.Format(messageList[selectedIndex], minuteList[selectedIndex].ToString());
+
+            if(publicChannel != null)
+                publicChannel.SendMessageAsync(serverMsg);
+
+            ServerUtility.Commands.ServerMsg(serverMsg);
         }
     }
 
     public static void WorkshopItemUpdateChecker(List<object> args)
     {
-        ScheduleItem serverRebootSchedule = Scheduler.GetItem("ServerRestart");
-        if(serverRebootSchedule == null)
+        if(!ServerUtility.IsServerRunning()
+        && 1 == 0)
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", DateTime.Now.ToLocalTime()));
+            return;
+        }
+
+        ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
+        ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
+
+        if(serverRestartSchedule == null)
         {
             Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
+            return;
+        }
+        else if(serverRestartSchedule.NextExecuteTime.Subtract(DateTime.Now).TotalMilliseconds <= Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer)
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", DateTime.Now.ToLocalTime()));
+            return;
+        }
+
+        if(serverRestartAnnouncer == null)
+        {
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRestartAnnouncer is null.", DateTime.Now.ToLocalTime()));
             return;
         }
 
@@ -126,10 +160,36 @@ public static class Schedules
         {
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated).LocalDateTime;
 
-            if(updateDate > Application.startTime)
+            if(updateDate > Application.startTime
+            || 1 == 1)
             {
-                // todo
+                var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
+                var  logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+                uint restartInMinutes = Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
 
+                if(logChannel != null)
+                {
+                    logChannel.SendMessageAsync("**[Workshop Mod Update Checker]** A workshop mod update has been detected. Preparing to restart server in "+restartInMinutes.ToString()+" minute(s).");
+                }
+                else
+                {
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] logChannel is null.", DateTime.Now.ToLocalTime()));
+                    return;
+                }
+
+                if(publicChannel != null)
+                {
+                    publicChannel.SendMessageAsync("**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
+                }
+                else
+                {
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] publicChannel is null.", DateTime.Now.ToLocalTime()));
+                    return;
+                }
+
+                serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
+                serverRestartAnnouncer.Function(serverRestartAnnouncer.Args);
+                break;
             }
         }
     }
