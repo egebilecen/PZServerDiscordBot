@@ -65,7 +65,8 @@ public static class Scheduler
 
             foreach(ScheduleItem item in scheduleItems)
             {
-                if(now >= item.NextExecuteTime)
+                if(item.IntervalMS != 0
+                && now >= item.NextExecuteTime)
                 {
                     item.Function(item.Args);
                     item.UpdateInterval();
