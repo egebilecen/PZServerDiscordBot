@@ -62,7 +62,9 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "**Restart Schedule Interval:** "+(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)).ToString()+" minute(s)";
         botSettings += "\n";
         botSettings += "**Workshop Mod Update Checker Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
-
+        botSettings += "\n";
+        botSettings += "**Workshop Mod Update Restart Timer:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)).ToString()+" minute(s)";
+        
         await Context.Channel.SendMessageAsync(botSettings);
     }
 
@@ -92,10 +94,17 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
     public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
     {
-        if(intervalMinute < 1)
+        //if(intervalMinute < 1)
+        //{
+        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
+        //    await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+        //    return;
+        //}
+
+        if(intervalMinute < 0)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+            await Context.Channel.SendMessageAsync("Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking.");
             return;
         }
 
@@ -108,6 +117,26 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Workshop mod update check schedule is updated.");
+    }
+
+    [Command("set_mod_update_restart_timer")]
+    [Summary("Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)")]
+    public async Task SetModUpdateRestartTimer(uint intervalMinute)
+    {
+        if(intervalMinute < 1)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+            return;
+        }
+
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_restart_timer] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer = intervalMinute * 60 * 1000;
+        Application.botSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
     }
 
     [Command("set_perk_cache_duration")]
