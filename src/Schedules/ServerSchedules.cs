@@ -17,8 +17,8 @@ public static class Schedules
         }
 
         bool isServerRunning = ServerUtility.IsServerRunning();
-        var publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
-        var logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+        var  publicChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
+        var  logChannel      = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
 
         if(logChannel != null)
         {
@@ -37,6 +37,8 @@ public static class Schedules
         }
         
         Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", DateTime.Now.ToLocalTime(), isServerRunning.ToString()));
+        
+        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule);
 
         serverRestartAnnouncer.Args.Clear();
         if(isServerRunning) ServerUtility.Commands.RestartServer();
@@ -70,10 +72,13 @@ public static class Schedules
             return;
         }
 
+        // To prevent sending messages every interval, we store the last sent message minute in Args.
         if(args == null)
         {
-            self.Args = new List<object>();
-            self.Args.Add(minuteList.First());
+            self.Args = new List<object>
+            {
+                minuteList.First()
+            };
         }
         else if(args.Count < 1)
             self.Args.Add(minuteList.First());
@@ -186,10 +191,7 @@ public static class Schedules
                 }
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
-
                 serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
-                serverRestartAnnouncer.Function(serverRestartAnnouncer.Args);
-
                 break;
             }
         }
