@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -66,7 +66,7 @@ public static class Application
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           60 * 1000, // Every minute
+                                           30 * 1000,
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
@@ -75,9 +75,9 @@ public static class Application
                                            null));
         Scheduler.Start(
             #if !DEBUG
-                60 * 1000 // Every minute
+                30 * 1000
             #else
-                1000      // Every second
+                1000
             #endif
         );
         
