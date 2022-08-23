@@ -54,6 +54,7 @@ To complete this step, you must have remote access to your Windows machine.
 2. Download the `zip` archive.
 3. Extract the contents in the archive to the `Project Zomboid Dedicated Server` folder. Your directory after extraction will look like the image below.  
 ![](https://i.imgur.com/y3nu6MZ.png)
+4. Rename the bat file you were using to start the server as `server.bat`. For example, if you were using `StartServer64.bat`, rename it as `server.bat`.
 5. Now all you need to do is running `PZServerDiscordBot.exe`. If everything setup correctly, program will automatically run the Discord bot at background and will show the Project Zomboid Server in the console. (Bot may not send the warning messages about the configuration if your discord server's last created channel is not accessable by the bot. You can just type configuration commands regardless.)
 ![](https://i.ibb.co/VqcdKBS/Screenshot-2.png)
 
