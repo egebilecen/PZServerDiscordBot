@@ -192,6 +192,7 @@ public static class Schedules
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
                 serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
+                Application.startTime = DateTime.Now.AddMinutes(restartInMinutes);
                 break;
             }
         }
