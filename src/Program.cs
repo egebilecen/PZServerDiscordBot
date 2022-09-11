@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    private static readonly string     botToken         = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion       = "v1.1.0 - Beta";
-    public const float                 botVersionNumber = 1.1f;
+    private static readonly string     botToken        = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+    public const string                botVersion      = "v1.1.1 - Beta";
+    public const float                 botVersionMajor = 1.1f;
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -40,8 +40,10 @@ public static class Application
 
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
-            botSettings = new Settings.BotSettings();
-            botSettings.VersionNumber = botVersionNumber;
+            botSettings = new Settings.BotSettings
+            {
+                VersionNumber = botVersionMajor
+            };
             botSettings.Save();
         }
         else
