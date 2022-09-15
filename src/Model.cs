@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -11,7 +11,9 @@ namespace Settings
 
     public class ServerScheduleSettings
     {
-        public uint ServerRestartSchedule = Convert.ToUInt32(TimeSpan.FromHours(6).TotalMinutes);
+        public uint ServerRestartSchedule          = Convert.ToUInt32(TimeSpan.FromHours(6).TotalMilliseconds);
+        public uint WorkshopItemUpdateSchedule     = Convert.ToUInt32(TimeSpan.FromMinutes(10).TotalMilliseconds);
+        public uint WorkshopItemUpdateRestartTimer = Convert.ToUInt32(TimeSpan.FromMinutes(30).TotalMilliseconds);
     }
 
     public class BotSettings
@@ -21,6 +23,7 @@ namespace Settings
         public ulong        CommandChannelId;
         public ulong        LogChannelId;
         public ulong        PublicChannelId;
+        public float        VersionNumber;
 
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();

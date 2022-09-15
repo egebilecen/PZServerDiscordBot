@@ -1,4 +1,4 @@
-﻿using Discord.Commands;
+using Discord.Commands;
 using Discord.WebSocket;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         string botSettings = "";
-        botSettings += "**Guild ID:** `"+Application.botSettings.GuildId.ToString()+"`";
+        botSettings += "**Server ID:** `"+Application.botSettings.GuildId.ToString()+"`";
         botSettings += "\n";
         botSettings += "**Command Channel ID:** `"+Application.botSettings.CommandChannelId.ToString()+"` (<#"+Application.botSettings.CommandChannelId.ToString()+">)";
         botSettings += "\n";
@@ -59,8 +59,12 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "\n";
         botSettings += "**Perk Parser Cache Duration:** "+Application.botSettings.ServerLogParserSettings.PerkParserCacheDuration.ToString()+" minute(s)";
         botSettings += "\n";
-        botSettings += "**Restart Schedule Interval:** "+Application.botSettings.ServerScheduleSettings.ServerRestartSchedule.ToString()+" minute(s)";;
-
+        botSettings += "**Restart Schedule Interval:** "+(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += "\n";
+        botSettings += "**Workshop Mod Update Checker Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += "\n";
+        botSettings += "**Workshop Mod Update Restart Timer:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)).ToString()+" minute(s)";
+        
         await Context.Channel.SendMessageAsync(botSettings);
     }
 
@@ -78,18 +82,81 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
-        Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute);
+        Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
 
-        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute;
+        Application.botSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
         Application.botSettings.Save();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
+    }
+
+    [Command("set_mod_update_check_interval")]
+    [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
+    public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
+    {
+        //if(intervalMinute < 1)
+        //{
+        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
+        //    await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+        //    return;
+        //}
+
+        if(intervalMinute < 0)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking.");
+            return;
+        }
+
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_check_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Scheduler.GetItem("WorkshopItemUpdateChecker").UpdateInterval(intervalMinute * 60 * 1000);
+
+        Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule = intervalMinute * 60 * 1000;
+        Application.botSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Workshop mod update check schedule is updated.");
+    }
+
+    [Command("set_mod_update_restart_timer")]
+    [Summary("Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)")]
+    public async Task SetModUpdateRestartTimer(uint intervalMinute)
+    {
+        if(intervalMinute < 1)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+            return;
+        }
+
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_restart_timer] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer = intervalMinute * 60 * 1000;
+        Application.botSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
     }
 
     [Command("set_perk_cache_duration")]
     [Summary("Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)")]
     public async Task SetPerkCacheDuration(uint durationMinute)
     {
+        //if(durationMinute < 1)
+        //{
+        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
+        //    await Context.Channel.SendMessageAsync("Duration must be at least 1 minute(s).");
+        //    return;
+        //}
+
+        if(durationMinute < 0)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Duration cannot be smaller than 0. But it can be 0 which means there won't be any caching.");
+            return;
+        }
+
         Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_perk_cache_duration] Caller: {0}, Params: {1}", Context.User.ToString(), durationMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         

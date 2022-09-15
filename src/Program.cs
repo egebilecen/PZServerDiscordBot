@@ -1,4 +1,4 @@
-﻿using Discord;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    private static readonly string     botToken   = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion = "v1.0.1";
+    private static readonly string     botToken        = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+    public const string                botVersion      = "v1.1.1 - Beta";
+    public const float                 botVersionMajor = 1.1f;
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -39,10 +40,24 @@ public static class Application
 
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
-            botSettings = new Settings.BotSettings();
+            botSettings = new Settings.BotSettings
+            {
+                VersionNumber = botVersionMajor
+            };
             botSettings.Save();
         }
-        else botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+        else
+        {
+            botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+        }
+
+        if(botSettings.VersionNumber == 0)
+        {
+            File.Delete(Settings.BotSettings.settingsFile);
+
+            Console.WriteLine("Please restart the bot.");
+            await Task.Delay(-1);
+        }
 
         foreach(Process process in Process.GetProcesses())
             if(process.ProcessName.Contains("java"))
@@ -53,14 +68,24 @@ public static class Application
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           1,
+                                           30 * 1000,
                                            Schedules.ServerRestartAnnouncer,
                                            null));
-        Scheduler.Start();
+        Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
+                                           botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
+                                           Schedules.WorkshopItemUpdateChecker,
+                                           null));
+        Scheduler.Start(
+            #if !DEBUG
+                30 * 1000
+            #else
+                1000
+            #endif
+        );
         
-#if !DEBUG
+    #if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
-#endif
+    #endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();

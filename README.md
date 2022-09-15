@@ -15,6 +15,8 @@ This bot is written for people to easily manage their server using Discord. Plea
 # Features
 - Automated server restart schedule with ingame and discord warning. (Warnings are announced when 1 hour, 30 min, 15 min, 5 min and 1 min left until server restart. Restart interval can be configured with bot commands.)
 ![Automated Server Restart Example](https://i.ibb.co/SQWfnL1/Screenshot-1.png)
+- Automated server restart when a mod (workshop item) update has been detected.
+![Automated Workshop Item Update Server Restart](https://i.ibb.co/vQ30ppB/Screenshot-4.png)
 - Executing server commands through bot commands. (For example; saving server, kicking player, teleporting player, starting/stopping rain, making admin and so on. Full list will be at the bottom and will be listed under available commands.)
 ![Server Commands Example](https://i.ibb.co/FnH50cH/Screenshot-3.png)
 - Perk Parser with cache system. (Bot automatically parses the last perk log file that holds the player skills when they login to server. This can be used to aid players that died to a bug but they can't remember their skills. As stated before, server logs the player skills only when they log into server. If player levels up a skill after connecting to server, it won't appear in log unless player logs into server afterwards again.) When command for perk parser is invoked, bot will parse the file and save it contents in memory until cache (in minutes) expires. This is for to increase efficiency as bot will not have to parse the same file each time. In a situation where fresh data needed, **!reset_perk_cache** command can be used to reset the cache.                
@@ -80,6 +82,8 @@ Bot Commands:
 - `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
 - `!get_settings` Gets the bot settings. (!get_settings)<br>
 - `!set_restart_interval` Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)<br>
+- `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)<br>
+- `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)<br>
 - `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
   

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 
 public static class ServerUtility
@@ -20,6 +21,18 @@ public static class ServerUtility
         }
 
         return javaProcess > initialJavaProcessCount;
+    }
+    
+    public static string GetServerConfigIniFilePath()
+    {
+        string[] fileList = Directory.GetFiles(ServerPath.serverSettingsPath, "*.ini", SearchOption.TopDirectoryOnly);
+        return fileList.Length > 0 ? fileList[0] : null;
+    }
+
+    public static string GetServerConfigIniFileName()
+    {
+        string filePath = GetServerConfigIniFilePath();
+        return string.IsNullOrEmpty(filePath) ? null : Path.GetFileName(filePath);
     }
 
     public static class Commands
