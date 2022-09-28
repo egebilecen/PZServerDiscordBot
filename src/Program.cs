@@ -1,4 +1,4 @@
-using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     private static readonly string     botToken        = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion      = "v1.1.1 - Beta";
+    public const string                botVersion      = "v1.1.1";
     public const float                 botVersionMajor = 1.1f;
 
     public static Settings.BotSettings botSettings;
