@@ -72,8 +72,8 @@ public static class SteamWebAPI
 
         for(int i=0; i < idList.Length; i++)
         {
-            var id = idList[i];
-            parameters.Add(new KeyValuePair<string, string>("publishedfileids["+i.ToString()+"]", id.ToString()));
+            string workshopItemId = idList[i];
+            parameters.Add(new KeyValuePair<string, string>("publishedfileids["+i.ToString()+"]", workshopItemId));
         }
 
         string res = await WebRequest.PostAsync(httpClient, baseAPIURL + apiModule, parameters);
