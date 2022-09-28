@@ -307,5 +307,27 @@ public static class ServerUtility
             catch(Exception)
             {}
         }
+
+        public static void ShowOptions()
+        {
+            try
+            {
+                serverProcess.StandardInput.WriteLine(string.Format("showoptions"));
+                serverProcess.StandardInput.Flush();
+            }
+            catch(Exception)
+            {}
+        }
+
+        public static void ReloadOptions()
+        {
+            try
+            {
+                serverProcess.StandardInput.WriteLine(string.Format("reloadoptions"));
+                serverProcess.StandardInput.Flush();
+            }
+            catch(Exception)
+            {}
+        }
     }
 }

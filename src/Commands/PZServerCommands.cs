@@ -315,4 +315,24 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
+
+    [Command("show_options")]
+    [Summary("Shows a list of current server options and values. (Prints to the server console)")]
+    public async Task ShowOptions()
+    {
+        ServerUtility.Commands.ShowOptions();
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - show_options] Caller: {0}", Context.User.ToString()));
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("reload_options")]
+    [Summary("Reloads server options.")]
+    public async Task ReloadOptions()
+    {
+        ServerUtility.Commands.ReloadOptions();
+        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[PZServerCommand - reload_options] Caller: {0}", Context.User.ToString()));
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
 }
