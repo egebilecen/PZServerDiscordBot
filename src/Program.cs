@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    private static readonly string     botToken        = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-    public const string                botVersion      = "v1.1.1";
-    public const float                 botVersionMajor = 1.1f;
+    public const string                botVersion      = "v1.2";
+    public const float                 botVersionMajor = 1.2f;
 
     public static Settings.BotSettings botSettings;
     public static DiscordSocketClient  client;
@@ -20,13 +19,22 @@ public static class Application
     public static CommandHandler       commandHandler;
     public static DateTime             startTime = DateTime.Now;
 
-    private static void Main(string[] args) => MainAsync().GetAwaiter().GetResult();
+    private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
     private static async Task MainAsync()
     {
-        if(string.IsNullOrEmpty(botToken))
+        try
         {
-            Console.WriteLine("Couldn't retrieve bot token from environment variable.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up environment variable.");
+            if(string.IsNullOrEmpty(BotUtility.GetDiscordBotToken()))
+            {
+                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up environment variable.");
+                await Task.Delay(-1);
+            }
+        }
+        catch(Exception ex)
+        {
+            Logger.LogException(ex);
+            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and create an issue about this with the log file.");
             await Task.Delay(-1);
         }
 
@@ -93,7 +101,7 @@ public static class Application
         commandHandler = new CommandHandler(client, commands, services);
 
         await commandHandler.SetupAsync();
-        await client.LoginAsync(TokenType.Bot, botToken);
+        await client.LoginAsync(TokenType.Bot, BotUtility.GetDiscordBotToken());
         await client.StartAsync();
 
         BotUtility.Discord.OrganizeCommands();
@@ -101,6 +109,20 @@ public static class Application
         client.Ready += async () =>
         {
             await BotUtility.Discord.DoChannelCheck();
+        };
+
+        client.Disconnected += async (ex) =>
+        {
+            Logger.LogException(ex);
+            Logger.LogException(ex.InnerException);
+
+            if(ex.InnerException.Message.Contains("Authentication failed"))
+            {
+                Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
+            }
+            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and create an issue about this with the log file.");
+            
+            await Task.Delay(-1);
         };
 
         await Task.Delay(-1);

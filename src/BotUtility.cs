@@ -3,13 +3,43 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 public static class BotUtility
 {
+    public const string DiscordBotTokenFile = "./bot_token.txt";
+
+    static string discordBotToken = null;
     static Dictionary<string, List<KeyValuePair<string, string>>> commandList = new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+    public static string GetDiscordBotToken()
+    {
+        if(discordBotToken != null) return discordBotToken;
+
+        if(!File.Exists(DiscordBotTokenFile))
+        {
+            try
+            {
+                string envVar = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+
+                if(!string.IsNullOrEmpty(envVar))
+                {
+                    File.WriteAllText(DiscordBotTokenFile, envVar);
+                    discordBotToken = envVar;
+                    return envVar;
+                }
+            }
+            catch { }
+
+            return null;
+        }
+
+        discordBotToken = File.ReadAllText(DiscordBotTokenFile);
+        return discordBotToken;
+    }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
     public static string GetRelativeTime(DateTime currentTime, DateTime passedTime)
