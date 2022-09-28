@@ -3,11 +3,11 @@ using System.IO;
 
 public static class Logger
 {
-    private const string logFile = ".\\pzbot.log";
+    public const string LogFile = ".\\pzbot.log";
 
     public static void WriteLog(string text)
     {
-        var file = File.AppendText(logFile);
+        var file = File.AppendText(LogFile);
         file.WriteLine(text);
         file.Close();
     }
@@ -21,6 +21,6 @@ public static class Logger
                         "\nDate: "+DateTime.Now.ToString("dd/MM/yyyy, HH:mm:ss") +
                         (additional_msg != "" ? "\n"+additional_msg : "") +
                         "\n---------------\n";
-        File.AppendAllText(logFile, ex_msg);
+        File.AppendAllText(LogFile, ex_msg);
     }
 }
