@@ -27,7 +27,7 @@ public static class Application
         {
             if(string.IsNullOrEmpty(BotUtility.GetDiscordBotToken()))
             {
-                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up environment variable.");
+                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to https://github.com/egebilecen/PZServerDiscordBot and see README.md file about setting up bot token.");
                 await Task.Delay(-1);
             }
         }
