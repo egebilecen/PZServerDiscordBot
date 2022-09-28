@@ -58,7 +58,7 @@ public static class SteamWebAPI
         }
     }
 
-    private static HttpClient httpClient = WebRequest.CreateHTTPClient(connectionTimeout:60);
+    public  static HttpClient httpClient = WebRequest.CreateHTTPClient(connectionTimeout:60);
     private static string     baseAPIURL = "https://api.steampowered.com/";
 
     public static async Task<List<Model.WorkshopItemDetails>> GetWorkshopItemDetails(string[] idList)

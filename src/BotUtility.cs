@@ -1,15 +1,69 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 public static class BotUtility
 {
+    public const string DiscordBotTokenFile = "./bot_token.txt";
+
+    static string discordBotToken = null;
     static Dictionary<string, List<KeyValuePair<string, string>>> commandList = new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+    public static string GetDiscordBotToken()
+    {
+        if(discordBotToken != null) return discordBotToken;
+
+        if(!File.Exists(DiscordBotTokenFile))
+        {
+            try
+            {
+                string envVar = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+
+                if(!string.IsNullOrEmpty(envVar))
+                {
+                    File.WriteAllText(DiscordBotTokenFile, envVar);
+                    discordBotToken = envVar;
+                    return envVar;
+                }
+            }
+            catch { }
+
+            return null;
+        }
+
+        discordBotToken = File.ReadAllText(DiscordBotTokenFile);
+        return discordBotToken;
+    }
+
+    public static async Task<string> GetLatestBotVersion()
+    {
+        const string apiURL = "https://api.github.com/repos/egebilecen/PZServerDiscordBot/releases/latest";
+     
+        string version = null;
+        string result  = await EB_Utility.WebRequest.GetAsync(SteamWebAPI.httpClient, apiURL);
+
+        if(string.IsNullOrEmpty(result))
+            return null;
+
+        try
+        {
+            JObject jsonObj = JObject.Parse(result);
+            version = jsonObj["tag_name"].Value<string>();
+        }
+        catch(Exception ex)
+        {
+            Logger.LogException(ex, "Error occured during GetLatestBotVersion().");
+        }
+
+        return version;
+    }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
     public static string GetRelativeTime(DateTime currentTime, DateTime passedTime)

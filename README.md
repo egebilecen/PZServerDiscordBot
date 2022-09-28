@@ -4,9 +4,9 @@ This bot is written for people to easily manage their server using Discord. Plea
 ## Contents
 * [Features](#features)
 * [Installation](#installation)
-  * [Creating the Bot](#creating-the-bot)
-  * [Setting Up Environment Variable](#setting-up-environment-variable)
+  * [Creating the Discord Bot](#creating-the-discord-bot)
   * [Installing Bot Files](#installing-bot-files)
+  * [Writing the Discord Bot Token Into File](#writing-the-discord-bot-token-into-file)
 * [Bot Configuration](#bot-configuration)
 * [Bot Commands](#bot-commands)
   * [Public Channel](#public-channel)
@@ -23,7 +23,7 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
 
 # Installation
-#### Creating the Bot
+#### Creating the Discord Bot
 1. Go to [Applications](https://discord.com/developers/applications) section of Discord developer portal. (Be sure to login first.)
 2. Click to `New Application` button on the top right corner of screen.
 ![](https://i.ibb.co/GWyfvkn/Screenshot-1.png)
@@ -42,22 +42,22 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![](https://i.ibb.co/553LsdH/Screenshot-8.png)
 ![](https://i.ibb.co/gjBpLtH/Screenshot-9.png)
 
-#### Setting Up Environment Variable
-To complete this step, you must have remote access to your Windows machine.
-1. Hit to `Windows + R` button. It will open up the `Run` window. Paste `systempropertiesadvanced.exe` into text input and press enter or click to `OK` button. It will open the system properties window.   
-![](https://i.ibb.co/RzWfT7k/Screenshot-1.png)
-2. In properties window, click to `Environment Variables` buttton at bottom right. It will open a new window called `Environment Variables`. In this window, you will see two lists. We need to add our variable to `User variables` which is at the top, not `System variables`.
-![](https://i.ibb.co/1L6nqVb/Screenshot-2.png)
-3. Click to `New...` button under the user variables. It will ask you to enter a variable and a value. Variable name is `EB_DISCORD_BOT_TOKEN`. Variable value is your bot's secret token that you saved into a file in previous steps. After you filled the inputs, click `OK` in every window.
-![](https://i.ibb.co/M7xrNBD/Screenshot-3.png)
-
 #### Installing Bot Files
+To complete this step and next step, you must have remote access to your Windows machine.
 1. Navigate to [releases](https://github.com/egebilecen/PZServerDiscordBot/releases) and pick a binary version. I would suggest picking the latest version as it would consist new features and bug fixes.
 2. Download the `zip` archive.
 3. Extract the contents in the archive to the `Project Zomboid Dedicated Server` folder. Your directory after extraction will look like the image below.  
 ![](https://i.imgur.com/y3nu6MZ.png)
 4. Rename the bat file you were using to start the server as `server.bat`. For example, if you were using `StartServer64.bat`, rename it as `server.bat`.
-5. Now all you need to do is running `PZServerDiscordBot.exe`. If everything setup correctly, program will automatically run the Discord bot at background and will show the Project Zomboid Server in the console. (Bot may not send the warning messages about the configuration if your discord server's last created channel is not accessable by the bot. You can just type configuration commands regardless.)
+
+#### Writing the Discord Bot Token Into File
+1. Create an empty text file in the directory and name it as `bot_token.txt` and open it.
+![](https://i.ibb.co/bHz3T8N/Screenshot-1.png)
+2. Paste the bot token that you saved while creating the discord bot to the first line. (It will look like the picture below.)
+![](https://i.ibb.co/4sr85KV/Screenshot-1.png)
+3. Save the file and close it.
+
+Now all you need to do is running `PZServerDiscordBot.exe`. If you did setup everything correctly, program will automatically run the Discord bot at background and will show the Project Zomboid Server in the console. (Bot may not send the warning messages about the configuration if your discord server's last created channel is not accessable by the bot. You can just type configuration commands regardless.)
 ![](https://i.ibb.co/VqcdKBS/Screenshot-2.png)
 
 **Note:**<br>
@@ -113,3 +113,5 @@ Server Commands:
 - `!godmode` Makes a player invincible. (!godmode "[username]")<br>
 - `!invisible` Makes a player invisible to zombies. (!invisible "[username]")<br>
 - `!noclip` Allows a player to pass through solid objects. (!noclip "[username]")<br>
+- `!show_options` Shows a list of current server options and values. (Prints to the server console) (!show_options)<br>
+- `!reload_options` Reloads server options. (!reload_options)<br>
