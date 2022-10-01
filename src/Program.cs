@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                botRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                botVersion      = "v1.2";
+    public const string                botVersion      = "v1.2.1";
     public const float                 botVersionMajor = 1.2f;
 
     public static Settings.BotSettings botSettings;
@@ -126,10 +126,9 @@ public static class Application
             if(ex.InnerException.Message.Contains("Authentication failed"))
             {
                 Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
+                await Task.Delay(-1);
             }
             else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+botRepoURL+" and create an issue about this with the log file.");
-            
-            await Task.Delay(-1);
         };
 
         await Task.Delay(-1);
