@@ -5,6 +5,11 @@ public static class Logger
 {
     public const string LogFile = ".\\pzbot.log";
 
+    public static string GetLoggingDate()
+    {
+        return DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+    }
+
     public static void WriteLog(string text)
     {
         var file = File.AppendText(LogFile);
@@ -18,7 +23,7 @@ public static class Logger
                         "Exception: "+ex.GetType().FullName +
                         "\nMessage: "+ex.Message +
                         "\nStack trace: "+ex.StackTrace.Trim() +
-                        "\nDate: "+DateTime.UtcNow.ToString("dd/MM/yyyy, HH:mm:ss") +
+                        "\nDate: "+ GetLoggingDate() +
                         (additional_msg != "" ? "\n"+additional_msg : "") +
                         "\n---------------\n";
         File.AppendAllText(LogFile, ex_msg);
