@@ -54,7 +54,7 @@ public static partial class Schedules
 
         foreach(var item in itemDetails)
         {
-            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated).LocalDateTime;
+            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
 
             if(updateDate > Application.startTime)
             {
@@ -84,7 +84,7 @@ public static partial class Schedules
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
                 serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
-                Application.startTime = DateTime.Now.AddMinutes(restartInMinutes);
+                Application.startTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
                 break;
             }
         }

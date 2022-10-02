@@ -18,7 +18,7 @@ public static class Application
     public static CommandService       commands;
     public static IServiceProvider     services;
     public static CommandHandler       commandHandler;
-    public static DateTime             startTime = DateTime.Now;
+    public static DateTime             startTime = DateTime.UtcNow;
 
     private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
