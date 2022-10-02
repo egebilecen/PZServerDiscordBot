@@ -277,7 +277,7 @@ public static class BotUtility
             return string.Empty;
         }
 
-        public static async Task SendEmbeddedMessage(SocketUserMessage context, List<KeyValuePair<string, string>> dataList)
+        public static async Task SendEmbeddedMessage(ISocketMessageChannel channel, List<KeyValuePair<string, string>> dataList)
         {
             if(dataList == null) return;
 
@@ -294,7 +294,7 @@ public static class BotUtility
                 if(counter == 25
                 || counter + (25 * fullCycleCount) == totalData)
                 {
-                    await context.Channel.SendMessageAsync("", false, embedBuilder.Build());
+                    await channel.SendMessageAsync("", false, embedBuilder.Build());
 
                     if(counter == 25)
                         embedBuilder = new EmbedBuilder();

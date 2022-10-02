@@ -114,7 +114,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
             await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}**:", username));
-            await BotUtility.Discord.SendEmbeddedMessage(Context.Message, perkList);
+            await BotUtility.Discord.SendEmbeddedMessage(Context.Message.Channel, perkList);
         }
 
         var lastCacheTime = ServerLogParsers.PerkLog.lastCacheTime;
