@@ -18,7 +18,7 @@ public static class Logger
                         "Exception: "+ex.GetType().FullName +
                         "\nMessage: "+ex.Message +
                         "\nStack trace: "+ex.StackTrace.Trim() +
-                        "\nDate: "+DateTime.Now.ToString("dd/MM/yyyy, HH:mm:ss") +
+                        "\nDate: "+DateTime.UtcNow.ToString("dd/MM/yyyy, HH:mm:ss") +
                         (additional_msg != "" ? "\n"+additional_msg : "") +
                         "\n---------------\n";
         File.AppendAllText(LogFile, ex_msg);

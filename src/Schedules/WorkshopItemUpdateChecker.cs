@@ -10,7 +10,7 @@ public static partial class Schedules
     {
         if(!ServerUtility.IsServerRunning())
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", DateTime.UtcNow.ToLocalTime()));
             return;
         }
 
@@ -19,32 +19,32 @@ public static partial class Schedules
 
         if(serverRestartSchedule == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", DateTime.UtcNow.ToLocalTime()));
             return;
         }
         else if(serverRestartSchedule.NextExecuteTime.Subtract(DateTime.Now).TotalMilliseconds <= Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", DateTime.UtcNow.ToLocalTime()));
             return;
         }
 
         if(serverRestartAnnouncer == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRestartAnnouncer is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRestartAnnouncer is null.", DateTime.UtcNow.ToLocalTime()));
             return;
         }
 
         string configFilePath = ServerUtility.GetServerConfigIniFilePath();
         if(string.IsNullOrEmpty(configFilePath))
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] configFilePath is null or empty.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] configFilePath is null or empty.", DateTime.UtcNow.ToLocalTime()));
             return;
         }
 
         IniParser.IniData iniData = IniParser.Parse(configFilePath);
         if(iniData == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData is null.", DateTime.UtcNow.ToLocalTime()));
             return;
         }
 
@@ -68,7 +68,7 @@ public static partial class Schedules
                 }
                 else
                 {
-                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] logChannel is null.", DateTime.Now.ToLocalTime()));
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] logChannel is null.", DateTime.UtcNow.ToLocalTime()));
                     return;
                 }
 
@@ -78,7 +78,7 @@ public static partial class Schedules
                 }
                 else
                 {
-                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] publicChannel is null.", DateTime.Now.ToLocalTime()));
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] publicChannel is null.", DateTime.UtcNow.ToLocalTime()));
                     return;
                 }
 
