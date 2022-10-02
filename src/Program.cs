@@ -84,6 +84,10 @@ public static class Application
                                            botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
+        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
+                                           Convert.ToUInt64(TimeSpan.FromMinutes(10).TotalMilliseconds),
+                                           Schedules.BotVersionChecker,
+                                           null));
         Scheduler.Start(
             #if !DEBUG
                 30 * 1000
