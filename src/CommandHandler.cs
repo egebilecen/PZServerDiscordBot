@@ -64,6 +64,11 @@ public class CommandHandler
 
         var context = new SocketCommandContext(_client, message);
 
+        if(isBotConfigured
+        && (context.Channel.Id != Application.botSettings.PublicChannelId
+            && context.Channel.Id != Application.botSettings.CommandChannelId))
+            return;
+
         if(command != "!help"
         && commandModule == string.Empty)
             goto unknownCommand;
