@@ -12,15 +12,7 @@ public static class ServerUtility
     // If it works, it works!
     public static bool IsServerRunning()
     {
-        int javaProcess = 0;
-
-        foreach(Process process in Process.GetProcesses())
-        {
-            if(process.ProcessName.Contains("java"))
-                javaProcess++;
-        }
-
-        return javaProcess > initialJavaProcessCount;
+        return serverProcess != null && !serverProcess.HasExited;
     }
     
     public static string GetServerConfigIniFilePath()

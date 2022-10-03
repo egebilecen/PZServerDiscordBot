@@ -3,7 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -40,10 +40,29 @@ public static class Application
         }
 
     #if !DEBUG
-        if(!File.Exists("./server.bat"))
+        string serverFile = "./server.bat";
+
+        if(!File.Exists(serverFile))
         {
             Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
             await Task.Delay(-1);
+        }
+        else
+        {
+            string[] lines = File.ReadAllLines(serverFile);
+
+            for(int i=lines.Length - 1; i >= 0; i--)
+            {
+                string line = lines[i];
+
+                if(line.Trim().ToLower() == "pause")
+                {
+                    List<string> newLines = new List<string>(lines);
+                    newLines.RemoveAt(i);
+                    File.WriteAllLines(serverFile, newLines);
+                    break;
+                }
+            }
         }
     #endif
 
@@ -67,10 +86,6 @@ public static class Application
             Console.WriteLine("Please restart the bot.");
             await Task.Delay(-1);
         }
-
-        foreach(Process process in Process.GetProcesses())
-            if(process.ProcessName.Contains("java"))
-                ServerUtility.initialJavaProcessCount++;
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            botSettings.ServerScheduleSettings.ServerRestartSchedule,
