@@ -3,14 +3,14 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
 public static class Application
 {
     public const string                botRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                botVersion      = "v1.2.1";
+    public const string                botVersion      = "v1.2.2";
     public const float                 botVersionMajor = 1.2f;
 
     public static Settings.BotSettings botSettings;
@@ -18,7 +18,7 @@ public static class Application
     public static CommandService       commands;
     public static IServiceProvider     services;
     public static CommandHandler       commandHandler;
-    public static DateTime             startTime = DateTime.Now;
+    public static DateTime             startTime = DateTime.UtcNow;
 
     private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
@@ -40,10 +40,29 @@ public static class Application
         }
 
     #if !DEBUG
-        if(!File.Exists("./server.bat"))
+        string serverFile = "./server.bat";
+
+        if(!File.Exists(serverFile))
         {
             Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
             await Task.Delay(-1);
+        }
+        else
+        {
+            string[] lines = File.ReadAllLines(serverFile);
+
+            for(int i=lines.Length - 1; i >= 0; i--)
+            {
+                string line = lines[i];
+
+                if(line.Trim().ToLower() == "pause")
+                {
+                    List<string> newLines = new List<string>(lines);
+                    newLines.RemoveAt(i);
+                    File.WriteAllLines(serverFile, newLines);
+                    break;
+                }
+            }
         }
     #endif
 
@@ -68,10 +87,6 @@ public static class Application
             await Task.Delay(-1);
         }
 
-        foreach(Process process in Process.GetProcesses())
-            if(process.ProcessName.Contains("java"))
-                ServerUtility.initialJavaProcessCount++;
-
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            botSettings.ServerScheduleSettings.ServerRestartSchedule,
                                            Schedules.ServerRestart,
@@ -83,6 +98,10 @@ public static class Application
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
                                            botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
+                                           null));
+        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
+                                           Convert.ToUInt64(TimeSpan.FromMinutes(10).TotalMilliseconds),
+                                           Schedules.BotVersionChecker,
                                            null));
         Scheduler.Start(
             #if !DEBUG

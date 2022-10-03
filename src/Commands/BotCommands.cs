@@ -12,7 +12,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.botSettings.CommandChannelId = channel.Id;
         Application.botSettings.Save();
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
     }
@@ -24,7 +24,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.botSettings.LogChannelId = channel.Id;
         Application.botSettings.Save();
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
     }
@@ -36,7 +36,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.botSettings.PublicChannelId = channel.Id;
         Application.botSettings.Save();
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
     }
@@ -45,7 +45,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Gets the bot settings. (!get_settings)")]
     public async Task GetSettings()
     {
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - get_settings] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - get_settings] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         string botSettings = "";
@@ -79,7 +79,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             return;
         }
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
@@ -108,7 +108,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             return;
         }
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_check_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_mod_update_check_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Scheduler.GetItem("WorkshopItemUpdateChecker").UpdateInterval(intervalMinute * 60 * 1000);
@@ -130,7 +130,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             return;
         }
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_mod_update_restart_timer] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_mod_update_restart_timer] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer = intervalMinute * 60 * 1000;
@@ -157,7 +157,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             return;
         }
 
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - set_perk_cache_duration] Caller: {0}, Params: {1}", Context.User.ToString(), durationMinute));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - set_perk_cache_duration] Caller: {0}, Params: {1}", Context.User.ToString(), durationMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Application.botSettings.ServerLogParserSettings.PerkParserCacheDuration = durationMinute;
@@ -170,7 +170,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Reset the perk cache. (!reset_perk_cache)")]
     public async Task ResetPerkCache()
     {
-        Logger.WriteLog("["+Context.Message.Timestamp.UtcDateTime.ToString()+"]"+string.Format("[BotCommands - reset_perk_cache] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - reset_perk_cache] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         ServerLogParsers.PerkLog.perkCache = null;

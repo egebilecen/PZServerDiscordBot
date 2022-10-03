@@ -10,7 +10,7 @@ public static partial class Schedules
     {
         if(!ServerUtility.IsServerRunning())
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", Logger.GetLoggingDate()));
             return;
         }
 
@@ -19,32 +19,32 @@ public static partial class Schedules
 
         if(serverRestartSchedule == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", Logger.GetLoggingDate()));
             return;
         }
         else if(serverRestartSchedule.NextExecuteTime.Subtract(DateTime.Now).TotalMilliseconds <= Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", Logger.GetLoggingDate()));
             return;
         }
 
         if(serverRestartAnnouncer == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRestartAnnouncer is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRestartAnnouncer is null.", Logger.GetLoggingDate()));
             return;
         }
 
         string configFilePath = ServerUtility.GetServerConfigIniFilePath();
         if(string.IsNullOrEmpty(configFilePath))
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] configFilePath is null or empty.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] configFilePath is null or empty.", Logger.GetLoggingDate()));
             return;
         }
 
         IniParser.IniData iniData = IniParser.Parse(configFilePath);
         if(iniData == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData is null.", Logger.GetLoggingDate()));
             return;
         }
 
@@ -54,7 +54,7 @@ public static partial class Schedules
 
         foreach(var item in itemDetails)
         {
-            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated).LocalDateTime;
+            var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
 
             if(updateDate > Application.startTime)
             {
@@ -68,7 +68,7 @@ public static partial class Schedules
                 }
                 else
                 {
-                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] logChannel is null.", DateTime.Now.ToLocalTime()));
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] logChannel is null.", Logger.GetLoggingDate()));
                     return;
                 }
 
@@ -78,13 +78,13 @@ public static partial class Schedules
                 }
                 else
                 {
-                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] publicChannel is null.", DateTime.Now.ToLocalTime()));
+                    Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] publicChannel is null.", Logger.GetLoggingDate()));
                     return;
                 }
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
                 serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
-                Application.startTime = DateTime.Now.AddMinutes(restartInMinutes);
+                Application.startTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
                 break;
             }
         }

@@ -64,6 +64,11 @@ public class CommandHandler
 
         var context = new SocketCommandContext(_client, message);
 
+        if(isBotConfigured
+        && (context.Channel.Id != Application.botSettings.PublicChannelId
+            && context.Channel.Id != Application.botSettings.CommandChannelId))
+            return;
+
         if(command != "!help"
         && commandModule == string.Empty)
             goto unknownCommand;
@@ -79,7 +84,7 @@ public class CommandHandler
 
                     await context.Message.AddReactionAsync(EmojiList.GreenCheck);
                     await context.Channel.SendMessageAsync("Here is the command list:");
-                    await BotUtility.Discord.SendEmbeddedMessage(context.Message, commandList);
+                    await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, commandList);
                     return;
                 }
 
@@ -96,19 +101,19 @@ public class CommandHandler
                     if(adminCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Admin command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, adminCommandModule);
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, adminCommandModule);
                     }
 
                     if(botCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Bot command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, botCommandModule);
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, botCommandModule);
                     }
 
                     if(pzserverCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Project Zomboid server command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message, pzserverCommandModule);        
+                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, pzserverCommandModule);        
                     }
                     return;
                 }

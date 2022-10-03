@@ -12,7 +12,7 @@ public static partial class Schedules
 
         if(serverRestartAnnouncer == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] serverRestartAnnouncer is null.", DateTime.Now.ToLocalTime()));
+            Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] serverRestartAnnouncer is null.", Logger.GetLoggingDate()));
             return;
         }
 
@@ -36,7 +36,7 @@ public static partial class Schedules
                 publicChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
         }
         
-        Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", DateTime.Now.ToLocalTime(), isServerRunning.ToString()));
+        Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", Logger.GetLoggingDate(), isServerRunning.ToString()));
         
         Scheduler.GetItem("ServerRestart").UpdateInterval(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule);
 
