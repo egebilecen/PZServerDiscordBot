@@ -100,7 +100,7 @@ public static class Application
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
         Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
-                                           Convert.ToUInt64(TimeSpan.FromMinutes(10).TotalMilliseconds),
+                                           Convert.ToUInt64(TimeSpan.FromHours(1).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
         Scheduler.Start(
