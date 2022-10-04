@@ -68,7 +68,9 @@ public static class Scheduler
                 if(item.IntervalMS != 0
                 && now >= item.NextExecuteTime)
                 {
-                    item.Function(item.Args);
+                    try { item.Function(item.Args); }
+                    catch(Exception ex) { Logger.LogException(ex, "Exception occured in ScheduleItem callback function. ScheduleItem: "+item.Name); }
+                    
                     item.UpdateInterval();
                 }
             }
