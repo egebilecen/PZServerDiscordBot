@@ -51,6 +51,15 @@ public static class ServerUtility
                 serverProcess = new Process();
                 serverProcess.StartInfo = startInfo;
                 serverProcess.Start();
+
+                ScheduleItem serverRestartSchedule  = Scheduler.GetItem("ServerRestart");
+                ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
+
+                if(serverRestartSchedule != null)
+                    serverRestartSchedule.UpdateInterval();
+
+                if(serverRestartAnnouncer != null)
+                    serverRestartAnnouncer.UpdateInterval();
             }
 
             return serverProcess;

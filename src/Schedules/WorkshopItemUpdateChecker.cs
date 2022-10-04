@@ -8,11 +8,13 @@ public static partial class Schedules
 {
     public static void WorkshopItemUpdateChecker(List<object> args)
     {
+    #if !DEBUG
         if(!ServerUtility.IsServerRunning())
         {
             Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Server is not running. Skipping...", Logger.GetLoggingDate()));
             return;
         }
+    #endif
 
         ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
@@ -52,14 +54,21 @@ public static partial class Schedules
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
 
+        var logChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+
         foreach(var item in itemDetails)
         {
+            if(item.Result != 1
+            && logChannel != null)
+            {
+                logChannel.SendMessageAsync(string.Format("**[Workshop Mod Update Checker]** Cannot get the details of mod with the ID of `{0}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {1})`\n**Mod Link:** {2}", item.PublishedFileId, item.Result.ToString(), "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId));
+            }
+
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
 
             if(updateDate > Application.startTime)
             {
                 var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
-                var  logChannel       = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
                 uint restartInMinutes = Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
 
                 if(logChannel != null)

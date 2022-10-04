@@ -8,6 +8,8 @@ public static partial class Schedules
 {
     public static void ServerRestartAnnouncer(List<object> args)
     {
+        if(!ServerUtility.IsServerRunning()) return;
+
         int[] minuteList = {
             60,
             30,

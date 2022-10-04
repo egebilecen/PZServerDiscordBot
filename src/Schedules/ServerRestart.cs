@@ -32,11 +32,9 @@ public static partial class Schedules
         {
             if(isServerRunning)
                 publicChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
-            else
-                publicChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
         }
         
-        Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server. (Is server running: {1})", Logger.GetLoggingDate(), isServerRunning.ToString()));
+        Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server if it is running. (Is server running: {1})", Logger.GetLoggingDate(), isServerRunning.ToString()));
         
         Scheduler.GetItem("ServerRestart").UpdateInterval(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule);
 
