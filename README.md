@@ -21,6 +21,7 @@ This bot is written for people to easily manage their server using Discord. Plea
 ![Server Commands Example](https://i.ibb.co/FnH50cH/Screenshot-3.png)
 - Perk Parser with cache system. (Bot automatically parses the last perk log file that holds the player skills when they login to server. This can be used to aid players that died to a bug but they can't remember their skills. As stated before, server logs the player skills only when they log into server. If player levels up a skill after connecting to server, it won't appear in log unless player logs into server afterwards again.) When command for perk parser is invoked, bot will parse the file and save it contents in memory until cache (in minutes) expires. This is for to increase efficiency as bot will not have to parse the same file each time. In a situation where fresh data needed, **!reset_perk_cache** command can be used to reset the cache.                
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
+- Auto server start if server quits. This feature useful if combined with mods that quits the server for whatever reason. For example, if you are using a mod that checks mod updates and when detects it, quits the server. With enabling this feature, you won't need to manually run the server.
 
 # Installation
 #### Creating the Discord Bot
@@ -86,6 +87,7 @@ Bot Commands:
 - `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)<br>
 - `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
+- `!toggle_server_auto_start` Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)<br>
   
 Server Commands:
 - `!server_msg` Broadcasts a message to all players in the server. (!server_msg "[message]")<br>

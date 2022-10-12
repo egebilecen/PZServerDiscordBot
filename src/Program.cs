@@ -26,7 +26,7 @@ public static class Application
     {
         try
         {
-            if(string.IsNullOrEmpty(BotUtility.GetDiscordBotToken()))
+            if(string.IsNullOrEmpty(BotUtility.Discord.GetToken()))
             {
                 Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+botRepoURL+" and see README.md file about setting up bot token.");
                 await Task.Delay(-1);
@@ -103,6 +103,10 @@ public static class Application
                                            Convert.ToUInt64(TimeSpan.FromHours(1).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
+        Scheduler.AddItem(new ScheduleItem("AutoServerStart",
+                                           Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
+                                           Schedules.AutoServerStart,
+                                           null));
         Scheduler.Start(
             #if !DEBUG
                 30 * 1000
@@ -121,7 +125,7 @@ public static class Application
         commandHandler = new CommandHandler(client, commands, services);
 
         await commandHandler.SetupAsync();
-        await client.LoginAsync(TokenType.Bot, BotUtility.GetDiscordBotToken());
+        await client.LoginAsync(TokenType.Bot, BotUtility.Discord.GetToken());
         await client.StartAsync();
         await client.SetGameAsync("Bot Version: "+botVersion);
 

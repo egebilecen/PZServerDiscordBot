@@ -16,6 +16,11 @@ namespace Settings
         public uint WorkshopItemUpdateRestartTimer = Convert.ToUInt32(TimeSpan.FromMinutes(30).TotalMilliseconds);
     }
 
+    public class BotFeatureSettings
+    {
+        public bool AutoServerStart = false;
+    }
+
     public class BotSettings
     {
         public const string settingsFile = ".\\pzdiscordbot.conf";
@@ -27,10 +32,11 @@ namespace Settings
 
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();
+        public BotFeatureSettings      BotFeatureSettings      = new BotFeatureSettings();
 
         public void Save()
         {
-            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(this, Formatting.None));
+            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
     }
 }

@@ -122,6 +122,7 @@
     <Compile Include="Schedules\BotVersionChecker.cs" />
     <Compile Include="Schedules\ServerRestart.cs" />
     <Compile Include="Schedules\ServerRestartAnnouncer.cs" />
+    <Compile Include="Schedules\AutoServerStart.cs" />
     <Compile Include="Schedules\WorkshopItemUpdateChecker.cs" />
     <Compile Include="ServerPath.cs" />
     <Compile Include="Program.cs" />
