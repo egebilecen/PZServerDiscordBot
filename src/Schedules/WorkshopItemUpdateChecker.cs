@@ -50,7 +50,10 @@ public static partial class Schedules
             return;
         }
 
-        string[] workshopIdList = iniData.GetValue("WorkshopItems").Split(';');
+        string workshopItems = iniData.GetValue("WorkshopItems");
+        Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] iniData workshopItems: {1}", Logger.GetLoggingDate(), workshopItems));
+
+        string[] workshopIdList = workshopItems.Split(';');
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
 
