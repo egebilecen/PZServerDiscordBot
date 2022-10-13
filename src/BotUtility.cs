@@ -16,32 +16,6 @@ public static class BotUtility
     static string discordBotToken = null;
     static Dictionary<string, List<KeyValuePair<string, string>>> commandList = new Dictionary<string, List<KeyValuePair<string, string>>>();
 
-    public static string GetDiscordBotToken()
-    {
-        if(discordBotToken != null) return discordBotToken;
-
-        if(!File.Exists(DiscordBotTokenFile))
-        {
-            try
-            {
-                string envVar = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
-
-                if(!string.IsNullOrEmpty(envVar))
-                {
-                    File.WriteAllText(DiscordBotTokenFile, envVar);
-                    discordBotToken = envVar;
-                    return envVar;
-                }
-            }
-            catch { }
-
-            return null;
-        }
-
-        discordBotToken = File.ReadAllText(DiscordBotTokenFile);
-        return discordBotToken;
-    }
-
     public static async Task<string> GetLatestBotVersion()
     {
         const string apiURL = "https://api.github.com/repos/egebilecen/PZServerDiscordBot/releases/latest";
@@ -112,6 +86,32 @@ public static class BotUtility
 
     public static class Discord
     {
+        public static string GetToken()
+        {
+            if(discordBotToken != null) return discordBotToken;
+
+            if(!File.Exists(DiscordBotTokenFile))
+            {
+                try
+                {
+                    string envVar = Environment.GetEnvironmentVariable("EB_DISCORD_BOT_TOKEN");
+
+                    if(!string.IsNullOrEmpty(envVar))
+                    {
+                        File.WriteAllText(DiscordBotTokenFile, envVar);
+                        discordBotToken = envVar;
+                        return envVar;
+                    }
+                }
+                catch { }
+
+                return null;
+            }
+
+            discordBotToken = File.ReadAllText(DiscordBotTokenFile);
+            return discordBotToken;
+        }
+
         public static SocketTextChannel GetTextChannelById(ulong id)
         {
             var guild = Application.client.Guilds.ElementAt(0);

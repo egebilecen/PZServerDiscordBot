@@ -9,7 +9,6 @@ public static class ServerUtility
     public static Process serverProcess           = null;
     public static int     initialJavaProcessCount = 0;
 
-    // If it works, it works!
     public static bool IsServerRunning()
     {
         return serverProcess != null && !serverProcess.HasExited;

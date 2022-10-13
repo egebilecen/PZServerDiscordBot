@@ -64,6 +64,8 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "**Workshop Mod Update Checker Interval:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
         botSettings += "\n";
         botSettings += "**Workshop Mod Update Restart Timer:** "+(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += "\n";
+        botSettings += "**Server Auto Start:** "+(Application.botSettings.BotFeatureSettings.AutoServerStart ? "Enabled" : "Disabled");
         
         await Context.Channel.SendMessageAsync(botSettings);
     }
@@ -175,5 +177,23 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         
         ServerLogParsers.PerkLog.perkCache = null;
         await Context.Channel.SendMessageAsync("Perk cache has been reset.");
+    }
+
+    [Command("toggle_server_auto_start")]
+    [Summary("Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)")]
+    public async Task ToggleServerAutoStart()
+    {
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - ToggleServerAutoStart] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Application.botSettings.BotFeatureSettings.AutoServerStart = !Application.botSettings.BotFeatureSettings.AutoServerStart;
+        Application.botSettings.Save();
+
+        ScheduleItem autoServerStartSchedule = Scheduler.GetItem("AutoServerStart");
+
+        if(autoServerStartSchedule != null)
+            autoServerStartSchedule.UpdateInterval();
+
+        await Context.Channel.SendMessageAsync("Server auto start feature has been " + (Application.botSettings.BotFeatureSettings.AutoServerStart ? "enabled" : "disabled") + ".");
     }
 }
