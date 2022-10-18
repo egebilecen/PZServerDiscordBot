@@ -79,7 +79,7 @@ public static class Application
         }
     #endif
 
-        if (!File.Exists(Settings.BotSettings.settingsFile))
+        if(!File.Exists(Settings.BotSettings.settingsFile))
         {
             botSettings = new Settings.BotSettings
             {
@@ -121,16 +121,16 @@ public static class Application
                                            Schedules.AutoServerStart,
                                            null));
         Scheduler.Start(
-#if !DEBUG
+            #if !DEBUG
                 30 * 1000
-#else
+            #else
                 1000
-#endif
+            #endif
         );
         
-#if !DEBUG
+    #if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
-#endif
+    #endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
