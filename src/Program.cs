@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                botRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                botVersion      = "v1.2.5-beta";
+    public const string                botVersion      = "v1.2.5-beta-2";
     public const float                 botVersionMajor = 1.2f;
 
     public static Settings.BotSettings botSettings;
