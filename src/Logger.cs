@@ -24,6 +24,7 @@ public static class Logger
                         "\nMessage: "+ex.Message +
                         "\nStack trace: "+ex.StackTrace.Trim() +
                         "\nDate: "+ GetLoggingDate() +
+                        "\nBot Version: "+ Application.botVersion +
                         (additional_msg != "" ? "\n"+additional_msg : "") +
                         "\n---------------\n";
         File.AppendAllText(LogFile, ex_msg);
