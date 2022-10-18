@@ -64,7 +64,7 @@ public static class Application
                     {
                         if(arg.Contains("user.home"))
                         {
-                            ServerPath.basePath = arg.Split('=').Last() + "\\";
+                            ServerPath.BasePath = arg.Split('=').Last() + "\\";
                         }
                     }
                 }

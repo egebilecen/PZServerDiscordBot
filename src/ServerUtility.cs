@@ -16,7 +16,7 @@ public static class ServerUtility
     
     public static string GetServerConfigIniFilePath()
     {
-        string[] fileList = Directory.GetFiles(ServerPath.serverSettingsPath, "*.ini", SearchOption.TopDirectoryOnly);
+        string[] fileList = Directory.GetFiles(ServerPath.ServerSettingsPath(), "*.ini", SearchOption.TopDirectoryOnly);
         return fileList.Length > 0 ? fileList[0] : null;
     }
 

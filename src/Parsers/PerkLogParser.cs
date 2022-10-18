@@ -24,7 +24,7 @@ namespace ServerLogParsers
 
         private static string GetContent(int nthFile=0)
         {
-            string zomboidLogDirectory = ServerPath.logPath;
+            string zomboidLogDirectory = ServerPath.LogPath();
 
             if(!Directory.Exists(zomboidLogDirectory)) return string.Empty;
 
