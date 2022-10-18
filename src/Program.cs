@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 public static class Application
@@ -51,11 +52,23 @@ public static class Application
         {
             string[] lines = File.ReadAllLines(serverFile);
 
-            for(int i=lines.Length - 1; i >= 0; i--)
+            for(int i=0; i < lines.Length; i++)
             {
                 string line = lines[i];
 
-                if(line.Trim().ToLower() == "pause")
+                if(line.Contains(@".\jre64\bin\java.exe"))
+                {
+                    string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
+
+                    foreach(string arg in args)
+                    {
+                        if(arg.Contains("user.home"))
+                        {
+                            ServerPath.basePath = arg.Split('=').Last() + "\\";
+                        }
+                    }
+                }
+                else if(line.Trim().ToLower() == "pause")
                 {
                     List<string> newLines = new List<string>(lines);
                     newLines.RemoveAt(i);
@@ -66,7 +79,7 @@ public static class Application
         }
     #endif
 
-        if(!File.Exists(Settings.BotSettings.settingsFile))
+        if (!File.Exists(Settings.BotSettings.settingsFile))
         {
             botSettings = new Settings.BotSettings
             {
@@ -108,16 +121,16 @@ public static class Application
                                            Schedules.AutoServerStart,
                                            null));
         Scheduler.Start(
-            #if !DEBUG
+#if !DEBUG
                 30 * 1000
-            #else
+#else
                 1000
-            #endif
+#endif
         );
         
-    #if !DEBUG
+#if !DEBUG
         ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
-    #endif
+#endif
 
         client   = new DiscordSocketClient();
         commands = new CommandService();
