@@ -129,7 +129,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\PZServerCommands.cs" />
     <Compile Include="Scheduler.cs" />
-    <Compile Include="ServerLogParsers\PerkLogParser.cs" />
+    <Compile Include="Parsers\PerkLogParser.cs" />
     <Compile Include="ServerUtility.cs" />
     <Compile Include="SteamWebAPI.cs" />
     <Compile Include="WebRequest.cs" />

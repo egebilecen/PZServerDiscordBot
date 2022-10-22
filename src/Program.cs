@@ -5,12 +5,13 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 public static class Application
 {
     public const string                botRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                botVersion      = "v1.2.4";
+    public const string                botVersion      = "v1.2.5";
     public const float                 botVersionMajor = 1.2f;
 
     public static Settings.BotSettings botSettings;
@@ -51,11 +52,23 @@ public static class Application
         {
             string[] lines = File.ReadAllLines(serverFile);
 
-            for(int i=lines.Length - 1; i >= 0; i--)
+            for(int i=0; i < lines.Length; i++)
             {
                 string line = lines[i];
 
-                if(line.Trim().ToLower() == "pause")
+                if(line.Contains(@".\jre64\bin\java.exe"))
+                {
+                    string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
+
+                    foreach(string arg in args)
+                    {
+                        if(arg.Contains("user.home"))
+                        {
+                            ServerPath.BasePath = arg.Split('=').Last() + "\\";
+                        }
+                    }
+                }
+                else if(line.Trim().ToLower() == "pause")
                 {
                     List<string> newLines = new List<string>(lines);
                     newLines.RemoveAt(i);

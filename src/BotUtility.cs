@@ -36,6 +36,9 @@ public static class BotUtility
             Logger.LogException(ex, "Error occured during GetLatestBotVersion().");
         }
 
+        if(version.Contains("-beta"))
+            return null;
+
         return version;
     }
 
