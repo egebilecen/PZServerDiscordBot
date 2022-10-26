@@ -80,6 +80,7 @@
     <Reference Include="System.Linq.Async, Version=5.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>packages\System.Linq.Async.5.0.0\lib\net461\System.Linq.Async.dll</HintPath>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -132,6 +133,7 @@
     <Compile Include="Scheduler.cs" />
     <Compile Include="Parsers\PerkLogParser.cs" />
     <Compile Include="ServerUtility.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="SteamWebAPI.cs" />
     <Compile Include="WebRequest.cs" />
   </ItemGroup>
