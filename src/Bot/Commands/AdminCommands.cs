@@ -21,7 +21,7 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
         File.WriteAllText("./debug_result.json", JsonConvert.SerializeObject(itemDetails, Formatting.Indented));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await BotUtility.Discord.SendEmbeddedMessage(Context.Channel, new List<KeyValuePair<string, string>>
+        await DiscordUtility.SendEmbeddedMessage(Context.Channel, new List<KeyValuePair<string, string>>
         {
             new KeyValuePair<string, string>("Application.startTime", Application.StartTime.ToString()),
             new KeyValuePair<string, string>("Application.startTime (timestamp)", ((DateTimeOffset)Application.StartTime).ToUnixTimeSeconds().ToString()),

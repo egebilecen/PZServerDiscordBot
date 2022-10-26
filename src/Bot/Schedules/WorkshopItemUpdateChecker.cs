@@ -54,7 +54,7 @@ public static partial class Schedules
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
 
-        var logChannel   = BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId);
+        var logChannel   = DiscordUtility.GetTextChannelById(Application.BotSettings.LogChannelId);
 
         foreach(var item in itemDetails)
         {
@@ -69,7 +69,7 @@ public static partial class Schedules
 
             if(updateDate > Application.StartTime)
             {
-                var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.BotSettings.PublicChannelId);
+                var  publicChannel    = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
                 uint restartInMinutes = Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
 
                 if(logChannel != null)

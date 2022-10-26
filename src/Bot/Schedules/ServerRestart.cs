@@ -17,8 +17,8 @@ public static partial class Schedules
         }
 
         bool isServerRunning = ServerUtility.IsServerRunning();
-        var  publicChannel   = BotUtility.Discord.GetTextChannelById(Application.BotSettings.PublicChannelId);
-        var  logChannel      = BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId);
+        var  publicChannel   = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
+        var  logChannel      = DiscordUtility.GetTextChannelById(Application.BotSettings.LogChannelId);
 
         if(logChannel != null)
         {

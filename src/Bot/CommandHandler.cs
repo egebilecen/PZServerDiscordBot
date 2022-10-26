@@ -59,7 +59,7 @@ public class CommandHandler
             return;
 
         string command         = message.Content.Split(' ')[0];
-        string commandModule   = BotUtility.Discord.GetCommandModuleName(command);
+        string commandModule   = DiscordUtility.GetCommandModuleName(command);
         bool   isBotConfigured = IsBotConfigured();
 
         var context = new SocketCommandContext(_client, message);
@@ -74,17 +74,17 @@ public class CommandHandler
             goto unknownCommand;
         else if(command == "!help")
         {
-            commandModule = BotUtility.Discord.GetCommandModuleOfChannelId(context.Channel.Id);
+            commandModule = DiscordUtility.GetCommandModuleOfChannelId(context.Channel.Id);
             
             switch(commandModule)
             {
                 case "UserCommands":
                 {
-                    List<KeyValuePair<string, string>> commandList = BotUtility.Discord.GetCommandModule(commandModule);
+                    List<KeyValuePair<string, string>> commandList = DiscordUtility.GetCommandModule(commandModule);
 
                     await context.Message.AddReactionAsync(EmojiList.GreenCheck);
                     await context.Channel.SendMessageAsync("Here is the command list:");
-                    await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, commandList);
+                    await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, commandList);
                     return;
                 }
 
@@ -92,28 +92,28 @@ public class CommandHandler
                 case "AdminCommands":
                 case "PZServerCommands":
                 {
-                    List<KeyValuePair<string, string>> adminCommandModule = BotUtility.Discord.GetCommandModule("AdminCommands");
-                    List<KeyValuePair<string, string>> botCommandModule = BotUtility.Discord.GetCommandModule("BotCommands");
-                    List<KeyValuePair<string, string>> pzserverCommandModule = BotUtility.Discord.GetCommandModule("PZServerCommands");
+                    List<KeyValuePair<string, string>> adminCommandModule = DiscordUtility.GetCommandModule("AdminCommands");
+                    List<KeyValuePair<string, string>> botCommandModule = DiscordUtility.GetCommandModule("BotCommands");
+                    List<KeyValuePair<string, string>> pzserverCommandModule = DiscordUtility.GetCommandModule("PZServerCommands");
 
                     await context.Message.AddReactionAsync(EmojiList.GreenCheck);
 
                     if(adminCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Admin command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, adminCommandModule);
+                        await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, adminCommandModule);
                     }
 
                     if(botCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Bot command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, botCommandModule);
+                        await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, botCommandModule);
                     }
 
                     if(pzserverCommandModule != null)
                     {
                         await context.Channel.SendMessageAsync("Project Zomboid server command list:");
-                        await BotUtility.Discord.SendEmbeddedMessage(context.Message.Channel, pzserverCommandModule);        
+                        await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, pzserverCommandModule);        
                     }
                     return;
                 }
@@ -128,7 +128,7 @@ public class CommandHandler
         }
         // If the channel that the command has been sent doesn't match with the
         // setted channel, do not handle it.
-        else if(isBotConfigured && BotUtility.Discord.GetChannelIdOfCommandModule(commandModule) != context.Channel.Id)
+        else if(isBotConfigured && DiscordUtility.GetChannelIdOfCommandModule(commandModule) != context.Channel.Id)
             goto unknownCommand;
 
         await _commands.ExecuteAsync(context : context, 
