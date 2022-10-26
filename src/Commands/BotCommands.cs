@@ -9,6 +9,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Sets the channel for bot to work in. (!set_command_channel <channel tag>)")]
     public async Task SetCommandChannel(ISocketMessageChannel channel)
     {
+        if(Application.BotSettings.LogChannelId == channel.Id)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> is configured to be log channel. Please select a different channel.", channel.Id.ToString()));
+            return;
+        }
+
         Application.BotSettings.CommandChannelId = channel.Id;
         Application.BotSettings.Save();
 
@@ -21,6 +28,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Sets the channel for bot to work in. (!set_log_channel <channel tag>)")]
     public async Task SetLogChannel(ISocketMessageChannel channel)
     {
+        if(Application.BotSettings.CommandChannelId == channel.Id)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> is configured to be command channel. Please select a different channel.", channel.Id.ToString()));
+            return;
+        }
+
         Application.BotSettings.LogChannelId = channel.Id;
         Application.BotSettings.Save();
 
