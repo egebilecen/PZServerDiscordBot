@@ -48,7 +48,18 @@ public static class BotUtility
         {
             if(latestBotVersion.Stage == DevelopmentStage.None
             && Application.BotVersion < latestBotVersion)
-                await Discord.GetTextChannelById(Application.BotSettings.CommandChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, Application.BotVersion, Application.BotRepoURL));
+            {
+                var commandChannel = Discord.GetTextChannelById(Application.BotSettings.CommandChannelId);
+                
+                if(commandChannel != null)
+                {
+                    string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
+
+                    if(!lastMessages.First().Content.Equals(warningText))
+                        await commandChannel.SendMessageAsync(warningText);
+                }
+            }
         }
         else Logger.WriteLog(string.Format("[{0}][CheckLatestBotVersion()] Couldn't parse the version string. String: {1}", Logger.GetLoggingDate(), latestBotVersionStr));
     }
