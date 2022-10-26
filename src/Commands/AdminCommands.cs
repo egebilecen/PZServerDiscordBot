@@ -10,7 +10,7 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
 {
     [Command("debug")]
     [Summary("Command enabled for debug purposes. (!debug ...)")]
-    //[Remarks("skip")]
+    [Remarks("skip")]
     public async Task Debug(string param1="", string param2="", string param3="")
     {
         // I got some reports about bot missing some workshop updates.
