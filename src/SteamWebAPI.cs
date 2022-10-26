@@ -58,8 +58,8 @@ public static class SteamWebAPI
         }
     }
 
-    public  static HttpClient httpClient = WebRequest.CreateHTTPClient(connectionTimeout:60);
-    private static string     baseAPIURL = "https://api.steampowered.com/";
+    public  static HttpClient      HttpClient = WebRequest.CreateHTTPClient(connectionTimeout:60);
+    private static readonly string baseAPIURL = "https://api.steampowered.com/";
 
     public static async Task<List<Model.WorkshopItemDetails>> GetWorkshopItemDetails(string[] idList)
     {
@@ -76,7 +76,7 @@ public static class SteamWebAPI
             parameters.Add(new KeyValuePair<string, string>("publishedfileids["+i.ToString()+"]", workshopItemId));
         }
 
-        string res = await WebRequest.PostAsync(httpClient, baseAPIURL + apiModule, parameters);
+        string res = await WebRequest.PostAsync(HttpClient, baseAPIURL + apiModule, parameters);
         
         List<Model.WorkshopItemDetails> itemDetailsList = new List<Model.WorkshopItemDetails>();
         JToken jsonData = JToken.Parse(res)["response"];

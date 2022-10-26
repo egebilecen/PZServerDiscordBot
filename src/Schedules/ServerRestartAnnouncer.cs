@@ -48,7 +48,7 @@ public static partial class Schedules
 
         DateTime now        = DateTime.Now;
         var timeDiffMinutes = serverRestartSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
-        var publicChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
+        var publicChannel   = BotUtility.Discord.GetTextChannelById(Application.BotSettings.PublicChannelId);
 
         int i=0;
         int selectedIndex = -1;

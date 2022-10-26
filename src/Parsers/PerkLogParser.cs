@@ -8,9 +8,9 @@ namespace ServerLogParsers
 {
     public static class PerkLog
     {
-        public const  string tempLogFile = ".\\perkLog.temp";
-        public static Dictionary<string, UserPerkData> perkCache = null;
-        public static DateTime? lastCacheTime = null;
+        public const  string TempLogFile = ".\\perkLog.temp";
+        public static Dictionary<string, UserPerkData> PerkCache = null;
+        public static DateTime? LastCacheTime = null;
 
         public class UserPerkData
         {
@@ -55,12 +55,12 @@ namespace ServerLogParsers
             }
             catch(IOException)
             {
-                if(File.Exists(tempLogFile))
-                    File.Delete(tempLogFile);
+                if(File.Exists(TempLogFile))
+                    File.Delete(TempLogFile);
 
-                File.Copy(fileInfo.FullName, tempLogFile);
+                File.Copy(fileInfo.FullName, TempLogFile);
 
-                using(FileStream fileStream     = File.Open(tempLogFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using(FileStream fileStream     = File.Open(TempLogFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                 using(StreamReader streamReader = new StreamReader(fileStream))
                 {
                     string fileContent = streamReader.ReadToEnd();
@@ -110,17 +110,17 @@ namespace ServerLogParsers
 
         public static Dictionary<string, UserPerkData> Get(int nthFile=0)
         {
-            if(perkCache     == null
-            || lastCacheTime == null
-            || DateTime.Now.Subtract((DateTime)lastCacheTime).TotalMinutes >= Application.botSettings.ServerLogParserSettings.PerkParserCacheDuration)
+            if(PerkCache     == null
+            || LastCacheTime == null
+            || DateTime.Now.Subtract((DateTime)LastCacheTime).TotalMinutes >= Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration)
             {
-                perkCache     = Parse(nthFile);
-                lastCacheTime = DateTime.Now;
+                PerkCache     = Parse(nthFile);
+                LastCacheTime = DateTime.Now;
 
-                return perkCache;
+                return PerkCache;
             }
             
-            return perkCache;
+            return PerkCache;
         }
     }
 }

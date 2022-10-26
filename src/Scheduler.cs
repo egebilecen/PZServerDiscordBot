@@ -8,14 +8,16 @@ using System.Timers;
 public class ScheduleItem
 {
     public string               Name            { get; }
+    public string               DisplayName     { get; }
     public Action<List<object>> Function        { get; }
     public List<object>         Args            { get; set; }
     public ulong                IntervalMS      { get; set; }
     public DateTime             NextExecuteTime { get; set; }
 
-    public ScheduleItem(string name, ulong intervalMS, Action<List<object>> func, List<object> args)
+    public ScheduleItem(string name, string displayName, ulong intervalMS, Action<List<object>> func, List<object> args)
     {
         Name           = name;
+        DisplayName    = displayName;
         Function       = func;
         Args           = args;
 
@@ -32,12 +34,14 @@ public class ScheduleItem
 public static class Scheduler
     {
         private static Timer clock;
-        private static List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
+        private static readonly List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
 
         public static void Start(ulong intervalMS)
         {
-            clock = new Timer();
-            clock.Interval = intervalMS;
+            clock = new Timer
+            {
+                Interval = intervalMS
+            };
             clock.Elapsed += new ElapsedEventHandler(ClockElapsed);
             clock.Start();
         }
@@ -57,6 +61,11 @@ public static class Scheduler
         public static ScheduleItem GetItem(string name)
         {
             return scheduleItems.Find(item => item.Name == name);
+        }
+
+        public static IReadOnlyCollection<ScheduleItem> GetItems()
+        {
+            return scheduleItems.AsReadOnly();
         }
 
         private static void ClockElapsed(object sender, ElapsedEventArgs e)

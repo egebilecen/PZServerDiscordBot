@@ -17,8 +17,8 @@ public static partial class Schedules
         }
 
         bool isServerRunning = ServerUtility.IsServerRunning();
-        var  publicChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
-        var  logChannel      = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+        var  publicChannel   = BotUtility.Discord.GetTextChannelById(Application.BotSettings.PublicChannelId);
+        var  logChannel      = BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId);
 
         if(logChannel != null)
         {
@@ -36,7 +36,7 @@ public static partial class Schedules
         
         Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server if it is running. (Is server running: {1})", Logger.GetLoggingDate(), isServerRunning.ToString()));
         
-        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.botSettings.ServerScheduleSettings.ServerRestartSchedule);
+        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
 
         serverRestartAnnouncer.Args.Clear();
         if(isServerRunning) ServerUtility.Commands.RestartServer();

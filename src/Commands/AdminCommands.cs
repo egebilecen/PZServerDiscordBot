@@ -10,7 +10,7 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
 {
     [Command("debug")]
     [Summary("Command enabled for debug purposes. (!debug ...)")]
-    //[Remarks("skip")]
+    [Remarks("skip")]
     public async Task Debug(string param1="", string param2="", string param3="")
     {
         // I got some reports about bot missing some workshop updates.
@@ -23,8 +23,8 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await BotUtility.Discord.SendEmbeddedMessage(Context.Channel, new List<KeyValuePair<string, string>>
         {
-            new KeyValuePair<string, string>("Application.startTime", Application.startTime.ToString()),
-            new KeyValuePair<string, string>("Application.startTime (timestamp)", ((DateTimeOffset)Application.startTime).ToUnixTimeSeconds().ToString()),
+            new KeyValuePair<string, string>("Application.startTime", Application.StartTime.ToString()),
+            new KeyValuePair<string, string>("Application.startTime (timestamp)", ((DateTimeOffset)Application.StartTime).ToUnixTimeSeconds().ToString()),
         });
         await Context.Channel.SendFileAsync("./debug_result.json");
     }

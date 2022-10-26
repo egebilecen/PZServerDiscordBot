@@ -79,6 +79,7 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 **!help** command can be used in any of configured 3 channels which bot will respond with the available command list for *that channel*.
 
 #### Public Channel
+- ``!bot_info`` Displays information about this bot. (!bot_info)
 - ``!server_status`` Gets the server status. (!server_status)
 - ``!restart_time`` Gets the next automated restart time. (!restart_time)
 
@@ -88,9 +89,11 @@ Bot Commands:
 - `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel <channel tag>)<br>
 - `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
 - `!get_settings` Gets the bot settings. (!get_settings)<br>
+- `!get_schedules` Gets the remaining times until schedules to be executed. (!get_schedules)<br>
 - `!set_restart_interval` Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)<br>
 - `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)<br>
 - `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)<br>
+- `!toggle_non_public_bot_logging` Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_bot_logging)<br>
 - `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
 - `!toggle_server_auto_start` Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)<br>

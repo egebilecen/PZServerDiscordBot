@@ -5,13 +5,12 @@ using System.Threading;
 
 public static class ServerUtility
 {
-    private const string  serverFile              = ".\\server.bat";
-    public static Process serverProcess           = null;
-    public static int     initialJavaProcessCount = 0;
+    private const string  serverFile    = ".\\server.bat";
+    public static Process ServerProcess = null;
 
     public static bool IsServerRunning()
     {
-        return serverProcess != null && !serverProcess.HasExited;
+        return ServerProcess != null && !ServerProcess.HasExited;
     }
     
     public static string GetServerConfigIniFilePath()
@@ -32,8 +31,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("servermsg \"{0}\"", message));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("servermsg \"{0}\"", message));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -47,9 +46,9 @@ public static class ServerUtility
                 startInfo.RedirectStandardInput = true;
                 startInfo.UseShellExecute       = false;
 
-                serverProcess = new Process();
-                serverProcess.StartInfo = startInfo;
-                serverProcess.Start();
+                ServerProcess = new Process();
+                ServerProcess.StartInfo = startInfo;
+                ServerProcess.Start();
 
                 ScheduleItem serverRestartSchedule  = Scheduler.GetItem("ServerRestart");
                 ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
@@ -61,15 +60,15 @@ public static class ServerUtility
                     serverRestartAnnouncer.UpdateInterval();
             }
 
-            return serverProcess;
+            return ServerProcess;
         }
 
         public static void StopServer()
         {
             try
             {
-                serverProcess.StandardInput.WriteLine("quit");
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine("quit");
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -92,8 +91,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine("save");
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine("save");
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception) 
             {}
@@ -103,8 +102,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("adduser \"{0}\" \"{1}\"", username, password));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("adduser \"{0}\" \"{1}\"", username, password));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -114,8 +113,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("addusertowhitelist \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("addusertowhitelist \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -125,8 +124,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("removeuserfromwhitelist \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("removeuserfromwhitelist \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -136,8 +135,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("banid \"{0}\"", id.ToString()));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("banid \"{0}\"", id.ToString()));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -147,8 +146,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("unbanid \"{0}\"", id.ToString()));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("unbanid \"{0}\"", id.ToString()));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -158,8 +157,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("banuser \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("banuser \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -169,8 +168,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("unbanuser \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("unbanuser \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -180,8 +179,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("grantadmin \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("grantadmin \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -191,8 +190,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("removeadmin \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("removeadmin \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -202,8 +201,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("kickuser \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("kickuser \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -213,8 +212,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine("startrain");
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine("startrain");
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -224,8 +223,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine("stoprain");
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine("stoprain");
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -235,8 +234,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("teleport \"{0}\" \"{1}\"", username1, username2));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("teleport \"{0}\" \"{1}\"", username1, username2));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -246,8 +245,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("additem \"{0}\" \"{1}\"", username, item));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("additem \"{0}\" \"{1}\"", username, item));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -257,8 +256,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("addxp \"{0}\" \"{1}={2}\"", username, perk, xp));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("addxp \"{0}\" \"{1}={2}\"", username, perk, xp));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -268,8 +267,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine("chopper");
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine("chopper");
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -279,8 +278,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("godmode \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("godmode \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -290,8 +289,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("invisible \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("invisible \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -301,8 +300,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("noclip \"{0}\"", username));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("noclip \"{0}\"", username));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -312,8 +311,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("showoptions"));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("showoptions"));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}
@@ -323,8 +322,8 @@ public static class ServerUtility
         {
             try
             {
-                serverProcess.StandardInput.WriteLine(string.Format("reloadoptions"));
-                serverProcess.StandardInput.Flush();
+                ServerProcess.StandardInput.WriteLine(string.Format("reloadoptions"));
+                ServerProcess.StandardInput.Flush();
             }
             catch(Exception)
             {}

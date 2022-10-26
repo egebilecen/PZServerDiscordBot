@@ -21,7 +21,7 @@ public static class BotUtility
         const string apiURL = "https://api.github.com/repos/egebilecen/PZServerDiscordBot/releases/latest";
      
         string version = null;
-        string result  = await EB_Utility.WebRequest.GetAsync(SteamWebAPI.httpClient, apiURL);
+        string result  = await EB_Utility.WebRequest.GetAsync(SteamWebAPI.HttpClient, apiURL);
 
         if(string.IsNullOrEmpty(result))
             return null;
@@ -36,10 +36,32 @@ public static class BotUtility
             Logger.LogException(ex, "Error occured during GetLatestBotVersion().");
         }
 
-        if(version.Contains("-beta"))
-            return null;
-
         return version;
+    }
+
+    public static async Task CheckLatestBotVersion()
+    {
+        string latestBotVersionStr = await GetLatestBotVersion();
+        bool parseResult = SemanticVersion.TryParse(latestBotVersionStr, out SemanticVersion latestBotVersion);
+
+        if(parseResult)
+        {
+            if(latestBotVersion.Stage == DevelopmentStage.None
+            && Application.BotVersion < latestBotVersion)
+            {
+                var commandChannel = Discord.GetTextChannelById(Application.BotSettings.CommandChannelId);
+                
+                if(commandChannel != null)
+                {
+                    string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
+
+                    if(!lastMessages.First().Content.Equals(warningText))
+                        await commandChannel.SendMessageAsync(warningText);
+                }
+            }
+        }
+        else Logger.WriteLog(string.Format("[{0}][CheckLatestBotVersion()] Couldn't parse the version string. String: {1}", Logger.GetLoggingDate(), latestBotVersionStr));
     }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
@@ -117,7 +139,7 @@ public static class BotUtility
 
         public static SocketTextChannel GetTextChannelById(ulong id)
         {
-            var guild = Application.client.Guilds.ElementAt(0);
+            var guild = Application.Client.Guilds.ElementAt(0);
             if(guild == null) return null;
 
             var textChannel = guild.GetTextChannel(id);
@@ -127,12 +149,12 @@ public static class BotUtility
 
         public static async Task DoChannelCheck()
         {
-            var guild = Application.client.Guilds.ElementAt(0);
+            var guild = Application.Client.Guilds.ElementAt(0);
 
-            if(Application.botSettings.GuildId == 0)
+            if(Application.BotSettings.GuildId == 0)
             {
-                Application.botSettings.GuildId = guild.Id;
-                Application.botSettings.Save();
+                Application.BotSettings.GuildId = guild.Id;
+                Application.BotSettings.Save();
             }
 
             bool warningMessage = false;
@@ -140,57 +162,57 @@ public static class BotUtility
             if(guild.TextChannels.Count < 1) return;
 
         commandChannelCheck:
-            if(Application.botSettings.CommandChannelId == 0)
+            if(Application.BotSettings.CommandChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to work in using **!set_command_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.CommandChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.BotSettings.CommandChannelId);
 
                 if(textChannel == null)
                 {
-                    Application.botSettings.CommandChannelId = 0;
-                    Application.botSettings.Save();
+                    Application.BotSettings.CommandChannelId = 0;
+                    Application.BotSettings.Save();
                     goto commandChannelCheck;
                 }
             }
 
         logChannelCheck:
-            if(Application.botSettings.LogChannelId == 0)
+            if(Application.BotSettings.LogChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to write logs using **!set_log_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.LogChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.BotSettings.LogChannelId);
 
                 if(textChannel == null)
                 {
-                    Application.botSettings.LogChannelId = 0;
-                    Application.botSettings.Save();
+                    Application.BotSettings.LogChannelId = 0;
+                    Application.BotSettings.Save();
                     goto logChannelCheck;
                 }
 
-                await textChannel.SendMessageAsync(string.Format("Bot (**{0}**) is started. :zombie:", Application.botVersion));
+                await textChannel.SendMessageAsync(string.Format("Bot (**{0}**) is started. :zombie:", Application.BotVersion));
             }
 
         publicChannelCheck:
-            if(Application.botSettings.PublicChannelId == 0)
+            if(Application.BotSettings.PublicChannelId == 0)
             {
                 warningMessage = true;
                 await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to accept commands in a public channel using **!set_public_channel <channel tag>** command.");
             }
             else
             {
-                SocketTextChannel textChannel = guild.GetTextChannel(Application.botSettings.PublicChannelId);
+                SocketTextChannel textChannel = guild.GetTextChannel(Application.BotSettings.PublicChannelId);
 
                 if(textChannel == null)
                 {
-                    Application.botSettings.PublicChannelId = 0;
-                    Application.botSettings.Save();
+                    Application.BotSettings.PublicChannelId = 0;
+                    Application.BotSettings.Save();
                     goto publicChannelCheck;
                 }
             }
@@ -201,7 +223,7 @@ public static class BotUtility
 
         public static void OrganizeCommands()
         {
-            List<CommandInfo> commands = Application.commands.Commands.ToList();
+            List<CommandInfo> commands = Application.Commands.Commands.ToList();
 
             foreach(CommandInfo command in commands)
             {
@@ -263,10 +285,10 @@ public static class BotUtility
         {
             switch(moduleName)
             {
-                case "AdminCommands":    return Application.botSettings.CommandChannelId;
-                case "PZServerCommands": return Application.botSettings.CommandChannelId;
-                case "BotCommands":      return Application.botSettings.CommandChannelId;
-                case "UserCommands":     return Application.botSettings.PublicChannelId;
+                case "AdminCommands":    return Application.BotSettings.CommandChannelId;
+                case "PZServerCommands": return Application.BotSettings.CommandChannelId;
+                case "BotCommands":      return Application.BotSettings.CommandChannelId;
+                case "UserCommands":     return Application.BotSettings.PublicChannelId;
             }
 
             return 0;
@@ -274,8 +296,8 @@ public static class BotUtility
 
         public static string GetCommandModuleOfChannelId(ulong channelId)
         {
-            if(channelId == Application.botSettings.CommandChannelId) return "AdminCommands";
-            if(channelId == Application.botSettings.PublicChannelId)  return "UserCommands";
+            if(channelId == Application.BotSettings.CommandChannelId) return "AdminCommands";
+            if(channelId == Application.BotSettings.PublicChannelId)  return "UserCommands";
 
             return string.Empty;
         }

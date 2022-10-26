@@ -124,6 +124,7 @@
     <Compile Include="Schedules\ServerRestartAnnouncer.cs" />
     <Compile Include="Schedules\AutoServerStart.cs" />
     <Compile Include="Schedules\WorkshopItemUpdateChecker.cs" />
+    <Compile Include="SemanticVersion.cs" />
     <Compile Include="ServerPath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
