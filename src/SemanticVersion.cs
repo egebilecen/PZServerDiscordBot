@@ -221,7 +221,7 @@ public class SemanticVersion : IComparable
 			^ this.Step.GetHashCode();
 	}
 	/// <summary>
-	/// Formats the value of the current instance using the specified format.
+	/// Formats the value of the current instance.
 	/// </summary>
 	/// <param name="format">The <see cref="T:System.String"/> specifying the format to use.</param>
 	/// <returns>
