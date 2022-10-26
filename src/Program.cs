@@ -27,7 +27,7 @@ public static class Application
     {
         try
         {
-            if(string.IsNullOrEmpty(BotUtility.Discord.GetToken()))
+            if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
                 Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+" and see README.md file about setting up bot token.");
                 await Task.Delay(-1);
@@ -141,15 +141,15 @@ public static class Application
         CommandHandler = new CommandHandler(Client, Commands, Services);
 
         await CommandHandler.SetupAsync();
-        await Client.LoginAsync(TokenType.Bot, BotUtility.Discord.GetToken());
+        await Client.LoginAsync(TokenType.Bot, DiscordUtility.GetToken());
         await Client.StartAsync();
         await Client.SetGameAsync("Bot Version: "+BotVersion);
 
-        BotUtility.Discord.OrganizeCommands();
+        DiscordUtility.OrganizeCommands();
 
         Client.Ready += async () =>
         {
-            await BotUtility.Discord.DoChannelCheck();
+            await DiscordUtility.DoChannelCheck();
             await BotUtility.CheckLatestBotVersion();
         };
 
