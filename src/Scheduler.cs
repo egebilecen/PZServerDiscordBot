@@ -32,12 +32,14 @@ public class ScheduleItem
 public static class Scheduler
     {
         private static Timer clock;
-        private static List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
+        private static readonly List<ScheduleItem> scheduleItems = new List<ScheduleItem>();
 
         public static void Start(ulong intervalMS)
         {
-            clock = new Timer();
-            clock.Interval = intervalMS;
+            clock = new Timer
+            {
+                Interval = intervalMS
+            };
             clock.Elapsed += new ElapsedEventHandler(ClockElapsed);
             clock.Start();
         }
@@ -57,6 +59,11 @@ public static class Scheduler
         public static ScheduleItem GetItem(string name)
         {
             return scheduleItems.Find(item => item.Name == name);
+        }
+
+        public static IReadOnlyCollection<ScheduleItem> GetItems()
+        {
+            return scheduleItems.AsReadOnly();
         }
 
         private static void ClockElapsed(object sender, ElapsedEventArgs e)
