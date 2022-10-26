@@ -135,8 +135,8 @@
     <Compile Include="Bot\Parsers\PerkLogParser.cs" />
     <Compile Include="PZServer\Util\ServerUtility.cs" />
     <Compile Include="Bot\Util\Statistics.cs" />
-    <Compile Include="Bot\Requests\SteamWebAPI.cs" />
-    <Compile Include="Bot\Requests\WebRequest.cs" />
+    <Compile Include="Bot\Util\SteamWebAPI.cs" />
+    <Compile Include="Bot\Util\WebRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
