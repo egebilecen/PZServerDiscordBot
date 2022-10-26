@@ -40,4 +40,16 @@ public static class Statistics
 
         return 0;
     }
+
+    public static string GetPercentageValueProgressBar(string title, double val)
+    {
+        char padChar  = ' ';
+        char fillChar = '#';
+        int  barWidth = 10;
+
+        int repeatCount = ((int)(val - (val % 10))) / 10 * (barWidth / 10);
+        string progressBar = string.Format("{0} [{1}] {2}%", title, new string(fillChar, repeatCount) + new string(padChar, barWidth - repeatCount), val.ToString("0.##"));
+        
+        return progressBar;
+    }
 }
