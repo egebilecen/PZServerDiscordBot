@@ -9,7 +9,7 @@ using System;
 /// <remarks>
 /// See http://semver.org/ for specifications.
 /// </remarks>
-public class SemanticVersion : IComparable, IFormattable
+public class SemanticVersion : IComparable
 {
 	/// <summary>
 	/// Gets the major version.
@@ -221,51 +221,18 @@ public class SemanticVersion : IComparable, IFormattable
 			^ this.Step.GetHashCode();
 	}
 	/// <summary>
-	/// Returns a <see cref="System.String"/> that represents this instance.
+	/// Formats the value of the current instance using the specified format.
 	/// </summary>
+	/// <param name="format">The <see cref="T:System.String"/> specifying the format to use.</param>
 	/// <returns>
-	/// A <see cref="System.String"/> that represents this instance.
+	/// A <see cref="T:System.String"/> containing the value of the current instance in the specified format.
 	/// </returns>
 	public override string ToString()
 	{
-		return ToString("G");
-	}
-	/// <summary>
-	/// Formats the value of the current instance using the specified format.
-	/// </summary>
-	/// <param name="format">The <see cref="T:System.String"/> specifying the format to use.</param>
-	/// <returns>
-	/// A <see cref="T:System.String"/> containing the value of the current instance in the specified format.
-	/// </returns>
-	public string ToString(string format)
-	{
-		return ToString(format, null);
-	}
-	/// <summary>
-	/// Formats the value of the current instance using the specified format.
-	/// </summary>
-	/// <param name="format">The <see cref="T:System.String"/> specifying the format to use.</param>
-	/// <param name="formatProvider">The <see cref="T:System.IFormatProvider"/> to use to format the value.</param>
-	/// <returns>
-	/// A <see cref="T:System.String"/> containing the value of the current instance in the specified format.
-	/// </returns>
-	public string ToString(string format, IFormatProvider formatProvider)
-	{
-		if (String.IsNullOrEmpty(format))
-			format = "G";
-		if (formatProvider == null)
-			formatProvider = System.Globalization.CultureInfo.CurrentCulture;
+		string stage = GetDisplayFriendlyDevelopmentStage();
 
-		switch (format.ToUpperInvariant())
-		{
-			case "G":
-				return String.Format(formatProvider, "{0}.{1}.{2}", Major, Minor, Patch);
-			case "F":
-				return String.Format(formatProvider, "{0}.{1}.{2}{3}{4}", Major, Minor, Patch,
-					GetDisplayFriendlyDevelopmentStage(), Step.HasValue ? Step.Value.ToString() : "");
-			default:
-				throw new FormatException(String.Format("The '{0}' format string is not supported.", format));
-		}
+		return String.Format("v{0}.{1}.{2}{3}{4}", Major, Minor, Patch,
+							 string.IsNullOrEmpty(stage) ? "" : "-"+stage, Step.HasValue ? "-"+Step.Value.ToString() : "");
 	}
 
 	private string GetDisplayFriendlyDevelopmentStage()
