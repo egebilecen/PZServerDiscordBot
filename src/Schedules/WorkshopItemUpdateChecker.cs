@@ -58,7 +58,8 @@ public static partial class Schedules
 
         foreach(var item in itemDetails)
         {
-            if(item.Result != 1
+            if(Application.BotSettings.BotFeatureSettings.NonPublicModLogging
+            && item.Result != 1
             && logChannel != null)
             {
                 logChannel.SendMessageAsync(string.Format("**[Workshop Mod Update Checker]** Cannot get the details of mod with the ID of `{0}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {1})`\n**Mod Link:** {2}", item.PublishedFileId, item.Result.ToString(), "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId));

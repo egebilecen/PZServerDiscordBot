@@ -18,7 +18,8 @@ namespace Settings
 
     public class BotFeatureSettings
     {
-        public bool AutoServerStart = false;
+        public bool AutoServerStart     = false;
+        public bool NonPublicModLogging = false;
     }
 
     public class BotSettings

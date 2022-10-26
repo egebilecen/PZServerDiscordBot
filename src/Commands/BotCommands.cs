@@ -66,6 +66,8 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "**Workshop Mod Update Restart Timer:** "+(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)).ToString()+" minute(s)";
         botSettings += "\n";
         botSettings += "**Server Auto Start:** "+(Application.BotSettings.BotFeatureSettings.AutoServerStart ? "Enabled" : "Disabled");
+        botSettings += "\n";
+        botSettings += "**Non-public Mod Logging:** "+(Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? "Enabled" : "Disabled");
         
         await Context.Channel.SendMessageAsync(botSettings);
     }
@@ -139,6 +141,19 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.Save();
 
         await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
+    }
+
+    [Command("toggle_non_public_bot_logging")]
+    [Summary("Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_bot_logging)")]
+    public async Task ToggleNonPublicBotLogging()
+    {
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - ToggleNonPublicBotLogs] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Application.BotSettings.BotFeatureSettings.NonPublicModLogging = !Application.BotSettings.BotFeatureSettings.NonPublicModLogging;
+        Application.BotSettings.Save();
+
+        await Context.Channel.SendMessageAsync("Non-public mod logging feature has been " + (Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? "enabled" : "disabled") + ".");
     }
 
     [Command("set_perk_cache_duration")]
