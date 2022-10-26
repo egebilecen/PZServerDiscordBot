@@ -8,14 +8,16 @@ using System.Timers;
 public class ScheduleItem
 {
     public string               Name            { get; }
+    public string               DisplayName     { get; }
     public Action<List<object>> Function        { get; }
     public List<object>         Args            { get; set; }
     public ulong                IntervalMS      { get; set; }
     public DateTime             NextExecuteTime { get; set; }
 
-    public ScheduleItem(string name, ulong intervalMS, Action<List<object>> func, List<object> args)
+    public ScheduleItem(string name, string displayName, ulong intervalMS, Action<List<object>> func, List<object> args)
     {
         Name           = name;
+        DisplayName    = displayName;
         Function       = func;
         Args           = args;
 

@@ -1,6 +1,8 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 public class BotCommands : ModuleBase<SocketCommandContext>
@@ -84,6 +86,31 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "**Non-public Mod Logging:** "+(Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? "Enabled" : "Disabled");
         
         await Context.Channel.SendMessageAsync(botSettings);
+    }
+
+    [Command("get_schedules")]
+    [Summary("Gets the remaining times until schedules to be executed. (!get_schedules)")]
+    public async Task GetSchedules()
+    {
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - get_schedules] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        IReadOnlyCollection<ScheduleItem> scheduleItems = Scheduler.GetItems();
+
+        if(scheduleItems.Count > 0)
+        {
+            string schedules = "";
+            
+            foreach((int i, ScheduleItem scheduleItem) in scheduleItems.Select((val, i) => (i, val)))
+            {
+                schedules += string.Format("**{0}** schedule will run in <t:{1}:R>.", scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
+                
+                if(i != scheduleItems.Count - 1) schedules += "\n";
+            }
+        
+            await Context.Channel.SendMessageAsync(schedules);
+        }
+        else await Context.Channel.SendMessageAsync("No schedule found.");
     }
 
     [Command("set_restart_interval")]
