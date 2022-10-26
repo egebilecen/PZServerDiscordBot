@@ -79,6 +79,7 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 **!help** command can be used in any of configured 3 channels which bot will respond with the available command list for *that channel*.
 
 #### Public Channel
+- ``!bot_info`` Displays information about this bot. (!bot_info)
 - ``!server_status`` Gets the server status. (!server_status)
 - ``!restart_time`` Gets the next automated restart time. (!restart_time)
 
