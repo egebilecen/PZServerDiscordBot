@@ -23,12 +23,13 @@ namespace Settings
 
     public class BotSettings
     {
-        public const string settingsFile = ".\\pzdiscordbot.conf";
-        public ulong        GuildId;
-        public ulong        CommandChannelId;
-        public ulong        LogChannelId;
-        public ulong        PublicChannelId;
-        public float        VersionNumber;
+        [JsonIgnore]
+        public const string    SettingsFile = ".\\pzdiscordbot.conf";
+        public ulong           GuildId;
+        public ulong           CommandChannelId;
+        public ulong           LogChannelId;
+        public ulong           PublicChannelId;
+        public SemanticVersion Version;
 
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();
@@ -36,7 +37,7 @@ namespace Settings
 
         public void Save()
         {
-            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
+            File.WriteAllText(SettingsFile, JsonConvert.SerializeObject(this, Formatting.Indented));
         }
     }
 }
