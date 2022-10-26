@@ -4,24 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Management;
 
-namespace PZServerDiscordBot
+public static class Statistics
 {
-    public static class Statistics
+    // http://www.allenconway.net/2013/07/get-cpu-usage-across-all-cores-in-c.html
+    public static ulong GetTotalCPUUsagePercentage()
     {
-        // http://www.allenconway.net/2013/07/get-cpu-usage-across-all-cores-in-c.html
-        public static ulong GetTotalCPUUsagePercentage()
-        {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PerfFormattedData_PerfOS_Processor");
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PerfFormattedData_PerfOS_Processor");
         
-            var cpuUsageList = searcher.Get().Cast<ManagementObject>().Select(mo => new {
-                Name = mo["Name"],
-                Usage = mo["PercentProcessorTime"]
-            }).ToList();
+        var cpuUsageList = searcher.Get().Cast<ManagementObject>().Select(mo => new {
+            Name = mo["Name"],
+            Usage = mo["PercentProcessorTime"]
+        }).ToList();
 
-            var query    = cpuUsageList.Where(x => x.Name.ToString() == "_Total").Select(x => x.Usage);
-            var cpuUsage = query.SingleOrDefault();
+        var query    = cpuUsageList.Where(x => x.Name.ToString() == "_Total").Select(x => x.Usage);
+        var cpuUsage = query.SingleOrDefault();
         
-            return (ulong)cpuUsage;
+        return (ulong)cpuUsage;
+    }
+
+    // https://stackoverflow.com/a/31434952/8277139
+    public static double GetTotalRAMUsagePercentage()
+    {
+        var wmiObject = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
+
+        var memoryValues = wmiObject.Get().Cast<ManagementObject>().Select(mo => new {
+            FreePhysicalMemory = Double.Parse(mo["FreePhysicalMemory"].ToString()),
+            TotalVisibleMemorySize = Double.Parse(mo["TotalVisibleMemorySize"].ToString())
+        }).FirstOrDefault();
+
+        if(memoryValues != null) 
+        {
+            var percent = ((memoryValues.TotalVisibleMemorySize - memoryValues.FreePhysicalMemory) / memoryValues.TotalVisibleMemorySize) * 100;
+            return percent;
         }
+
+        return 0;
     }
 }
