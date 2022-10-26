@@ -8,11 +8,11 @@ public static partial class Schedules
 {
     public static void AutoServerStart(List<object> args)
     {
-        if(Application.botSettings.BotFeatureSettings.AutoServerStart)
+        if(Application.BotSettings.BotFeatureSettings.AutoServerStart)
         {
             if(!ServerUtility.IsServerRunning())
             {
-                var logChannel = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+                var logChannel = BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId);
 
                 Logger.WriteLog(string.Format("[{0}][AutoServerStart Schedule] Server is not running. Attempting to start the server.", Logger.GetLoggingDate()));
 

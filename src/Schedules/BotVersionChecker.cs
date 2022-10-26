@@ -12,7 +12,7 @@ public static partial class Schedules
         string latestBotVersion  = latestBotVersionTask.Result;
         
         if(!string.IsNullOrEmpty(latestBotVersion)
-        && latestBotVersion != Application.botVersion)
-            BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, Application.botVersion, Application.botRepoURL));
+        && latestBotVersion != Application.BotVersion)
+            BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, Application.BotVersion, Application.BotRepoURL));
     }
 }

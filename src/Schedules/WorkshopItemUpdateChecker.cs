@@ -24,7 +24,7 @@ public static partial class Schedules
             Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] serverRebootSchedule is null.", Logger.GetLoggingDate()));
             return;
         }
-        else if(serverRestartSchedule.NextExecuteTime.Subtract(DateTime.Now).TotalMilliseconds <= Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer)
+        else if(serverRestartSchedule.NextExecuteTime.Subtract(DateTime.Now).TotalMilliseconds <= Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer)
         {
             Logger.WriteLog(string.Format("[{0}][Workshop Item Update Checker Schedule] Upcoming restart detected. Skipping...", Logger.GetLoggingDate()));
             return;
@@ -54,7 +54,7 @@ public static partial class Schedules
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
 
-        var logChannel   = BotUtility.Discord.GetTextChannelById(Application.botSettings.LogChannelId);
+        var logChannel   = BotUtility.Discord.GetTextChannelById(Application.BotSettings.LogChannelId);
 
         foreach(var item in itemDetails)
         {
@@ -66,10 +66,10 @@ public static partial class Schedules
 
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
 
-            if(updateDate > Application.startTime)
+            if(updateDate > Application.StartTime)
             {
-                var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.botSettings.PublicChannelId);
-                uint restartInMinutes = Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
+                var  publicChannel    = BotUtility.Discord.GetTextChannelById(Application.BotSettings.PublicChannelId);
+                uint restartInMinutes = Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
 
                 if(logChannel != null)
                 {
@@ -92,8 +92,8 @@ public static partial class Schedules
                 }
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
-                serverRestartSchedule.UpdateInterval(Application.botSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
-                Application.startTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
+                serverRestartSchedule.UpdateInterval(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
+                Application.StartTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
                 break;
             }
         }

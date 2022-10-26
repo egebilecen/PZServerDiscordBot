@@ -10,16 +10,16 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                botRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                botVersion      = "v1.2.5";
-    public const float                 botVersionMajor = 1.2f;
+    public const string                BotRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
+    public const string                BotVersion      = "v1.2.5";
+    public const float                 BotVersionMajor = 1.2f;
+    public static Settings.BotSettings BotSettings;
 
-    public static Settings.BotSettings botSettings;
-    public static DiscordSocketClient  client;
-    public static CommandService       commands;
-    public static IServiceProvider     services;
-    public static CommandHandler       commandHandler;
-    public static DateTime             startTime = DateTime.UtcNow;
+    public static DiscordSocketClient  Client;
+    public static CommandService       Commands;
+    public static IServiceProvider     Services;
+    public static CommandHandler       CommandHandler;
+    public static DateTime             StartTime = DateTime.UtcNow;
 
     private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
@@ -29,14 +29,14 @@ public static class Application
         {
             if(string.IsNullOrEmpty(BotUtility.Discord.GetToken()))
             {
-                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+botRepoURL+" and see README.md file about setting up bot token.");
+                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+" and see README.md file about setting up bot token.");
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+botRepoURL+" and create an issue about this with the log file.");
+            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
             await Task.Delay(-1);
         }
 
@@ -81,18 +81,18 @@ public static class Application
 
         if(!File.Exists(Settings.BotSettings.settingsFile))
         {
-            botSettings = new Settings.BotSettings
+            BotSettings = new Settings.BotSettings
             {
-                VersionNumber = botVersionMajor
+                VersionNumber = BotVersionMajor
             };
-            botSettings.Save();
+            BotSettings.Save();
         }
         else
         {
-            botSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
         }
 
-        if(botSettings.VersionNumber == 0)
+        if(BotSettings.VersionNumber == 0)
         {
             File.Delete(Settings.BotSettings.settingsFile);
 
@@ -101,7 +101,7 @@ public static class Application
         }
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
-                                           botSettings.ServerScheduleSettings.ServerRestartSchedule,
+                                           BotSettings.ServerScheduleSettings.ServerRestartSchedule,
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
@@ -109,7 +109,7 @@ public static class Application
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
-                                           botSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
+                                           BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
         Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
@@ -129,32 +129,32 @@ public static class Application
         );
         
     #if !DEBUG
-        ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
+        ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
     #endif
 
-        client   = new DiscordSocketClient();
-        commands = new CommandService();
-        services = null;
-        commandHandler = new CommandHandler(client, commands, services);
+        Client   = new DiscordSocketClient();
+        Commands = new CommandService();
+        Services = null;
+        CommandHandler = new CommandHandler(Client, Commands, Services);
 
-        await commandHandler.SetupAsync();
-        await client.LoginAsync(TokenType.Bot, BotUtility.Discord.GetToken());
-        await client.StartAsync();
-        await client.SetGameAsync("Bot Version: "+botVersion);
+        await CommandHandler.SetupAsync();
+        await Client.LoginAsync(TokenType.Bot, BotUtility.Discord.GetToken());
+        await Client.StartAsync();
+        await Client.SetGameAsync("Bot Version: "+BotVersion);
 
         BotUtility.Discord.OrganizeCommands();
 
-        client.Ready += async () =>
+        Client.Ready += async () =>
         {
             await BotUtility.Discord.DoChannelCheck();
 
             string latestBotVersion = await BotUtility.GetLatestBotVersion();
             if(!string.IsNullOrEmpty(latestBotVersion)
-            && latestBotVersion != botVersion)
-                await BotUtility.Discord.GetTextChannelById(botSettings.LogChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, botVersion, botRepoURL));
+            && latestBotVersion != BotVersion)
+                await BotUtility.Discord.GetTextChannelById(BotSettings.LogChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, BotVersion, BotRepoURL));
         };
 
-        client.Disconnected += async (ex) =>
+        Client.Disconnected += async (ex) =>
         {
             Logger.LogException(ex);
             Logger.LogException(ex.InnerException);
@@ -164,7 +164,7 @@ public static class Application
                 Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
                 await Task.Delay(-1);
             }
-            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+botRepoURL+" and create an issue about this with the log file.");
+            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
         };
 
         await Task.Delay(-1);

@@ -15,9 +15,9 @@ public class CommandHandler
 
     private bool IsBotConfigured()
     {
-        return !(Application.botSettings.CommandChannelId == 0
-              || Application.botSettings.LogChannelId     == 0
-              || Application.botSettings.PublicChannelId  == 0);
+        return !(Application.BotSettings.CommandChannelId == 0
+              || Application.BotSettings.LogChannelId     == 0
+              || Application.BotSettings.PublicChannelId  == 0);
     }
 
     public CommandHandler(DiscordSocketClient client, CommandService commands, IServiceProvider services)
@@ -65,8 +65,8 @@ public class CommandHandler
         var context = new SocketCommandContext(_client, message);
 
         if(isBotConfigured
-        && (context.Channel.Id != Application.botSettings.PublicChannelId
-            && context.Channel.Id != Application.botSettings.CommandChannelId))
+        && (context.Channel.Id != Application.BotSettings.PublicChannelId
+            && context.Channel.Id != Application.BotSettings.CommandChannelId))
             return;
 
         if(command != "!help"

@@ -27,7 +27,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         }
         else
         {
-            ServerUtility.serverProcess = ServerUtility.Commands.StartServer();
+            ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
             
             Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[PZServerCommand - start_server] Caller: {0}", Context.User.ToString()));
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
@@ -117,7 +117,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             await BotUtility.Discord.SendEmbeddedMessage(Context.Message.Channel, perkList);
         }
 
-        var lastCacheTime = ServerLogParsers.PerkLog.lastCacheTime;
+        var lastCacheTime = ServerLogParsers.PerkLog.LastCacheTime;
 
         if(lastCacheTime != null)
         {
