@@ -2,6 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,10 +11,9 @@ using System.Threading.Tasks;
 
 public static class Application
 {
-    public const string                BotRepoURL      = "https://github.com/egebilecen/PZServerDiscordBot";
-    public const string                BotVersion      = "v1.2.5";
-    public const float                 BotVersionMajor = 1.2f;
-    public static Settings.BotSettings BotSettings;
+    public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 3, 0, DevelopmentStage.None);
+    public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
     public static CommandService       Commands;
@@ -79,25 +79,23 @@ public static class Application
         }
     #endif
 
-        if(!File.Exists(Settings.BotSettings.settingsFile))
+        if(!File.Exists(Settings.BotSettings.SettingsFile))
         {
             BotSettings = new Settings.BotSettings
             {
-                VersionNumber = BotVersionMajor
+                Version = BotVersion
             };
             BotSettings.Save();
         }
         else
         {
-            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.settingsFile));
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
         }
 
-        if(BotSettings.VersionNumber == 0)
+        if(BotSettings.Version == null)
         {
-            File.Delete(Settings.BotSettings.settingsFile);
-
-            Console.WriteLine("Please restart the bot.");
-            await Task.Delay(-1);
+            BotSettings.Version = BotVersion;
+            BotSettings.Save();
         }
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
@@ -147,11 +145,7 @@ public static class Application
         Client.Ready += async () =>
         {
             await BotUtility.Discord.DoChannelCheck();
-
-            string latestBotVersion = await BotUtility.GetLatestBotVersion();
-            if(!string.IsNullOrEmpty(latestBotVersion)
-            && latestBotVersion != BotVersion)
-                await BotUtility.Discord.GetTextChannelById(BotSettings.LogChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, BotVersion, BotRepoURL));
+            await BotUtility.CheckLatestBotVersion();
         };
 
         Client.Disconnected += async (ex) =>

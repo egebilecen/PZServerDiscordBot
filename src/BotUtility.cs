@@ -36,10 +36,21 @@ public static class BotUtility
             Logger.LogException(ex, "Error occured during GetLatestBotVersion().");
         }
 
-        if(version.Contains("-beta"))
-            return null;
-
         return version;
+    }
+
+    public static async Task CheckLatestBotVersion()
+    {
+        string latestBotVersionStr = await GetLatestBotVersion();
+        bool parseResult = SemanticVersion.TryParse(latestBotVersionStr, out SemanticVersion latestBotVersion);
+
+        if(parseResult)
+        {
+            if(latestBotVersion.Stage == DevelopmentStage.None
+            && Application.BotVersion < latestBotVersion)
+                await Discord.GetTextChannelById(Application.BotSettings.CommandChannelId).SendMessageAsync(string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}.", latestBotVersion, Application.BotVersion, Application.BotRepoURL));
+        }
+        else Logger.WriteLog(string.Format("[{0}][CheckLatestBotVersion()] Couldn't parse the version string. String: {1}", Logger.GetLoggingDate(), latestBotVersionStr));
     }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
