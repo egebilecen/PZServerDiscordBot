@@ -90,6 +90,7 @@ Bot Commands:
 - `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
 - `!get_settings` Gets the bot settings. (!get_settings)<br>
 - `!get_schedules` Gets the remaining times until schedules to be executed. (!get_schedules)<br>
+- `!get_ram_cpu` Gets the total RAM and CPU usage of the machine. (!get_ram_cpu)<br>
 - `!set_restart_interval` Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)<br>
 - `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)<br>
 - `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)<br>

@@ -113,6 +113,22 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         else await Context.Channel.SendMessageAsync("No schedule found.");
     }
 
+    [Command("get_ram_cpu")]
+    [Summary("Gets the total RAM and CPU usage of the machine. (!get_ram_cpu)")]
+    public async Task GetRAMCPU()
+    {
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - get_ram_cpu] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        string progressBarStr = "```";
+        progressBarStr += Statistics.GetPercentageValueProgressBar("RAM", Statistics.GetTotalRAMUsagePercentage());
+        progressBarStr += "\n";
+        progressBarStr += Statistics.GetPercentageValueProgressBar("CPU", Statistics.GetTotalCPUUsagePercentage());
+        progressBarStr += "```";
+
+        await Context.Channel.SendMessageAsync(progressBarStr);
+    }
+
     [Command("set_restart_interval")]
     [Summary("Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)")]
     public async Task SetRestartInterval(uint intervalMinute)
