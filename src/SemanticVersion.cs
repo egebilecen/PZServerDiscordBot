@@ -1,6 +1,7 @@
-﻿// https://gist.github.com/yadyn/959467
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Represents assembly, application, or other version information,
@@ -253,6 +254,65 @@ public class SemanticVersion : IComparable
 				return "rc";
 		}
 	}
+
+	public static bool TryParse(string s, out SemanticVersion result)
+    {
+		Regex regex = new Regex(@"^v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$");
+		MatchCollection matches = regex.Matches(s);
+		
+		result = null;
+
+		if(matches.Count > 0)
+        {
+			Match match = matches[0];
+
+			int  major = int.Parse(match.Groups[1].Value);
+			int  minor = int.Parse(match.Groups[2].Value);
+			int  patch = int.Parse(match.Groups[3].Value);
+			DevelopmentStage stage = DevelopmentStage.None;
+			int? step  = null;
+
+			string[] split = match.Groups[4].Value.Split('-').Where(x => !string.IsNullOrEmpty(x)).ToArray();
+
+			if(split.Length > 0)
+            {
+				try
+				{
+					if(split.Length > 1)
+						step = int.Parse(split.Last());
+				}
+				catch (Exception) { return false; }
+
+				switch(split.First())
+				{
+					case "pre":
+						stage = DevelopmentStage.PreAlpha;
+					break;
+
+					case "alpha":
+						stage = DevelopmentStage.Alpha;
+					break;
+
+					case "beta":
+						stage = DevelopmentStage.Beta;
+					break;
+
+					case "rc":
+						stage = DevelopmentStage.RC;
+					break;
+
+					default:
+						stage = DevelopmentStage.None;
+					break;
+				}
+            }
+
+			result = new SemanticVersion(major, minor, patch, stage, step);
+			return true;
+        }
+
+		return false;
+    }
 }
 /// <summary>
 /// A list of development stages.
