@@ -93,9 +93,9 @@ public class SemanticVersion : IComparable
 		if (step < 1)
 			throw new ArgumentOutOfRangeException("step", "Step cannot be negative or zero.");
 
-		// None/Final don't support steps, so ignore the value in those cases
+		// None don't support steps, so ignore the value in those cases
 		// Should it throw ArgumentException instead?
-		if (stage != DevelopmentStage.None && stage != DevelopmentStage.Final)
+		if (stage != DevelopmentStage.None)
 			this.Step = step;
 	}
 
@@ -242,7 +242,6 @@ public class SemanticVersion : IComparable
 		{
 			default:
 			case DevelopmentStage.None:
-			case DevelopmentStage.Final:
 				return String.Empty;
 			case DevelopmentStage.PreAlpha:
 				return "pre";
@@ -347,9 +346,5 @@ public enum DevelopmentStage
 	/// either done or cut, as well as tested and mostly ready.  Code
 	/// should be mainly stable.
 	/// </summary>
-	RC = 4,
-	/// <summary>
-	/// This typically means a shipping or production version.
-	/// </summary>
-	Final = 5
+	RC = 4
 }
