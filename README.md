@@ -85,6 +85,7 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 - ``!bot_info`` Displays information about this bot. (!bot_info)
 - ``!server_status`` Gets the server status. (!server_status)
 - ``!restart_time`` Gets the next automated restart time. (!restart_time)
+- ``!game_date`` Gets the current in-game date. (!game_date)
 
 #### Command Channel
 Bot Commands:
