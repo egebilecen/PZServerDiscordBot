@@ -62,6 +62,9 @@ public static class Application
                         if(arg.Contains("user.home"))
                         {
                             ServerPath.BasePath = arg.Split('=').Last() + "\\";
+
+                            if(!Directory.Exists(ServerPath.BasePath))
+                                ServerPath.BasePath += "Zomboid\\";
                         }
                     }
                 }
