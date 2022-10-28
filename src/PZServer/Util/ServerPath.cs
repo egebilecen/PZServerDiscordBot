@@ -4,7 +4,7 @@ public static class ServerPath
 {
     public static string BasePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Zomboid\\";
 
-    public static string LogPath()
+    public static string ServerLogsPath()
     {
         string path = BasePath + "Logs\\";
         return path;

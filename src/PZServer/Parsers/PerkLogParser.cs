@@ -24,14 +24,14 @@ namespace ServerLogParsers
 
         private static string GetContent(int nthFile=0)
         {
-            string zomboidLogDirectory = ServerPath.LogPath();
+            string serverLogDir = ServerPath.ServerLogsPath();
 
-            if(!Directory.Exists(zomboidLogDirectory)) return string.Empty;
+            if(!Directory.Exists(serverLogDir)) return string.Empty;
 
             List<FileInfo> perkLogFiles    = new List<FileInfo>();
-            List<FileInfo> sortedDirectory = new DirectoryInfo(zomboidLogDirectory).GetFiles()
-                                                                                   .OrderBy(file => file.LastWriteTime)
-                                                                                   .ToList();
+            List<FileInfo> sortedDirectory = new DirectoryInfo(serverLogDir).GetFiles()
+                                                                            .OrderBy(file => file.LastWriteTime)
+                                                                            .ToList();
 
             foreach(FileInfo _fileInfo in sortedDirectory)
             {
