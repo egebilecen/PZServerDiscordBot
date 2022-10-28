@@ -8,10 +8,10 @@ public static class ServerPath
     {
     #if DEBUG
         return ".\\Logs\\";
-    #endif
-
+    #else
         string path = BasePath + "Logs\\";
         return path;
+    #endif
     }
 
     public static string ServerSettingsPath()
