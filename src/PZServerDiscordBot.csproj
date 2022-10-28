@@ -123,6 +123,7 @@
     <Compile Include="Bot\CommandHandler.cs" />
     <Compile Include="Bot\Commands\AdminCommands.cs" />
     <Compile Include="Bot\Commands\BotCommands.cs" />
+    <Compile Include="Bot\Util\FileUtility.cs" />
     <Compile Include="Discord\DiscordUtility.cs" />
     <Compile Include="Discord\EmojiList.cs" />
     <Compile Include="PZServer\Parsers\IniParser.cs" />
