@@ -16,4 +16,16 @@ public static class ServerPath
         string path = BasePath + "Server\\";
         return path;
     }
+
+    public static string ServerSavesPath()
+    {
+        string path = BasePath + "Saves\\Multiplayer\\" + ServerUtility.GetServerConfigIniFileName(true) + "\\";
+        return path;
+    }
+
+    public static string MapTimeFilePath()
+    {
+        string path = ServerSavesPath() + "map_t.bin";
+        return path;
+    }
 }

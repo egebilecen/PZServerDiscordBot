@@ -19,10 +19,12 @@ public static class ServerUtility
         return fileList.Length > 0 ? fileList[0] : null;
     }
 
-    public static string GetServerConfigIniFileName()
+    public static string GetServerConfigIniFileName(bool cropExtension = false)
     {
         string filePath = GetServerConfigIniFilePath();
-        return string.IsNullOrEmpty(filePath) ? null : Path.GetFileName(filePath);
+        return string.IsNullOrEmpty(filePath) ? null 
+                                              : (cropExtension ? Path.GetFileNameWithoutExtension(filePath) 
+                                                               : Path.GetFileName(filePath));
     }
 
     public static class Commands
