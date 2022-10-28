@@ -6,6 +6,10 @@ public static class ServerPath
 
     public static string ServerLogsPath()
     {
+    #if DEBUG
+        return ".\\Logs\\";
+    #endif
+
         string path = BasePath + "Logs\\";
         return path;
     }
