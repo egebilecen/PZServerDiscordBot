@@ -71,7 +71,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
             "```" +
             "Current in-game date: {0}/{1}/{2}" +
             "```" + 
-            "*(Date is in DD-MM-YYYY format aka European format)*", 
+            "*(Date is in DD-MM-YYYY aka European format)*", 
             day.ToString().PadLeft(2, '0'), month.ToString().PadLeft(2, '0'), year.ToString());
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
