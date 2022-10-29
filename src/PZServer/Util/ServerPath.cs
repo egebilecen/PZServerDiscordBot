@@ -1,31 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public static class ServerPath
 {
     public static string BasePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Zomboid\\";
 
-    public static string LogPath()
+    public static string ServerLogsPath()
     {
+    #if DEBUG
+        return ".\\Logs\\";
+    #else
         string path = BasePath + "Logs\\";
-
-        if(!Directory.Exists(path))
-            path = BasePath + "Zomboid\\Logs\\";
-
         return path;
+    #endif
     }
 
     public static string ServerSettingsPath()
     {
         string path = BasePath + "Server\\";
+        return path;
+    }
 
-        if(!Directory.Exists(path))
-            path = BasePath + "Zomboid\\Server\\";
+    public static string ServerSavesPath()
+    {
+        string path = BasePath + "Saves\\Multiplayer\\" + ServerUtility.GetServerConfigIniFileName(true) + "\\";
+        return path;
+    }
 
+    public static string MapTimeFilePath()
+    {
+        string path = ServerSavesPath() + "map_t.bin";
         return path;
     }
 }
