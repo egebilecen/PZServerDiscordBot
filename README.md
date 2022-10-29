@@ -22,6 +22,9 @@ This bot is written for people to easily manage their server using Discord. Plea
 - Perk Parser with cache system. (Bot automatically parses the last perk log file that holds the player skills when they login to server. This can be used to aid players that died to a bug but they can't remember their skills. As stated before, server logs the player skills only when they log into server. If player levels up a skill after connecting to server, it won't appear in log unless player logs into server afterwards again.) When command for perk parser is invoked, bot will parse the file and save it contents in memory until cache (in minutes) expires. This is for to increase efficiency as bot will not have to parse the same file each time. In a situation where fresh data needed, **!reset_perk_cache** command can be used to reset the cache.                
 ![Perk Parser Example](https://i.ibb.co/DgYY698/Screenshot-2.png)
 - Auto server start if server quits. This feature useful if combined with mods that quits the server for whatever reason. For example, if you are using a mod that checks mod updates and when detects it, quits the server. With enabling this feature, you won't need to manually run the server.
+![Auto Server Start Example](https://i.ibb.co/zJmJZc8/Screenshot-5.png)
+- `!get_ram_cpu` Command for checking current RAM and CPU usage of the machine.
+![RAM CPU Command Example](https://i.ibb.co/7CJwjH1/Screenshot-6.png)
 
 # Installation
 #### Creating the Discord Bot
@@ -82,6 +85,7 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 - ``!bot_info`` Displays information about this bot. (!bot_info)
 - ``!server_status`` Gets the server status. (!server_status)
 - ``!restart_time`` Gets the next automated restart time. (!restart_time)
+- ``!game_date`` Gets the current in-game date. (!game_date)
 
 #### Command Channel
 Bot Commands:

@@ -24,14 +24,14 @@ namespace ServerLogParsers
 
         private static string GetContent(int nthFile=0)
         {
-            string zomboidLogDirectory = ServerPath.LogPath();
+            string serverLogDir = ServerPath.ServerLogsPath();
 
-            if(!Directory.Exists(zomboidLogDirectory)) return string.Empty;
+            if(!Directory.Exists(serverLogDir)) return string.Empty;
 
             List<FileInfo> perkLogFiles    = new List<FileInfo>();
-            List<FileInfo> sortedDirectory = new DirectoryInfo(zomboidLogDirectory).GetFiles()
-                                                                                   .OrderBy(file => file.LastWriteTime)
-                                                                                   .ToList();
+            List<FileInfo> sortedDirectory = new DirectoryInfo(serverLogDir).GetFiles()
+                                                                            .OrderByDescending(file => file.LastWriteTime)
+                                                                            .ToList();
 
             foreach(FileInfo _fileInfo in sortedDirectory)
             {
@@ -43,30 +43,7 @@ namespace ServerLogParsers
             || nthFile > perkLogFiles.Count - 1) return string.Empty;
 
             FileInfo fileInfo = perkLogFiles[nthFile];
-
-            try 
-            {
-                using(FileStream fileStream     = File.Open(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read))
-                using(StreamReader streamReader = new StreamReader(fileStream))
-                {
-                    string fileContent = streamReader.ReadToEnd();
-                    return fileContent;
-                }
-            }
-            catch(IOException)
-            {
-                if(File.Exists(TempLogFile))
-                    File.Delete(TempLogFile);
-
-                File.Copy(fileInfo.FullName, TempLogFile);
-
-                using(FileStream fileStream     = File.Open(TempLogFile, FileMode.Open, FileAccess.Read, FileShare.Read))
-                using(StreamReader streamReader = new StreamReader(fileStream))
-                {
-                    string fileContent = streamReader.ReadToEnd();
-                    return fileContent;
-                }
-            }
+            return FileUtility.ReadFile(fileInfo.FullName);
         }
 
         private static Dictionary<string, UserPerkData> Parse(int nthFile=0)
