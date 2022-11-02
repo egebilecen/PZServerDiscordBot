@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
-    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 4, 0, DevelopmentStage.None);
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 4, 1, DevelopmentStage.None);
     public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
@@ -65,7 +65,7 @@ public static class Application
                         {
                             ServerPath.BasePath = arg.Split('=').Last() + "\\";
 
-                            if(!Directory.Exists(ServerPath.BasePath))
+                            if(Directory.Exists(ServerPath.BasePath + "Zomboid\\"))
                                 ServerPath.BasePath += "Zomboid\\";
                         }
                     }
