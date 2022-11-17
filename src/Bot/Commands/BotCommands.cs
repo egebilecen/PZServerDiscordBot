@@ -270,7 +270,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("backup_server")]
-    [Summary("Creates a backup of server. (!backup_server)")]
+    [Summary("Creates a backup of the server. Backup files can be found in \"server_backup\" folder in the directory where bot has been launched. (!backup_server)")]
     public async Task BackupServer()
     {
         if(ServerUtility.IsServerRunning())
