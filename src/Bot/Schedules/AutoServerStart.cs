@@ -6,7 +6,8 @@ public static partial class Schedules
     {
         if(Application.BotSettings.BotFeatureSettings.AutoServerStart)
         {
-            if(!ServerUtility.IsServerRunning())
+            if(!ServerUtility.IsServerRunning()
+            && !BackupCreator.IsRunning)
             {
                 var logChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.LogChannelId);
 
@@ -19,7 +20,7 @@ public static partial class Schedules
                 ServerUtility.Commands.StartServer();
             #endif
             }
-            else Logger.WriteLog(string.Format("[{0}][AutoServerStart Schedule] Server is running. Skipping...", Logger.GetLoggingDate()));
+            else Logger.WriteLog(string.Format("[{0}][AutoServerStart Schedule] Either server is running or backup creator is running. Skipping...", Logger.GetLoggingDate()));
         }
     }
 }

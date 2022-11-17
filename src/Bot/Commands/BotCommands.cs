@@ -273,6 +273,13 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Creates a backup of server. (!backup_server)")]
     public async Task BackupServer()
     {
+        if(ServerUtility.IsServerRunning())
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Cannot create a backup while server is running.");
+            return;
+        }
+
         Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - backup_server] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         

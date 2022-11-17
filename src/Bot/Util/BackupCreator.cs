@@ -66,9 +66,6 @@ public static class BackupCreator
         if(ServerUtility.IsServerRunning())
         {
             Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Server is running. Cannot create backup.", Logger.GetLoggingDate()));
-            
-            if(logChannel != null)
-                logChannel.SendMessageAsync("Cannot create a backup while server is running.");
             return;
         }
 
@@ -103,13 +100,14 @@ public static class BackupCreator
 
             CreateFromDirectory(namePathPair.Value, backupPath+"/"+namePathPair.Key, new ProgressReporter<double>(p =>
             {
-                string backupText = string.Format("Backup in progress for `{0}`: **{1:P2}**.", namePathPair.Value, p);
-
-                if(logChannel != null)
-                    logChannel.SendMessageAsync(backupText);
-
+                string backupText = string.Format("Backup in progress for \"{0}\": {1:P2}.", namePathPair.Value, p);
+                Console.WriteLine(backupText);
+                
                 if(p == 1)
                 {
+                    if(logChannel != null)
+                        logChannel.SendMessageAsync("Backup of `"+namePathPair.Value+"` is done.");
+
                     bool allCompleted = true;
                     backupProgressTracker[namePathPair.Key] = true;
 
@@ -125,7 +123,12 @@ public static class BackupCreator
                     IsRunning = !allCompleted;
 
                     if(allCompleted)
-                        logChannel.SendMessageAsync("Server backup is completed!");
+                    {
+                        Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Backup completed.", Logger.GetLoggingDate()));
+                        
+                        if(logChannel != null)
+                            logChannel.SendMessageAsync("Server backup is completed!");
+                    }
                 }
             }));
         }
