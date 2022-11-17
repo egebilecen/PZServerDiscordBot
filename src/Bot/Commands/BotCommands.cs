@@ -283,7 +283,8 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - backup_server] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
-        BackupCreator.Start();
+        _ = Task.Run(() => BackupCreator.Start());
+
         await Context.Channel.SendMessageAsync("Starting server backup. You can check the backup progress in log channel (<#"+Application.BotSettings.LogChannelId.ToString()+">).");
     }
 }
