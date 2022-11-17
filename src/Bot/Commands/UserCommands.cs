@@ -21,7 +21,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(ServerUtility.IsServerRunning() 
                                              ? "Server is **running** :hamster:" 
-                                             : BackupCreator.IsRunning
+                                             : ServerBackupCreator.IsRunning
                                              ? "Currently **server backup** is in progress. :wrench:"
                                              : "Server is **dead** :skull:");
     }

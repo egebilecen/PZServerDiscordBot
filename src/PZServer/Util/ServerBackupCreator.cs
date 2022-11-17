@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 
-public static class BackupCreator
+public static class ServerBackupCreator
 {
     public static bool IsRunning { get; private set; } = false;
     private static readonly string backupPath = "./server_backup";

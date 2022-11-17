@@ -24,7 +24,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
             await Context.Channel.SendMessageAsync("Server is already running.");
         }
-        else if(BackupCreator.IsRunning)
+        else if(ServerBackupCreator.IsRunning)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
             await Context.Channel.SendMessageAsync("Cannot start the server during backup in progress. Please wait until backup finishes.");

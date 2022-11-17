@@ -8,6 +8,11 @@ public static class ServerUtility
     private const string  serverFile    = ".\\server.bat";
     public static Process ServerProcess = null;
 
+    public static bool CanStartServer()
+    {
+        return !IsServerRunning() && !ServerBackupCreator.IsRunning;
+    }
+
     public static bool IsServerRunning()
     {
         return ServerProcess != null && !ServerProcess.HasExited;
@@ -43,7 +48,7 @@ public static class ServerUtility
         public static Process StartServer()
         {
             if(!IsServerRunning()
-            && !BackupCreator.IsRunning)
+            && !ServerBackupCreator.IsRunning)
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(serverFile)
                 {
