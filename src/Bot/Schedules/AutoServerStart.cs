@@ -6,8 +6,7 @@ public static partial class Schedules
     {
         if(Application.BotSettings.BotFeatureSettings.AutoServerStart)
         {
-            if(!ServerUtility.IsServerRunning()
-            && !ServerBackupCreator.IsRunning)
+            if(ServerUtility.CanStartServer())
             {
                 var logChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.LogChannelId);
 

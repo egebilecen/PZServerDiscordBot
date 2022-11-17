@@ -47,8 +47,7 @@ public static class ServerUtility
 
         public static Process StartServer()
         {
-            if(!IsServerRunning()
-            && !ServerBackupCreator.IsRunning)
+            if(CanStartServer())
             {
                 ProcessStartInfo startInfo = new ProcessStartInfo(serverFile)
                 {
