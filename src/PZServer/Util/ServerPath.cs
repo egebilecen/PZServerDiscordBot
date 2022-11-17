@@ -32,6 +32,12 @@ public static class ServerPath
         return path;
     }
 
+    public static string ServerLuaPath()
+    {
+        string path = BasePath + "Lua\\";
+        return path;
+    }
+
     public static string MapTimeFilePath()
     {
         string path = ServerSavesPath() + "map_t.bin";

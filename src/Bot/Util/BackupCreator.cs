@@ -48,13 +48,14 @@ public class StreamWithProgress : Stream
 
 public static class BackupCreator
 {
-    public static bool IsRunning { get; private set; } = true;
+    public static bool IsRunning { get; private set; } = false;
     private static readonly string backupPath = "./server_backup";
 
     private static readonly Dictionary<string, string> backupNamePathList = new Dictionary<string, string> 
     {
         { "db.zip", ServerPath.ServerDatabasePath() },
-        { "server.zip", ServerPath.ServerDatabasePath() },
+        { "server.zip", ServerPath.ServerSettingsPath() },
+        { "Lua.zip", ServerPath.ServerLuaPath() },
     };
     private static readonly Dictionary<string, bool> backupProgressTracker = new Dictionary<string, bool>();
 
@@ -71,7 +72,7 @@ public static class BackupCreator
             return;
         }
 
-        IsRunning = false;
+        IsRunning = true;
         backupProgressTracker.Clear();
 
         // Will be set to true when all files added into archive.
@@ -84,10 +85,21 @@ public static class BackupCreator
         if(logChannel != null)
             logChannel.SendMessageAsync("Server backup started.");
 
+        bool isHandlerAssigned = false;
+
         foreach(KeyValuePair<string, string> namePathPair in backupNamePathList)
         {
             if(File.Exists(backupPath+"/"+namePathPair.Key))
                 File.Delete(backupPath+"/"+namePathPair.Key);
+
+            if(!Directory.Exists(namePathPair.Value))
+            {
+                Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Couldn't find path \""+namePathPair.Value+"\". Skipping...", Logger.GetLoggingDate()));
+                backupProgressTracker[namePathPair.Key] = true;
+                continue;
+            }
+
+            isHandlerAssigned = true;
 
             CreateFromDirectory(namePathPair.Value, backupPath+"/"+namePathPair.Key, new ProgressReporter<double>(p =>
             {
@@ -110,12 +122,20 @@ public static class BackupCreator
                         }
                     }
 
-                    IsRunning = allCompleted;
+                    IsRunning = !allCompleted;
 
                     if(allCompleted)
                         logChannel.SendMessageAsync("Server backup is completed!");
                 }
             }));
+        }
+
+        if(!isHandlerAssigned)
+        {
+            if(logChannel != null)
+                logChannel.SendMessageAsync("There isn't anything to backup.");
+
+            IsRunning = false;
         }
     }
 
