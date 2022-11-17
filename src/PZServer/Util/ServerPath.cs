@@ -26,6 +26,12 @@ public static class ServerPath
         return path;
     }
 
+    public static string ServerSavesPlayerPath()
+    {
+        string path = BasePath + "Saves\\Multiplayer\\" + ServerUtility.GetServerConfigIniFileName(true) + "_player\\";
+        return path;
+    }
+
     public static string ServerDatabasePath()
     {
         string path = BasePath + "db\\";
