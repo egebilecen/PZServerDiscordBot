@@ -19,10 +19,33 @@ public static class ServerPath
         string path = BasePath + "Server\\";
         return path;
     }
+    public static string ServerBaseSavesPath()
+    {
+        string path = BasePath + "Saves\\";
+        return path;
+    }
 
     public static string ServerSavesPath()
     {
         string path = BasePath + "Saves\\Multiplayer\\" + ServerUtility.GetServerConfigIniFileName(true) + "\\";
+        return path;
+    }
+
+    public static string ServerSavesPlayerPath()
+    {
+        string path = BasePath + "Saves\\Multiplayer\\" + ServerUtility.GetServerConfigIniFileName(true) + "_player\\";
+        return path;
+    }
+
+    public static string ServerDatabasePath()
+    {
+        string path = BasePath + "db\\";
+        return path;
+    }
+
+    public static string ServerLuaPath()
+    {
+        string path = BasePath + "Lua\\";
         return path;
     }
 

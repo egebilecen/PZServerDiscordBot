@@ -19,7 +19,11 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     public async Task ServerStatus()
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(ServerUtility.IsServerRunning() ? "Server is **running** :hamster:" : "Server is **dead** :skull:");
+        await Context.Channel.SendMessageAsync(ServerUtility.IsServerRunning() 
+                                             ? "Server is **running** :hamster:" 
+                                             : ServerBackupCreator.IsRunning
+                                             ? "Currently **server backup** is in progress. :wrench:"
+                                             : "Server is **dead** :skull:");
     }
 
     [Command("restart_time")]

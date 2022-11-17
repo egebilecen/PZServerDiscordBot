@@ -200,11 +200,11 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
     }
 
-    [Command("toggle_non_public_bot_logging")]
-    [Summary("Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_bot_logging)")]
+    [Command("toggle_non_public_mod_logging")]
+    [Summary("Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_mod_logging)")]
     public async Task ToggleNonPublicBotLogging()
     {
-        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - ToggleNonPublicBotLogs] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - toggle_non_public_mod_logging] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Application.BotSettings.BotFeatureSettings.NonPublicModLogging = !Application.BotSettings.BotFeatureSettings.NonPublicModLogging;
@@ -255,7 +255,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)")]
     public async Task ToggleServerAutoStart()
     {
-        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - ToggleServerAutoStart] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - toggle_server_auto_start] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Application.BotSettings.BotFeatureSettings.AutoServerStart = !Application.BotSettings.BotFeatureSettings.AutoServerStart;
@@ -267,5 +267,24 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             autoServerStartSchedule.UpdateInterval();
 
         await Context.Channel.SendMessageAsync("Server auto start feature has been " + (Application.BotSettings.BotFeatureSettings.AutoServerStart ? "enabled" : "disabled") + ".");
+    }
+
+    [Command("backup_server")]
+    [Summary("Creates a backup of the server. Backup files can be found in \"server_backup\" folder in the directory where bot has been launched. (!backup_server)")]
+    public async Task BackupServer()
+    {
+        if(ServerUtility.IsServerRunning())
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Cannot create a backup while server is running.");
+            return;
+        }
+
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - backup_server] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        _ = Task.Run(async () => await ServerBackupCreator.Start());
+
+        await Context.Channel.SendMessageAsync("Starting server backup. You can check the backup progress in log channel (<#"+Application.BotSettings.LogChannelId.ToString()+">).");
     }
 }

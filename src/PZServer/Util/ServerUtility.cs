@@ -8,6 +8,11 @@ public static class ServerUtility
     private const string  serverFile    = ".\\server.bat";
     public static Process ServerProcess = null;
 
+    public static bool CanStartServer()
+    {
+        return !IsServerRunning() && !ServerBackupCreator.IsRunning;
+    }
+
     public static bool IsServerRunning()
     {
         return ServerProcess != null && !ServerProcess.HasExited;
@@ -42,14 +47,18 @@ public static class ServerUtility
 
         public static Process StartServer()
         {
-            if(!IsServerRunning())
+            if(CanStartServer())
             {
-                ProcessStartInfo startInfo      = new ProcessStartInfo(serverFile);
-                startInfo.RedirectStandardInput = true;
-                startInfo.UseShellExecute       = false;
+                ProcessStartInfo startInfo = new ProcessStartInfo(serverFile)
+                {
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                };
 
-                ServerProcess = new Process();
-                ServerProcess.StartInfo = startInfo;
+                ServerProcess = new Process
+                {
+                    StartInfo = startInfo
+                };
                 ServerProcess.Start();
 
                 ScheduleItem serverRestartSchedule  = Scheduler.GetItem("ServerRestart");
