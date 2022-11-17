@@ -200,11 +200,11 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
     }
 
-    [Command("toggle_non_public_bot_logging")]
-    [Summary("Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_bot_logging)")]
+    [Command("toggle_non_public_mod_logging")]
+    [Summary("Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_mod_logging)")]
     public async Task ToggleNonPublicBotLogging()
     {
-        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - ToggleNonPublicBotLogs] Caller: {0}", Context.User.ToString()));
+        Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[BotCommands - toggle_non_public_mod_logging] Caller: {0}", Context.User.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         Application.BotSettings.BotFeatureSettings.NonPublicModLogging = !Application.BotSettings.BotFeatureSettings.NonPublicModLogging;
