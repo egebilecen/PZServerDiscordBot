@@ -42,14 +42,19 @@ public static class ServerUtility
 
         public static Process StartServer()
         {
-            if(!IsServerRunning())
+            if(!IsServerRunning()
+            && !BackupCreator.IsRunning)
             {
-                ProcessStartInfo startInfo      = new ProcessStartInfo(serverFile);
-                startInfo.RedirectStandardInput = true;
-                startInfo.UseShellExecute       = false;
+                ProcessStartInfo startInfo = new ProcessStartInfo(serverFile)
+                {
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                };
 
-                ServerProcess = new Process();
-                ServerProcess.StartInfo = startInfo;
+                ServerProcess = new Process
+                {
+                    StartInfo = startInfo
+                };
                 ServerProcess.Start();
 
                 ScheduleItem serverRestartSchedule  = Scheduler.GetItem("ServerRestart");

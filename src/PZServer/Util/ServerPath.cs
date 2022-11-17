@@ -26,6 +26,12 @@ public static class ServerPath
         return path;
     }
 
+    public static string ServerDatabasePath()
+    {
+        string path = BasePath + "db\\";
+        return path;
+    }
+
     public static string MapTimeFilePath()
     {
         string path = ServerSavesPath() + "map_t.bin";
