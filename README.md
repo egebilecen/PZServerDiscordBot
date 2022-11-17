@@ -102,6 +102,7 @@ Bot Commands:
 - `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
 - `!toggle_server_auto_start` Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)<br>
+- `!backup_server` Creates a backup of the server. Backup files can be found in "server_backup" folder in the directory where bot has been launched. (!backup_server)<br>
   
 Server Commands:
 - `!server_msg` Broadcasts a message to all players in the server. (!server_msg "[message]")<br>
