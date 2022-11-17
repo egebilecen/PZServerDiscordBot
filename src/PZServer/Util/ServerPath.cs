@@ -19,6 +19,11 @@ public static class ServerPath
         string path = BasePath + "Server\\";
         return path;
     }
+    public static string ServerBaseSavesPath()
+    {
+        string path = BasePath + "Saves\\";
+        return path;
+    }
 
     public static string ServerSavesPath()
     {
