@@ -27,7 +27,7 @@ This bot is written for people to easily manage their Project Zomboid server usi
 ![RAM CPU Command Example](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_6.png)
 - `!backup_server` command for backing up the server easily.
 ![Backup Command Example 1](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_7.png)
-![Backup Command Example 2](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_8png)
+![Backup Command Example 2](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_8.png)
 
 # Installation
 #### Creating the Discord Bot
