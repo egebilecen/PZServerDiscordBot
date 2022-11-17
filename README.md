@@ -24,7 +24,7 @@ This bot is written for people to easily manage their Project Zomboid server usi
 - Auto server start if server quits. This feature useful if combined with mods that quits the server for whatever reason. For example, if you are using a mod that checks mod updates and when detects it, quits the server. With enabling this feature, you won't need to manually run the server.
 ![Auto Server Start Example](https://i.ibb.co/zJmJZc8/Screenshot-5.png)
 - `!get_ram_cpu` command for checking current RAM and CPU usage of the machine.
-![RAM CPU Command Example](https://i.ibb.co/7CJwjH1/Screenshot-6.png)
+![RAM CPU Command Example](https://i.ibb.co/ZTWkm4c/Screenshot-6.png)
 - `!backup_server` command for backing up the server easily.
 ![Backup Command Example 1](https://i.ibb.co/QNpnkMF/Screenshot-7.png)
 ![Backup Command Example 2](https://i.ibb.co/d25bbkD/Screenshot-8.png)
