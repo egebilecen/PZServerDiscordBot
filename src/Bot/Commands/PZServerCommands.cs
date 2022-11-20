@@ -83,7 +83,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("initiate_restart")]
-    [Summary("Initiate a restart. (!initiate_restart <minutes until restart>)")]
+    [Summary("Initiates a restart. (!initiate_restart <minutes until restart>)")]
     public async Task InitiateRestart(uint minutes)
     {
         if(minutes == 0)
@@ -112,7 +112,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("abort_restart")]
-    [Summary("Aborts an upcoming restart. Works both with restart schedule or manual initiated restart. (!abort_restart)")]
+    [Summary("Aborts an upcoming restart. Works both with restart schedule and manual initiated restart. (!abort_restart)")]
     public async Task AbortRestart()
     {
         if(ServerUtility.IsServerRunning())
