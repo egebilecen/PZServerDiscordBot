@@ -68,7 +68,7 @@ public static partial class Schedules
             if(updateDate > Application.StartTime)
             {
                 var  publicChannel    = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
-                uint restartInMinutes = ServerUtility.InitiateRestart(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
+                uint restartInMinutes = ServerUtility.InitiateServerRestart(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
 
                 if(logChannel != null)
                 {

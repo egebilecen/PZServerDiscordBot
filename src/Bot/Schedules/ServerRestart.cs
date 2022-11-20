@@ -34,7 +34,7 @@ public static partial class Schedules
         
         // Set server restart interval value back to the value defined in settings just in case of some function
         // updated the default interval value for earlier restart.
-        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        ServerUtility.ResetServerRestartInterval();
 
         serverRestartAnnouncer.Args.Clear();
         if(isServerRunning) ServerUtility.Commands.RestartServer();

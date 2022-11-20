@@ -32,7 +32,7 @@ public static class ServerUtility
                                                                : Path.GetFileName(filePath));
     }
 
-    public static uint InitiateRestart(uint intervalMS)
+    public static uint InitiateServerRestart(uint intervalMS)
     {
         uint restartInMinutes = intervalMS / (60 * 1000);
         ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
@@ -42,6 +42,11 @@ public static class ServerUtility
         Application.StartTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
 
         return restartInMinutes;
+    }
+
+    public static void ResetServerRestartInterval()
+    {
+        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
     }
 
     public static class Commands
