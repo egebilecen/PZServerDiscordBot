@@ -55,7 +55,7 @@ public static class BotUtility
     }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
-    public static string GetRelativeTime(DateTime currentTime, DateTime passedTime)
+    public static string GetPastRelativeTimeStr(DateTime currentTime, DateTime passedTime)
     {
         const int SECOND = 1;  
         const int MINUTE = 60 * SECOND;  
