@@ -38,14 +38,17 @@ public class UserCommands : ModuleBase<SocketCommandContext>
 
     [Command("game_date")]
     [Summary("Gets the current in-game date. (!game_date)")]
-    public async Task Date()
+    public async Task GameDate()
     {
         string mapTimeFile = ServerPath.MapTimeFilePath();
 
         if(!File.Exists(mapTimeFile))
         {
+            Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[UserCommand - game_date] Couldn't find path: ", mapTimeFile));
+            
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
             await Context.Channel.SendMessageAsync(string.Format("Couldn't find the time file."));
+            return;
         }
 
         // All bytes are in Big-Endian order
