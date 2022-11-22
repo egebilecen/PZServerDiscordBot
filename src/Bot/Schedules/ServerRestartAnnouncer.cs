@@ -2,30 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AnnouncementIntervalList = System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<int, bool>>;
+
 public static partial class Schedules
 {
+
     public static void ServerRestartAnnouncer(List<object> args)
     {
         if(!ServerUtility.IsServerRunning()) return;
 
-        int[] minuteList = {
-            60,
-            30,
-            15,
-            5,
-            1
-        };
-
-        string[] messageList = { 
-            "Server will be restarted in 1 hour.",
-            "Server will be restarted in {0} minutes.",
-            "Server will be restarted in {0} minutes. Prepare to find shelter!",
-            "Server will be restarted in {0} minutes. Escape combat soon!",
-            "Server will be restarted in {0} minute. Hold tight!",
-        };
-
         ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
+
+        if(args == null)
+        {
+            // If bool value is true then announcement is done
+            args = new List<object>{
+                new AnnouncementIntervalList
+                {
+                    new KeyValuePair<int, bool>(60, false),
+                    new KeyValuePair<int, bool>(30, false),
+                    new KeyValuePair<int, bool>(15, false),
+                    new KeyValuePair<int, bool>(5, false),
+                    new KeyValuePair<int, bool>(1, false)
+                }
+            };
+
+            self.Args = args;
+        }
 
         if(serverRestartSchedule == null)
         {
@@ -33,45 +37,24 @@ public static partial class Schedules
             return;
         }
 
-        // To prevent sending messages every interval, we store the last sent message minute in Args.
-        if(args == null)
-        {
-            self.Args = new List<object>
-            {
-                minuteList.First()
-            };
-        }
-        else if(args.Count < 1)
-            self.Args.Add(minuteList.First());
+        DateTime now = DateTime.Now;
+        double timeDiffMinutes = serverRestartSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
 
-        DateTime now        = DateTime.Now;
-        var timeDiffMinutes = serverRestartSchedule.NextExecuteTime.Subtract(now).TotalMinutes;
-        var publicChannel   = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
+        AnnouncementIntervalList intervalList = args[0] as AnnouncementIntervalList;
+        int index = intervalList.FindIndex(x => (timeDiffMinutes <= x.Key && timeDiffMinutes >= Convert.ToDouble(x.Key) - 0.5) 
+                                                 && !x.Value);
+        if(index == -1) return;
 
-        int i=0;
-        int selectedIndex = -1;
-        foreach(int minute in minuteList)
-        {
-            if(timeDiffMinutes <= minute
-            && (int)self.Args.First() == minute)
-            {
-                selectedIndex = i;
+        var announcementPair = intervalList[index];
+        var publicChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
 
-                if(i != minuteList.Length - 1)
-                    self.Args[0] = minuteList[i + 1];
-            }
+        string message = string.Format("Server will be restarted in {0} {1}.", 
+                                        announcementPair.Key >= 60 ? announcementPair.Key / 60 : announcementPair.Key,
+                                        announcementPair.Key >= 60 ? "hour(s)" : "minute(s)");
 
-            i++;
-        }
+        intervalList[index] = new KeyValuePair<int, bool>(announcementPair.Key, true);
 
-        if(selectedIndex > -1)
-        {
-            string serverMsg = string.Format(messageList[selectedIndex], minuteList[selectedIndex].ToString());
-
-            if(publicChannel != null)
-                publicChannel.SendMessageAsync(serverMsg);
-
-            ServerUtility.Commands.ServerMsg(serverMsg);
-        }
+        publicChannel?.SendMessageAsync(message);
+        ServerUtility.Commands.ServerMsg(message);
     }
 }
