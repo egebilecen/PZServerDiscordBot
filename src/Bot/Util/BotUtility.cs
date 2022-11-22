@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 public static class BotUtility
 {
-    public static async Task<string> GetLatestBotVersion()
+    public static async Task<Tuple<string, string>> GetLatestBotVersion()
     {
         const string apiURL = "https://api.github.com/repos/egebilecen/PZServerDiscordBot/releases/latest";
      
         string version = null;
+        string releaseText = null;
         string result  = await EB_Utility.WebRequest.GetAsync(SteamWebAPI.HttpClient, apiURL);
 
         if(string.IsNullOrEmpty(result))
@@ -20,19 +21,20 @@ public static class BotUtility
         {
             JObject jsonObj = JObject.Parse(result);
             version = jsonObj["tag_name"].Value<string>();
+            releaseText = jsonObj["body"].Value<string>();    
         }
         catch(Exception ex)
         {
             Logger.LogException(ex, "Error occured during GetLatestBotVersion().");
         }
 
-        return version;
+        return new Tuple<string, string>(version, releaseText);
     }
 
     public static async Task CheckLatestBotVersion()
     {
-        string latestBotVersionStr = await GetLatestBotVersion();
-        bool parseResult = SemanticVersion.TryParse(latestBotVersionStr, out SemanticVersion latestBotVersion);
+        Tuple<string, string> lastReleaseResult = await GetLatestBotVersion();
+        bool parseResult = SemanticVersion.TryParse(lastReleaseResult.Item1, out SemanticVersion latestBotVersion);
 
         if(parseResult)
         {
@@ -47,11 +49,18 @@ public static class BotUtility
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
+                    {
                         await commandChannel.SendMessageAsync(warningText);
+                        
+                        if(!string.IsNullOrEmpty(lastReleaseResult.Item2))
+                            await commandChannel.SendMessageAsync($"```\n{lastReleaseResult.Item2}```");
+                    }
+
+                    Scheduler.RemoveItem("BotVersionChecker");
                 }
             }
         }
-        else Logger.WriteLog(string.Format("[CheckLatestBotVersion()] Couldn't parse the version string. String: {0}", latestBotVersionStr));
+        else Logger.WriteLog(string.Format("[CheckLatestBotVersion()] Couldn't parse the version string. String: {0}", lastReleaseResult.Item1));
     }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx

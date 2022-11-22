@@ -115,15 +115,15 @@ public static class Application
                                            BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
-        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
-                                           "Bot New Version Checker",
-                                           Convert.ToUInt64(TimeSpan.FromHours(1).TotalMilliseconds),
-                                           Schedules.BotVersionChecker,
-                                           null));
         Scheduler.AddItem(new ScheduleItem("AutoServerStart",
                                            "Auto Server Starter",
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.AutoServerStart,
+                                           null));
+        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
+                                           "Bot New Version Checker",
+                                           Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
+                                           Schedules.BotVersionChecker,
                                            null));
         Scheduler.Start(
             #if !DEBUG
