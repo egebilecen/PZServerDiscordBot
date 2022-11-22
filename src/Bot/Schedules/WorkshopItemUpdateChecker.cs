@@ -68,7 +68,7 @@ public static partial class Schedules
             if(updateDate > Application.StartTime)
             {
                 var  publicChannel    = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
-                uint restartInMinutes = Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000);
+                uint restartInMinutes = ServerUtility.InitiateServerRestart(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
 
                 if(logChannel != null)
                 {
@@ -91,8 +91,6 @@ public static partial class Schedules
                 }
 
                 ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
-                serverRestartSchedule.UpdateInterval(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer);
-                Application.StartTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
                 break;
             }
         }

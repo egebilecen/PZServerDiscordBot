@@ -112,6 +112,8 @@ Server Commands:
 - `!start_server` Starts the server. (!start_server)<br>
 - `!stop_server` Saves and stops the server. (!stop_server)<br>
 - `!restart_server` Restarts the server. (!restart_server)<br>
+- `!initiate_restart` Initiates a restart. (!initiate_restart [minutes until restart])<br>
+- `!abort_restart` Aborts an upcoming restart. Works both with restart schedule and manual initiated restart. (!abort_restart)<br>
 - `!save_server` Saves the current world. (!save_server)<br>
 - `!perk_info` Displays the perk information of player. (!perk_info "[username]")<br>
 - `!add_user` Adds a new user to the whitelist. (!add_user "[username]" "[password]")<br>

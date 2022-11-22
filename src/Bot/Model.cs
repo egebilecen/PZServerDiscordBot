@@ -13,7 +13,7 @@ namespace Settings
     {
         public uint ServerRestartSchedule          = Convert.ToUInt32(TimeSpan.FromHours(6).TotalMilliseconds);
         public uint WorkshopItemUpdateSchedule     = Convert.ToUInt32(TimeSpan.FromMinutes(10).TotalMilliseconds);
-        public uint WorkshopItemUpdateRestartTimer = Convert.ToUInt32(TimeSpan.FromMinutes(30).TotalMilliseconds);
+        public uint WorkshopItemUpdateRestartTimer = Convert.ToUInt32(TimeSpan.FromMinutes(15).TotalMilliseconds);
     }
 
     public class BotFeatureSettings

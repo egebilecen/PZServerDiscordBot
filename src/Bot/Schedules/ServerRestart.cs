@@ -32,7 +32,9 @@ public static partial class Schedules
         
         Logger.WriteLog(string.Format("[{0}][Server Restart Schedule] Restarting server if it is running. (Is server running: {1})", Logger.GetLoggingDate(), isServerRunning.ToString()));
         
-        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        // Set server restart interval value back to the value defined in settings just in case of some function
+        // updated the default interval value for earlier restart.
+        ServerUtility.ResetServerRestartInterval();
 
         serverRestartAnnouncer.Args.Clear();
         if(isServerRunning) ServerUtility.Commands.RestartServer();

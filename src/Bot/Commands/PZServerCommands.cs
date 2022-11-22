@@ -35,7 +35,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             
             Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[PZServerCommand - start_server] Caller: {0}", Context.User.ToString()));
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute.");
+            await Context.Channel.SendMessageAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute(s).");
         }
     }
 
@@ -77,7 +77,58 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         else
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is not running. Start the server first.");
+            await Context.Channel.SendMessageAsync("Server is not running.");
+            return;
+        }
+    }
+
+    [Command("initiate_restart")]
+    [Summary("Initiates a restart. (!initiate_restart <minutes until restart>)")]
+    public async Task InitiateRestart(uint minutes)
+    {
+        if(minutes == 0)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Minutes cannot be 0. Use `!restart_server` instead.");
+            return;
+        }
+
+        if(ServerUtility.IsServerRunning())
+        {
+            Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[PZServerCommand - initiate_restart] Caller: {0}, Params: {1}", Context.User.ToString(), minutes));
+            
+            uint restartInMinutes = ServerUtility.InitiateServerRestart(minutes * (60 * 1000));
+            ServerUtility.Commands.ServerMsg(string.Format("A manual server restart has been initiated. Server will be restarted in {0} minute(s).", restartInMinutes));
+
+            await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+            await Context.Channel.SendMessageAsync(string.Format("Manual restart has been initiated. Server will be restarted in **{0} minute(s)**.", restartInMinutes));
+        }
+        else
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Server is not running.");
+            return;
+        }
+    }
+
+    [Command("abort_restart")]
+    [Summary("Aborts an upcoming restart. Works both with restart schedule and manual initiated restart. (!abort_restart)")]
+    public async Task AbortRestart()
+    {
+        if(ServerUtility.IsServerRunning())
+        {
+            Logger.WriteLog("["+Logger.GetLoggingDate()+"]"+string.Format("[PZServerCommand - abort_restart] Caller: {0}", Context.User.ToString()));
+            
+            ServerUtility.ResetServerRestartInterval();
+            ServerUtility.Commands.ServerMsg(string.Format("Upcoming restart has been aborted. Next restart will happen in {0} minutes.", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes.ToString()));
+
+            await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+            await Context.Channel.SendMessageAsync("Upcoming restart has been aborted.");
+        }
+        else
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Server is not running.");
             return;
         }
     }
@@ -126,7 +177,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(lastCacheTime != null)
         {
             await Context.Channel.SendMessageAsync(string.Format("Last cache was at **{0}**.", 
-                                                   BotUtility.GetRelativeTime(DateTime.Now, (DateTime)lastCacheTime)));
+                                                   BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)));
         }
     }
 
