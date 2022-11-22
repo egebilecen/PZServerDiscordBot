@@ -55,6 +55,12 @@ public static class Scheduler
                 scheduleItems.Add(item);
         }
 
+        public static void RemoveItem(string name)
+        { 
+            int index = scheduleItems.FindIndex(item => item.Name == name);
+            if(index != -1) scheduleItems.RemoveAt(index);
+        }
+
         public static ScheduleItem GetItem(string name)
         {
             return scheduleItems.Find(item => item.Name == name);
