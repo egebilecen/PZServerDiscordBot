@@ -24,7 +24,7 @@ public static class ServerBackupCreator
 
         if(ServerUtility.IsServerRunning())
         {
-            Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Server is running. Cannot create backup.", Logger.GetLoggingDate()));
+            Logger.WriteLog("[BackupCreator.Start()] Server is running. Cannot create backup.");
             return;
         }
 
@@ -44,7 +44,7 @@ public static class ServerBackupCreator
 
             if(!Directory.Exists(namePathPair.Value))
             {
-                Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Couldn't find path \""+namePathPair.Value+"\". Skipping...", Logger.GetLoggingDate()));
+                Logger.WriteLog("[BackupCreator.Start()] Couldn't find path \""+namePathPair.Value+"\". Skipping...");
                 continue;
             }
 
@@ -56,7 +56,7 @@ public static class ServerBackupCreator
 
         IsRunning = false;
 
-        Logger.WriteLog(string.Format("[{0}][BackupCreator.Start()] Backup completed.", Logger.GetLoggingDate()));
+        Logger.WriteLog("[BackupCreator.Start()] Backup completed.");
                         
         if(logChannel != null)
             await logChannel.SendMessageAsync("Server backup is completed!");

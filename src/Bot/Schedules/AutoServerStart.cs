@@ -10,16 +10,14 @@ public static partial class Schedules
             {
                 var logChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.LogChannelId);
 
-                Logger.WriteLog(string.Format("[{0}][AutoServerStart Schedule] Server is not running. Attempting to start the server.", Logger.GetLoggingDate()));
-
-                if(logChannel != null)
-                    logChannel.SendMessageAsync("**[Auto Server Starter]** Server is not running. Attempting to start the server.");
+                Logger.WriteLog("[AutoServerStart Schedule] Server is not running. Attempting to start the server.");
+                logChannel?.SendMessageAsync("**[Auto Server Starter]** Server is not running. Attempting to start the server.");
                 
             #if !DEBUG
                 ServerUtility.Commands.StartServer();
             #endif
             }
-            else Logger.WriteLog(string.Format("[{0}][AutoServerStart Schedule] Either server is running or backup creator is running. Skipping...", Logger.GetLoggingDate()));
+            else Logger.WriteLog("[AutoServerStart Schedule] Either server is running or backup creator is running. Skipping...");
         }
     }
 }

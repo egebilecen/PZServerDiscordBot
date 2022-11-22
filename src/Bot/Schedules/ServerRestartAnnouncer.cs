@@ -29,7 +29,7 @@ public static partial class Schedules
 
         if(serverRestartSchedule == null)
         {
-            Logger.WriteLog(string.Format("[{0}][Server Restart Announcer Schedule] serverRebootSchedule is null.", Logger.GetLoggingDate()));
+            Logger.WriteLog("[Server Restart Announcer Schedule] serverRebootSchedule is null.");
             return;
         }
 

@@ -51,7 +51,7 @@ public static class BotUtility
                 }
             }
         }
-        else Logger.WriteLog(string.Format("[{0}][CheckLatestBotVersion()] Couldn't parse the version string. String: {1}", Logger.GetLoggingDate(), latestBotVersionStr));
+        else Logger.WriteLog(string.Format("[CheckLatestBotVersion()] Couldn't parse the version string. String: {0}", latestBotVersionStr));
     }
 
     // Credits: https://www.c-sharpcorner.com/code/2562/c-sharp-code-to-calculate-relative-time.aspx
