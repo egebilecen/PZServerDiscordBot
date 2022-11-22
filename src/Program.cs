@@ -107,7 +107,7 @@ public static class Application
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
                                            "Server Restart Announcer",
-                                           30 * 1000,
+                                           Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
@@ -125,13 +125,7 @@ public static class Application
                                            Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
-        Scheduler.Start(
-            #if !DEBUG
-                30 * 1000
-            #else
-                1000
-            #endif
-        );
+        Scheduler.Start(1000);
         
     #if !DEBUG
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
