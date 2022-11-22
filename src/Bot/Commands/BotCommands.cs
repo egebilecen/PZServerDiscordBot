@@ -5,6 +5,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+public static class BotCommands2
+{
+    private static readonly string errorMessage = "Error.";
+
+    public static string Response(string message, bool isSuccess = true)
+    {
+        return (isSuccess ? EmojiList.GreenCheck : EmojiList.RedCross) + " " + message;
+    }
+
+    public static async Task<string> SetCommandChannel(SocketSlashCommandData data)
+    {
+        var channel = data.Options.ElementAtOrDefault(0).Value as SocketTextChannel;
+
+        if(Application.BotSettings.LogChannelId == channel.Id)
+            return Response(string.Format("Channel <#{0}> is configured to be log channel. Please select a different channel.", channel.Id.ToString()), false);
+
+        Application.BotSettings.CommandChannelId = channel.Id;
+        Application.BotSettings.Save();
+
+        return Response(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
+    }
+}
+
 public class BotCommands : ModuleBase<SocketCommandContext>
 {
     [Command("set_command_channel")]

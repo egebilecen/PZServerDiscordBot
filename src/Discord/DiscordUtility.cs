@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+using SlashCommandsUtil;
+
 public static class DiscordUtility
 {
     public const string DiscordBotTokenFile = "./bot_token.txt";
@@ -122,6 +124,38 @@ public static class DiscordUtility
 
         if(warningMessage)
             await guild.TextChannels.ElementAt(0).SendMessageAsync("Bot won't accept any other commands until the steps above step(s) are completed. @everyone");
+    }
+
+    public static async Task RegisterSlashCommands()
+    {
+        var slashCommandBuilder = new SlashCommandBuilder();
+
+        foreach(SlashCommand slashCommand in Commands.List())
+        {
+            slashCommandBuilder = slashCommandBuilder.WithName(slashCommand.Name);
+            slashCommandBuilder = slashCommandBuilder.WithDescription(slashCommand.Description);
+
+            foreach(SlashCommandOption slashCommandOption in slashCommand.Options)
+            {
+                slashCommandBuilder = slashCommandBuilder.AddOption(slashCommandOption.Name, 
+                                                                    slashCommandOption.Type, 
+                                                                    slashCommandOption.Description, 
+                                                                    isRequired: slashCommandOption.IsRequired,
+                                                                    isDefault: slashCommandOption.IsDefault,
+                                                                    minValue: slashCommandOption.MinValue,
+                                                                    maxValue: slashCommandOption.MaxValue);
+            }
+
+            try
+            {
+                await Application.Client.Rest.CreateGuildCommand(slashCommandBuilder.Build(), Application.Client.Guilds.ElementAt(0).Id);
+            }
+            catch(Exception ex) 
+            { 
+                Logger.LogException(ex);
+                Console.WriteLine("An error occured while registering slash commands.");
+            }
+        }
     }
 
     public static void OrganizeCommands()

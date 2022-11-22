@@ -149,9 +149,12 @@ public static class Application
 
         DiscordUtility.OrganizeCommands();
 
+        Client.SlashCommandExecuted += SlashCommandsUtil.SlashCommandHandler.Handler;
+
         Client.Ready += async () =>
         {
             await DiscordUtility.DoChannelCheck();
+            await DiscordUtility.RegisterSlashCommands();
             await BotUtility.CheckLatestBotVersion();
         };
 
