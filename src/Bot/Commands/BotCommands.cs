@@ -103,7 +103,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             
             foreach((int i, ScheduleItem scheduleItem) in scheduleItems.Select((val, i) => (i, val)))
             {
-                schedules += string.Format("**{0}** schedule will run in <t:{1}:R>.", scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
+                schedules += string.Format("**{0}** schedule will run <t:{1}:R>.", scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
                 
                 if(i != scheduleItems.Count - 1) schedules += "\n";
             }
