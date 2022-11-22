@@ -38,7 +38,7 @@ public static class BotUtility
 
         if(parseResult)
         {
-            if(latestBotVersion.Stage == DevelopmentStage.None
+            if((latestBotVersion.Stage == DevelopmentStage.None || latestBotVersion.Stage == DevelopmentStage.Release)
             && Application.BotVersion < latestBotVersion)
             {
                 var commandChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.CommandChannelId);
