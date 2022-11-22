@@ -346,5 +346,6 @@ public enum DevelopmentStage
 	/// either done or cut, as well as tested and mostly ready.  Code
 	/// should be mainly stable.
 	/// </summary>
-	RC = 4
+	RC = 4,
+	Release = 5
 }
