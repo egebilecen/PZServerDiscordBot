@@ -92,11 +92,6 @@ public class SemanticVersion : IComparable
     {
         if (step < 1)
             throw new ArgumentOutOfRangeException("step", "Step cannot be negative or zero.");
-
-        // None don't support steps, so ignore the value in those cases
-        // Should it throw ArgumentException instead?
-        if (stage != DevelopmentStage.None)
-            this.Step = step;
     }
 
     /// <summary>
@@ -240,9 +235,6 @@ public class SemanticVersion : IComparable
     {
         switch (Stage)
         {
-            default:
-            case DevelopmentStage.None:
-                return String.Empty;
             case DevelopmentStage.PreAlpha:
                 return "pre";
             case DevelopmentStage.Alpha:
@@ -251,6 +243,8 @@ public class SemanticVersion : IComparable
                 return "beta";
             case DevelopmentStage.RC:
                 return "rc";
+            default:
+                return String.Empty;
         }
     }
 
@@ -268,7 +262,7 @@ public class SemanticVersion : IComparable
             int  major = int.Parse(match.Groups[1].Value);
             int  minor = int.Parse(match.Groups[2].Value);
             int  patch = int.Parse(match.Groups[3].Value);
-            DevelopmentStage stage = DevelopmentStage.None;
+            DevelopmentStage stage = DevelopmentStage.Release;
             int? step  = null;
 
             string[] split = match.Groups[4].Value.Split('-').Where(x => !string.IsNullOrEmpty(x)).ToArray();
@@ -301,7 +295,7 @@ public class SemanticVersion : IComparable
                     break;
 
                     default:
-                        stage = DevelopmentStage.None;
+                        stage = DevelopmentStage.Release;
                     break;
                 }
             }
@@ -318,10 +312,6 @@ public class SemanticVersion : IComparable
 /// </summary>
 public enum DevelopmentStage
 {
-    /// <summary>
-    /// This is the default or unspecified value.
-    /// </summary>
-    None = 0,
     /// <summary>
     /// <para>
     /// Usually akin to a prototype, this has either very little
