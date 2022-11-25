@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -149,6 +150,88 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.Save();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
+    }
+
+    [Command("set_restart_time_schedule")]
+    [Summary("TODO")]
+    public async Task SetRestartSchedule()
+    {
+        Logger.WriteLog(string.Format("[BotCommands - set_restart_time_schedule] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        string placeholderText = "Select a time.";
+        string selectMenuId    = "restart-schedule-select";
+
+        var menuBuilder = new SelectMenuBuilder()
+            .WithPlaceholder(placeholderText)
+            .WithCustomId(selectMenuId);
+
+        var menuBuilder2 = new SelectMenuBuilder()
+            .WithPlaceholder(placeholderText)
+            .WithCustomId(selectMenuId);
+
+        var menuBuilder3 = new SelectMenuBuilder()
+            .WithPlaceholder(placeholderText)
+            .WithCustomId(selectMenuId);
+
+        var menuBuilder4 = new SelectMenuBuilder()
+            .WithPlaceholder(placeholderText)
+            .WithCustomId(selectMenuId);
+
+        for(int i=0; i <= 23; i++)
+        {
+            string timeStr = i.ToString("00");
+
+            menuBuilder  = menuBuilder .AddOption(timeStr + ":00 UTC", timeStr + ":00");
+            menuBuilder2 = menuBuilder2.AddOption(timeStr + ":15 UTC", timeStr + ":15");
+            menuBuilder3 = menuBuilder3.AddOption(timeStr + ":30 UTC", timeStr + ":30");
+            menuBuilder4 = menuBuilder4.AddOption(timeStr + ":45 UTC", timeStr + ":45");
+        }
+
+        var builder  = new ComponentBuilder().WithSelectMenu(menuBuilder);
+        var builder2 = new ComponentBuilder().WithSelectMenu(menuBuilder2);
+        var builder3 = new ComponentBuilder().WithSelectMenu(menuBuilder3);
+        var builder4 = new ComponentBuilder().WithSelectMenu(menuBuilder4);
+        
+        await Context.Channel.SendMessageAsync("Please select a time to schedule restart.");
+        await Context.Channel.SendMessageAsync("**XX:00**", components: builder.Build());
+        await Context.Channel.SendMessageAsync("**XX:15**", components: builder2.Build());
+        await Context.Channel.SendMessageAsync("**XX:30**", components: builder3.Build());
+        await Context.Channel.SendMessageAsync("**XX:45**", components: builder4.Build());
+    }
+
+    [Command("get_restart_time_schedule")]
+    [Summary("TODO")]
+    public async Task GetRestartSchedule()
+    {
+        Logger.WriteLog(string.Format("[BotCommands - get_restart_time_schedule] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+
+        string responseStr = "Active Restart Time Schedules:\n```";
+
+        if(Application.BotSettings.ServerScheduleSettings.ServerRestartScheduleTimes.Count < 1)
+            responseStr += "No schedule has been set.";
+        else
+        {
+            int i=0;
+            foreach(string time in Application.BotSettings.ServerScheduleSettings.ServerRestartScheduleTimes)
+            {
+                responseStr += $"{time} (ID: {i + 1})\n";
+                i++;
+            }
+        }
+
+        responseStr += "```";
+        
+        await Context.Channel.SendMessageAsync(responseStr);
+    }
+
+    [Command("delete_restart_time_schedule")]
+    [Summary("TODO")]
+    public async Task DeleteRestartSchedule(int id)
+    {
+        Logger.WriteLog(string.Format("[BotCommands - delete_restart_time_schedule] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
 
     [Command("set_mod_update_check_interval")]
