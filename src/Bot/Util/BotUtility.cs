@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 public static class BotUtility
 {
+    private static bool announcedEarlyAccessVersion = false;
+
     public static async Task<Tuple<string, string>> GetLatestBotVersion()
     {
         const string apiURL = "https://api.github.com/repos/egebilecen/PZServerDiscordBot/releases/latest";
@@ -62,6 +64,21 @@ public static class BotUtility
                     }
 
                     Scheduler.RemoveItem("BotVersionChecker");
+                }
+                else if(!announcedEarlyAccessVersion)
+                {
+                    string warningText = string.Format("There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
+
+                    if(!lastMessages.First().Content.Equals(warningText))
+                    {
+                        await commandChannel.SendMessageAsync(warningText);
+                        
+                        if(!string.IsNullOrEmpty(lastReleaseResult.Item2))
+                            await commandChannel.SendMessageAsync($"```\n{lastReleaseResult.Item2}```");
+                    }
+
+                    announcedEarlyAccessVersion = true;
                 }
             }
         }
