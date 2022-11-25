@@ -31,8 +31,16 @@ public static class BotUtility
         return new Tuple<string, string>(version, releaseText);
     }
 
-    public static async Task CheckLatestBotVersion()
+    public static async Task NotifyLatestBotVersion()
     {
+        var commandChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.CommandChannelId);
+
+        if(commandChannel == null)
+        {
+            Logger.WriteLog("BotUtility.NotifyLatestBotVersion() - commandChannel is null.");
+            return;
+        }
+
         Tuple<string, string> lastReleaseResult = await GetLatestBotVersion();
         bool parseResult = SemanticVersion.TryParse(lastReleaseResult.Item1, out SemanticVersion latestBotVersion);
 
@@ -40,25 +48,20 @@ public static class BotUtility
         {
             if(Application.BotVersion < latestBotVersion)
             {
-                var commandChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.CommandChannelId);
-                
                 if(latestBotVersion.Stage == DevelopmentStage.Release)
                 {
-                    if(commandChannel != null)
+                    string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
+
+                    if(!lastMessages.First().Content.Equals(warningText))
                     {
-                        string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
-                        var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
-
-                        if(!lastMessages.First().Content.Equals(warningText))
-                        {
-                            await commandChannel.SendMessageAsync(warningText);
+                        await commandChannel.SendMessageAsync(warningText);
                         
-                            if(!string.IsNullOrEmpty(lastReleaseResult.Item2))
-                                await commandChannel.SendMessageAsync($"```\n{lastReleaseResult.Item2}```");
-                        }
-
-                        Scheduler.RemoveItem("BotVersionChecker");
+                        if(!string.IsNullOrEmpty(lastReleaseResult.Item2))
+                            await commandChannel.SendMessageAsync($"```\n{lastReleaseResult.Item2}```");
                     }
+
+                    Scheduler.RemoveItem("BotVersionChecker");
                 }
             }
         }

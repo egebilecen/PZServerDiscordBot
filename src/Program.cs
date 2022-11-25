@@ -146,7 +146,7 @@ public static class Application
         Client.Ready += async () =>
         {
             await DiscordUtility.DoChannelCheck();
-            await BotUtility.CheckLatestBotVersion();
+            await BotUtility.NotifyLatestBotVersion();
         };
 
         Client.Disconnected += async (ex) =>
