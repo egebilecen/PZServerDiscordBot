@@ -143,11 +143,11 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_restart_interval] Caller: {0}, Params: {1}", Context.User.ToString(), intervalMinute));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Scheduler.GetItem("ServerRestart").UpdateInterval(intervalMinute * 60 * 1000);
 
         Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
         Application.BotSettings.Save();
-        
-        ScheduleUtility.CheckServerRestartSchedule();
 
         await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
     }
@@ -232,8 +232,6 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     {
         Logger.WriteLog(string.Format("[BotCommands - delete_restart_time_schedule] Caller: {0}, Params: {1}", Context.User.ToString(), id.ToString()));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-
-        // TODO: ScheduleUtility.CheckServerRestartSchedule();
     }
 
     [Command("set_mod_update_check_interval")]
