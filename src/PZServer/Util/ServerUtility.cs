@@ -47,15 +47,19 @@ public static class ServerUtility
 
     public static void ResetServerRestartInterval()
     {
-        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        Scheduler.GetItem("ServerRestart")?.UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
         ResetServerRestartAnnouncerInterval();
     }
 
     public static void ResetServerRestartAnnouncerInterval()
     {
         ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
-        serverRestartAnnouncer.Args = null;
-        serverRestartAnnouncer.UpdateInterval();
+        
+        if(serverRestartAnnouncer != null)
+        {
+            serverRestartAnnouncer.Args = null;
+            serverRestartAnnouncer.UpdateInterval();
+        }
     }
 
     public static class Commands
