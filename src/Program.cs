@@ -162,34 +162,6 @@ public static class Application
             else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
         };
 
-        Client.SelectMenuExecuted += async (SocketMessageComponent component) => 
-        { 
-            if(component.Data != null)
-            {
-                switch(component.Data.CustomId)
-                {
-                    case "restart-schedule-select":
-                    {
-                        IReadOnlyCollection<string> values = component.Data.Values;
-                        string value = values.FirstOrDefault();
-
-                        if(!string.IsNullOrEmpty(value))
-                        {
-                            if(!BotSettings.ServerScheduleSettings.ServerRestartScheduleTimes.Contains(value))
-                            { 
-                                BotSettings.ServerScheduleSettings.ServerRestartScheduleTimes.Add(value);
-                                BotSettings.Save();
-
-                                await component.RespondAsync($"**{value}** added to restart time schedule.");
-                            }
-                            else await component.RespondAsync($"**{value}** is already in the restart time schedule.");
-                        }
-                    }
-                    break;
-                }
-            }
-        };
-
         await Task.Delay(-1);
     }
 }
