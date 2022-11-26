@@ -125,6 +125,7 @@ public static class Application
                                            Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
+        ScheduleUtility.CheckServerRestartSchedule();
         Scheduler.Start(1000);
         
     #if !DEBUG
