@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
-    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 6, 0, DevelopmentStage.None);
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 7, 0, DevelopmentStage.Release);
     public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
@@ -107,7 +107,7 @@ public static class Application
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
                                            "Server Restart Announcer",
-                                           30 * 1000,
+                                           Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
@@ -115,23 +115,17 @@ public static class Application
                                            BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
-        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
-                                           "Bot New Version Checker",
-                                           Convert.ToUInt64(TimeSpan.FromHours(1).TotalMilliseconds),
-                                           Schedules.BotVersionChecker,
-                                           null));
         Scheduler.AddItem(new ScheduleItem("AutoServerStart",
                                            "Auto Server Starter",
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.AutoServerStart,
                                            null));
-        Scheduler.Start(
-            #if !DEBUG
-                30 * 1000
-            #else
-                1000
-            #endif
-        );
+        Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
+                                           "Bot New Version Checker",
+                                           Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
+                                           Schedules.BotVersionChecker,
+                                           null));
+        Scheduler.Start(1000);
         
     #if !DEBUG
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
@@ -152,7 +146,7 @@ public static class Application
         Client.Ready += async () =>
         {
             await DiscordUtility.DoChannelCheck();
-            await BotUtility.CheckLatestBotVersion();
+            await BotUtility.NotifyLatestBotVersion();
         };
 
         Client.Disconnected += async (ex) =>

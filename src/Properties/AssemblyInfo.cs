@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PZServerDiscordBot")]
-[assembly: AssemblyDescription("github.com/PZServerDiscordBot")]
+[assembly: AssemblyDescription("github.com/egebilecen/PZServerDiscordBot")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PZServerDiscordBot")]

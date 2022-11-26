@@ -35,10 +35,11 @@ public static class ServerUtility
     public static uint InitiateServerRestart(uint intervalMS)
     {
         uint restartInMinutes = intervalMS / (60 * 1000);
-        ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
         
-        // "ServerRestart" schedule will set this updated interval back to the value of restart interval in settings.
-        serverRestartSchedule.UpdateInterval(intervalMS);
+        // This updated interval will be set back to the value in settings when StartServer() is called.
+        Scheduler.GetItem("ServerRestart")?.UpdateInterval(intervalMS);
+        ResetServerRestartAnnouncerInterval();
+        
         Application.StartTime = DateTime.UtcNow.AddMinutes(restartInMinutes);
 
         return restartInMinutes;
@@ -46,7 +47,19 @@ public static class ServerUtility
 
     public static void ResetServerRestartInterval()
     {
-        Scheduler.GetItem("ServerRestart").UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        Scheduler.GetItem("ServerRestart")?.UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        ResetServerRestartAnnouncerInterval();
+    }
+
+    public static void ResetServerRestartAnnouncerInterval()
+    {
+        ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
+        
+        if(serverRestartAnnouncer != null)
+        {
+            serverRestartAnnouncer.Args = null;
+            serverRestartAnnouncer.UpdateInterval();
+        }
     }
 
     public static class Commands
@@ -66,6 +79,10 @@ public static class ServerUtility
         {
             if(CanStartServer())
             {
+                // Set server restart interval value back to the value defined in settings just in case of some function
+                // updated the default interval value for earlier restart.
+                ResetServerRestartInterval();
+
                 ProcessStartInfo startInfo = new ProcessStartInfo(serverFile)
                 {
                     RedirectStandardInput = true,
@@ -77,15 +94,6 @@ public static class ServerUtility
                     StartInfo = startInfo
                 };
                 ServerProcess.Start();
-
-                ScheduleItem serverRestartSchedule  = Scheduler.GetItem("ServerRestart");
-                ScheduleItem serverRestartAnnouncer = Scheduler.GetItem("ServerRestartAnnouncer");
-
-                if(serverRestartSchedule != null)
-                    serverRestartSchedule.UpdateInterval();
-
-                if(serverRestartAnnouncer != null)
-                    serverRestartAnnouncer.UpdateInterval();
             }
 
             return ServerProcess;
