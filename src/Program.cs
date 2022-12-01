@@ -32,14 +32,14 @@ public static class Application
         {
             if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
-                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+" and see README.md file about setting up bot token.");
+                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+"#writing-the-discord-bot-token-into-file.");
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
+            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+"/issues and create an issue about this with the log file.");
             await Task.Delay(-1);
         }
 
@@ -163,7 +163,7 @@ public static class Application
                 Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
                 await Task.Delay(-1);
             }
-            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
+            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+"/issues and create an issue about this with the log file.");
         };
 
         await Task.Delay(-1);

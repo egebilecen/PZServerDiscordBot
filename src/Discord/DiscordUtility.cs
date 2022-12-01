@@ -121,7 +121,10 @@ public static class DiscordUtility
         }
 
         if(warningMessage)
+        {
+            Console.WriteLine("Bot is missing configuration. Please refer to "+Application.BotRepoURL+"#bot-configuration.");
             await guild.TextChannels.ElementAt(0).SendMessageAsync("Bot won't accept any other commands until the steps above step(s) are completed. @everyone");
+        }
     }
 
     public static void OrganizeCommands()
