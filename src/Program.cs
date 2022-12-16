@@ -32,14 +32,14 @@ public static class Application
         {
             if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
-                Console.WriteLine(Localization.Get("err_bot_token"));
+                Console.WriteLine(string.Format(Localization.Get("err_bot_token"), BotRepoURL));
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine(Localization.Get("err_retv_bot_token"));
+            Console.WriteLine(string.Format(Localization.Get("err_retv_bot_token"), Logger.LogFile, BotRepoURL));
             await Task.Delay(-1);
         }
 
@@ -163,7 +163,7 @@ public static class Application
                 Console.WriteLine(Localization.Get("err_disc_auth_fail"));
                 await Task.Delay(-1);
             }
-            else Console.WriteLine(Localization.Get("err_disc_disconn"));
+            else Console.WriteLine(string.Format(Localization.Get("err_disc_disconn"), Logger.LogFile, BotRepoURL));
         };
 
         await Task.Delay(-1);

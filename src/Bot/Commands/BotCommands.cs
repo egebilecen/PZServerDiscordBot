@@ -14,7 +14,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(Application.BotSettings.LogChannelId == channel.Id)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> is configured to be log channel. Please select a different channel.", channel.Id.ToString()));
+            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_command_channel_warn"), channel.Id.ToString()));
             return;
         }
 
@@ -23,7 +23,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_command_channel_ok"), channel.Id.ToString()));
     }
 
     [Command("set_log_channel")]
@@ -33,7 +33,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(Application.BotSettings.CommandChannelId == channel.Id)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> is configured to be command channel. Please select a different channel.", channel.Id.ToString()));
+            await Context.Channel.SendMessageAsync(string.Format(string.Format(Localization.Get("disc_cmd_set_log_channel_warn"), channel.Id.ToString())));
             return;
         }
 
@@ -42,7 +42,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_log_channel_ok"), channel.Id.ToString()));
     }
 
     [Command("set_public_channel")]
@@ -54,7 +54,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format("Channel <#{0}> successfully configured for the bot to work in.", channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_public_channel_ok"), channel.Id.ToString()));
     }
 
     [Command("get_settings")]
@@ -65,25 +65,25 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         string botSettings = "";
-        botSettings += "**Server ID:** `"+Application.BotSettings.GuildId.ToString()+"`";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_serv_id"), Application.BotSettings.GuildId.ToString());
         botSettings += "\n";
-        botSettings += "**Command Channel ID:** `"+Application.BotSettings.CommandChannelId.ToString()+"` (<#"+Application.BotSettings.CommandChannelId.ToString()+">)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_cmd_chan_id"), Application.BotSettings.CommandChannelId.ToString(), Application.BotSettings.CommandChannelId.ToString());
         botSettings += "\n";
-        botSettings += "**Log Channel ID:** `"+Application.BotSettings.LogChannelId.ToString()+"` (<#"+Application.BotSettings.LogChannelId.ToString()+">)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_log_chan_id"), Application.BotSettings.LogChannelId.ToString(), Application.BotSettings.LogChannelId.ToString());
         botSettings += "\n";
-        botSettings += "**Public Channel ID:** `"+Application.BotSettings.PublicChannelId.ToString()+"` (<#"+Application.BotSettings.PublicChannelId.ToString()+">)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_pub_chan_id"), Application.BotSettings.PublicChannelId.ToString(), Application.BotSettings.PublicChannelId.ToString());
         botSettings += "\n";
-        botSettings += "**Perk Parser Cache Duration:** "+Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration.ToString()+" minute(s)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_perk_cac_dur"), Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration.ToString());
         botSettings += "\n";
-        botSettings += "**Restart Schedule Interval:** "+(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_res_sch_int"), Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000));
         botSettings += "\n";
-        botSettings += "**Workshop Mod Update Checker Interval:** "+(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_sch_int"), Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000));
         botSettings += "\n";
-        botSettings += "**Workshop Mod Update Restart Timer:** "+(Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)).ToString()+" minute(s)";
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_rst_timer"), Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000));
         botSettings += "\n";
-        botSettings += "**Server Auto Start:** "+(Application.BotSettings.BotFeatureSettings.AutoServerStart ? "Enabled" : "Disabled");
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_serv_aut_strt"), Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up"));
         botSettings += "\n";
-        botSettings += "**Non-public Mod Logging:** "+(Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? "Enabled" : "Disabled");
+        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_logging"), Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up"));
         
         await Context.Channel.SendMessageAsync(botSettings);
     }
@@ -103,14 +103,14 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             
             foreach((int i, ScheduleItem scheduleItem) in scheduleItems.Select((val, i) => (i, val)))
             {
-                schedules += string.Format("**{0}** schedule will run <t:{1}:R>.", scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
+                schedules += string.Format(Localization.Get("disc_cmd_get_schedules_run"), scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
                 
                 if(i != scheduleItems.Count - 1) schedules += "\n";
             }
         
             await Context.Channel.SendMessageAsync(schedules);
         }
-        else await Context.Channel.SendMessageAsync("No schedule found.");
+        else await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_get_schedules_not_fnd"));
     }
 
     [Command("get_ram_cpu")]
@@ -136,7 +136,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(intervalMinute < 60)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Restart interval must be at least 60 minutes.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_warn"));
             return;
         }
 
@@ -148,24 +148,17 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule = intervalMinute * 60 * 1000;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync("Server restart schedule is updated.");
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_ok"));
     }
 
     [Command("set_mod_update_check_interval")]
     [Summary("Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)")]
     public async Task SetWorkshopItemUpdateChecker(uint intervalMinute)
     {
-        //if(intervalMinute < 1)
-        //{
-        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
-        //    await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
-        //    return;
-        //}
-
         if(intervalMinute < 0)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_mod_update_check_interval_int_warn"));
             return;
         }
 
@@ -177,7 +170,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule = intervalMinute * 60 * 1000;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync("Workshop mod update check schedule is updated.");
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_mod_update_check_interval_int_ok"));
     }
 
     [Command("set_mod_update_restart_timer")]
@@ -187,7 +180,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(intervalMinute < 1)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Interval must be at least 1 minute(s).");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_mod_update_restart_timer_warn"));
             return;
         }
 
@@ -197,7 +190,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer = intervalMinute * 60 * 1000;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync("Workshop mod update restart timer is updated.");
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_mod_update_restart_timer_ok"));
     }
 
     [Command("toggle_non_public_mod_logging")]
@@ -210,24 +203,17 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.BotFeatureSettings.NonPublicModLogging = !Application.BotSettings.BotFeatureSettings.NonPublicModLogging;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync("Non-public mod logging feature has been " + (Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? "enabled" : "disabled") + ".");
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_toggle_non_public_mod_logging_ok"), (Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower()));
     }
 
     [Command("set_perk_cache_duration")]
     [Summary("Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)")]
     public async Task SetPerkCacheDuration(uint durationMinute)
     {
-        //if(durationMinute < 1)
-        //{
-        //    await Context.Message.AddReactionAsync(EmojiList.RedCross);
-        //    await Context.Channel.SendMessageAsync("Duration must be at least 1 minute(s).");
-        //    return;
-        //}
-
         if(durationMinute < 0)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Duration cannot be smaller than 0. But it can be 0 which means there won't be any caching.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_perk_cache_duration_warn"));
             return;
         }
 
@@ -237,7 +223,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration = durationMinute;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync("Perk cache duration is updated.");
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_perk_cache_duration_ok"));
     }
 
     [Command("reset_perk_cache")]
@@ -248,7 +234,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         ServerLogParsers.PerkLog.PerkCache = null;
-        await Context.Channel.SendMessageAsync("Perk cache has been reset.");
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_reset_perk_cache_ok"));
     }
 
     [Command("toggle_server_auto_start")]
@@ -262,11 +248,9 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.Save();
 
         ScheduleItem autoServerStartSchedule = Scheduler.GetItem("AutoServerStart");
+        autoServerStartSchedule?.UpdateInterval();
 
-        if(autoServerStartSchedule != null)
-            autoServerStartSchedule.UpdateInterval();
-
-        await Context.Channel.SendMessageAsync("Server auto start feature has been " + (Application.BotSettings.BotFeatureSettings.AutoServerStart ? "enabled" : "disabled") + ".");
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_toggle_server_auto_start_ok"), (Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower()));
     }
 
     [Command("backup_server")]
@@ -276,7 +260,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Cannot create a backup while server is running.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_backup_server_warn"));
             return;
         }
 
@@ -285,6 +269,6 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         
         _ = Task.Run(async () => await ServerBackupCreator.Start());
 
-        await Context.Channel.SendMessageAsync("Starting server backup. You can check the backup progress in log channel (<#"+Application.BotSettings.LogChannelId.ToString()+">).");
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_backup_server_ok"), Application.BotSettings.LogChannelId.ToString()));
     }
 }
