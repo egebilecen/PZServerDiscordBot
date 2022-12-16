@@ -25,21 +25,21 @@ public static class Application
     private static async Task MainAsync()
     {
     #if DEBUG
-        Console.WriteLine("WARNING: Bot is running in DEBUG configuration.");
+        Console.WriteLine(Localization.Get("warn_debug_mode"));
     #endif
 
         try
         {
             if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
-                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+"#writing-the-discord-bot-token-into-file.");
+                Console.WriteLine(Localization.Get("err_bot_token"));
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+"/issues and create an issue about this with the log file.");
+            Console.WriteLine(Localization.Get("err_retv_bot_token"));
             await Task.Delay(-1);
         }
 
@@ -48,7 +48,7 @@ public static class Application
 
         if(!File.Exists(serverFile))
         {
-            Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
+            Console.WriteLine(Localization.Get("err_serv_bat"));
             await Task.Delay(-1);
         }
         else
@@ -143,7 +143,7 @@ public static class Application
         await CommandHandler.SetupAsync();
         await Client.LoginAsync(TokenType.Bot, DiscordUtility.GetToken());
         await Client.StartAsync();
-        await Client.SetGameAsync("Bot Version: "+BotVersion);
+        await Client.SetGameAsync(string.Format(Localization.Get("info_disc_act_bot_ver"), BotVersion));
 
         DiscordUtility.OrganizeCommands();
 
@@ -160,10 +160,10 @@ public static class Application
 
             if(ex.InnerException.Message.Contains("Authentication failed"))
             {
-                Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
+                Console.WriteLine(Localization.Get("err_disc_auth_fail"));
                 await Task.Delay(-1);
             }
-            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+"/issues and create an issue about this with the log file.");
+            else Console.WriteLine(Localization.Get("err_disc_disconn"));
         };
 
         await Task.Delay(-1);
