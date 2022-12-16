@@ -121,6 +121,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bot\Localization.cs" />
     <Compile Include="PZServer\Util\ServerBackupCreator.cs" />
     <Compile Include="Bot\Util\BotUtility.cs" />
     <Compile Include="Bot\CommandHandler.cs" />
