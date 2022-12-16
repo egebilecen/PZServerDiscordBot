@@ -17,7 +17,7 @@ public static class Localization
         { "err_retv_bot_token", $"An error occured while retrieving bot token. Error details are saved into {Logger.LogFile} file.\nPlease refer to \"{Application.BotRepoURL}/issues\" and create an issue about this with the log file." },
         { "err_serv_bat", "Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes." },
         { "err_disc_auth_fail", "Authentication failed! Be sure your discord bot token is valid." },
-        { "err_disc_disconn", "An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+"/issues and create an issue about this with the log file." },
+        { "err_disc_disconn", $"An error occured and discord bot has been disconnected! Error details are saved into {Logger.LogFile} file.\nPlease refer to \"{Application.BotRepoURL}/issues\" and create an issue about this with the log file." },
 
         // Infos
         { "info_disc_act_bot_ver", "Bot Version: {0}" },
