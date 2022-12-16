@@ -90,39 +90,24 @@ public static class Localization
         // -------- !
         { "", "" },
     };
-
-    static Localization()
+    
+    // TODO
+    private static void Load(string language = null)
     {
-        if(!File.Exists(LocalizationFile))
-        {
-            CreateFile();
-            return;
-        }
+        //try
+        //{
             
-        try
-        {
-            localization = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(LocalizationFile));
-        }
-        catch(Exception ex)
-        { 
-            Logger.LogException(ex, "Localization constructor"); 
-        }
-    }
-
-    private static void CreateFile()
-    {
-        File.WriteAllText(LocalizationFile, JsonConvert.SerializeObject(localization ?? defaultLocalization, Formatting.Indented));
+        //}
+        //catch(Exception ex)
+        //{ 
+        //    Logger.LogException(ex, "Localization - Load()"); 
+        //}
     }
 
     public static string Get(string key)
     {
-        if(localization == null)
-        {
-            localization = defaultLocalization;
-            Logger.WriteLog("[Localization] No localization found, using default.");
-        }
-
-        if(localization.ContainsKey(key))
+        if(localization != null
+        && localization.ContainsKey(key))
             return localization[key];
         else if(defaultLocalization.ContainsKey(key))
             return defaultLocalization[key];
