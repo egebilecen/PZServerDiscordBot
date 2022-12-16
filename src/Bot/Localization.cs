@@ -5,7 +5,8 @@ using System.IO;
 
 public static class Localization
 {
-    public const string LocalizationFile = "./localization.json";
+    private const string localizationFolder = "./localization/";
+
     private static Dictionary<string, string> localization = null;
     private static readonly Dictionary<string, string> defaultLocalization = new Dictionary<string, string>
     {
