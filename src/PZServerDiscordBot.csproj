@@ -132,7 +132,7 @@
     <Compile Include="PZServer\Parsers\IniParser.cs" />
     <Compile Include="Bot\Util\Logger.cs" />
     <Compile Include="Bot\Commands\UserCommands.cs" />
-    <Compile Include="Bot\Model.cs" />
+    <Compile Include="Bot\SettingsModel.cs" />
     <Compile Include="Bot\Schedules\BotVersionChecker.cs" />
     <Compile Include="Bot\Schedules\ServerRestart.cs" />
     <Compile Include="Bot\Schedules\ServerRestartAnnouncer.cs" />
