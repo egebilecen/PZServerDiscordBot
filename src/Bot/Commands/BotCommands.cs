@@ -23,7 +23,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_command_channel_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
     }
 
     [Command("set_log_channel")]
@@ -42,7 +42,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_log_channel_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
     }
 
     [Command("set_public_channel")]
@@ -54,7 +54,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_public_channel_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
     }
 
     [Command("get_settings")]

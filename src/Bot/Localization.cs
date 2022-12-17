@@ -14,8 +14,12 @@ public static class Localization
         { "gen_enab_up", "Enabled" },
         { "gen_disa_up", "Disabled" },
 
+        // Success Messages
+        { "bot_disc_chan_set_ok", "Channel <#{0}> successfully configured for the bot to work in." },
+
         // Warning Messages
         { "warn_debug_mode", "WARNING: Bot is running in DEBUG configuration." },
+        { "warn_server_not_running", "Server is not running." },
 
         // Error Messages
         { "err_bot_token", "Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to \"{0}#writing-the-discord-bot-token-into-file\"." },
@@ -31,14 +35,9 @@ public static class Localization
         // ---- Admin Commands
         // -------- !set_command_channel
         { "disc_cmd_set_command_channel_warn", "Channel <#{0}> is configured to be log channel. Please select a different channel." },
-        { "disc_cmd_set_command_channel_ok", "Channel <#{0}> successfully configured for the bot to work in." },
         
         // -------- !set_log_channel
         { "disc_cmd_set_log_channel_warn", "Channel <#{0}> is configured to be command channel. Please select a different channel." },
-        { "disc_cmd_set_log_channel_ok", "Channel <#{0}> successfully configured for the bot to work in." },
-        
-        // -------- !set_public_channel
-        { "disc_cmd_set_public_channel_ok", "Channel <#{0}> successfully configured for the bot to work in." },
 
         // -------- !get_settings
         { "disc_cmd_get_settings_serv_id", "**Server ID:** `{0}`" },
@@ -88,6 +87,32 @@ public static class Localization
         { "disc_cmd_backup_server_item_done", "Backup of `{0}` is done. **({1} folder left)**" },
         { "disc_cmd_backup_server_finish", "Server backup is completed!" },
         
+        // ---- PZ Server Commands
+        // -------- !start_server
+        { "disc_cmd_start_server_warn_running", "Server is already running." },
+        { "disc_cmd_start_server_warn_backup", "Cannot start the server during backup in progress. Please wait until backup finishes." },
+        { "disc_cmd_start_server_ok", "Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute(s)." },
+
+        // -------- !stop_server
+        { "disc_cmd_stop_server_warn", "Server is already stopped." },
+        
+        // -------- !restart_server
+        { "disc_cmd_restart_server_ok", "Restarting server." },
+
+        // -------- !initiate_restart
+        { "disc_cmd_initiate_restart_warn_min", "Minutes cannot be 0. Use `!restart_server` instead." },
+        { "disc_cmd_initiate_restart_info_server_msg", "A manual server restart has been initiated. Server will be restarted in {0} minute(s)." },
+        { "disc_cmd_initiate_restart_info_disc_msg", "Manual restart has been initiated. Server will be restarted in **{0} minute(s)**." },
+
+        // -------- !abort_restart
+        { "disc_cmd_abort_restart_ok_server", "Upcoming restart has been aborted. Next restart will happen in {0} minutes." },
+        { "disc_cmd_abort_restart_ok_disc", "Upcoming restart has been aborted." },
+
+        // -------- !perk_info
+        { "disc_cmd_perk_info_no_result", "Couldn't find any perk log related to username **{0}**." },
+        { "disc_cmd_perk_info_result_title", "Perk Information of **{0}**:" },
+        { "disc_cmd_perk_info_last_cache", "Last cache was at **{0}**." },
+
         // -------- !
         { "", "" },
     };
