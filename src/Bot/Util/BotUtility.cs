@@ -52,7 +52,7 @@ public static class BotUtility
             {
                 if(latestBotVersion.Stage == DevelopmentStage.Release)
                 {
-                    string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = string.Format(Localization.Get("info_bot_new_version"), latestBotVersion, Application.BotVersion, Application.BotRepoURL);
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
@@ -67,7 +67,7 @@ public static class BotUtility
                 }
                 else if(!announcedEarlyAccessVersion)
                 {
-                    string warningText = string.Format("There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = string.Format(Localization.Get("info_bot_new_early_version"), latestBotVersion, Application.BotVersion, Application.BotRepoURL);
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))

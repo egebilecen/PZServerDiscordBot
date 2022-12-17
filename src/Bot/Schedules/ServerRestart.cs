@@ -11,15 +11,15 @@ public static partial class Schedules
         if(logChannel != null)
         {
             if(isServerRunning)
-                logChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
+                logChannel.SendMessageAsync(Localization.Get("sch_serverrestart_restart_text"));
             else
-                logChannel.SendMessageAsync("**[Server Restart Schedule]** Server is not running. Skipping...");
+                logChannel.SendMessageAsync(Localization.Get("sch_serverrestart_server_not_running"));
         }
 
         if(publicChannel != null)
         {
             if(isServerRunning)
-                publicChannel.SendMessageAsync("**[Server Restart Schedule]** Restarting server.");
+                publicChannel.SendMessageAsync(Localization.Get("sch_serverrestart_restart_text"));
         }
         
         Logger.WriteLog(string.Format("[Server Restart Schedule] Restarting server if it is running. (Is server running: {0})", isServerRunning.ToString()));

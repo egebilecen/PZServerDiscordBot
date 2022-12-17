@@ -13,6 +13,8 @@ public static class Localization
         // General
         { "gen_enab_up", "Enabled" },
         { "gen_disa_up", "Disabled" },
+        { "gen_hours_text", "hour(s)" },
+        { "gen_minutes_text", "minute(s)" },
 
         // Success Messages
         { "bot_disc_chan_set_ok", "Channel <#{0}> successfully configured for the bot to work in." },
@@ -30,6 +32,8 @@ public static class Localization
 
         // Info Messages
         { "info_disc_act_bot_ver", "Bot Version: {0}" },
+        { "info_bot_new_version", "There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:." },
+        { "info_bot_new_early_version", "There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section." },
 
         // Discord Commands
         // ---- Admin Commands
@@ -129,7 +133,24 @@ public static class Localization
         { "disc_cmd_game_date_warn_file", "Couldn't find the time file." },
         { "disc_cmd_game_date_response", "```Current in-game date: {0}/{1}/{2}```*(Date is in DD-MM-YYYY aka European format)*" },
 
-        // -------- !
+        // Schedules
+        // ---- AutoServerStart
+        { "sch_autoserverstart_text", "**[Auto Server Starter]** Server is not running. Attempting to start the server." },
+
+        // ---- ServerRestart
+        { "sch_serverrestart_restart_text", "**[Server Restart Schedule]** Restarting server." },
+        { "sch_serverrestart_server_not_running", "**[Server Restart Schedule]** Server is not running. Skipping..." },
+
+        // ---- ServerRestartAnnouncer
+        { "sch_serverrestartannouncer_text", "Server will be restarted in {0} {1}." },
+
+        // ---- WorkshopItemUpdateChecker
+        { "sch_workshopitemupdatechecker_details_fail", "**[Workshop Mod Update Checker]** Cannot get the details of mod with the ID of `{0}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {1})`\n**Mod Link:** {2}" },
+        { "sch_workshopitemupdatechecker_log_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Preparing to restart server in {0} minute(s)." },
+        { "sch_workshopitemupdatechecker_pub_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in {0} minute(s)." },
+        { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {0} minute(s)." },
+
+        //
         { "", "" },
     };
     

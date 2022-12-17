@@ -60,7 +60,7 @@ public static partial class Schedules
             && item.Result != 1
             && logChannel != null)
             {
-                logChannel.SendMessageAsync(string.Format("**[Workshop Mod Update Checker]** Cannot get the details of mod with the ID of `{0}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {1})`\n**Mod Link:** {2}", item.PublishedFileId, item.Result.ToString(), "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId));
+                logChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_details_fail"), item.PublishedFileId, item.Result.ToString(), "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId));
             }
 
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
@@ -72,7 +72,7 @@ public static partial class Schedules
 
                 if(logChannel != null)
                 {
-                    logChannel.SendMessageAsync("**[Workshop Mod Update Checker]** A workshop mod update has been detected. Preparing to restart server in "+restartInMinutes.ToString()+" minute(s).");
+                    logChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_log_chan_text"), restartInMinutes.ToString()));
                 }
                 else
                 {
@@ -82,7 +82,7 @@ public static partial class Schedules
 
                 if(publicChannel != null)
                 {
-                    publicChannel.SendMessageAsync("**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
+                    publicChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_pub_chan_text"), restartInMinutes.ToString()));
                 }
                 else
                 {
@@ -90,7 +90,7 @@ public static partial class Schedules
                     return;
                 }
 
-                ServerUtility.Commands.ServerMsg("Workshop mod update has been detected. Server will be restarted in "+restartInMinutes.ToString()+" minute(s).");
+                ServerUtility.Commands.ServerMsg(string.Format(Localization.Get("sch_workshopitemupdatechecker_server_announcement_text"), restartInMinutes.ToString()));
                 break;
             }
         }
