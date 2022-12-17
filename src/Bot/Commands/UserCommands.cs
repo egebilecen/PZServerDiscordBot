@@ -11,7 +11,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     public async Task BotInfo()
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync("This bot is written for people to easily manage their server using Discord. Source code and bot files can be reached from "+Application.BotRepoURL+". If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.");
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_bot_info_text"), Application.BotRepoURL));
     }
 
     [Command("server_status")]
@@ -20,10 +20,10 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(ServerUtility.IsServerRunning() 
-                                             ? "Server is **running** :hamster:" 
+                                             ? Localization.Get("disc_cmd_server_status_running")
                                              : ServerBackupCreator.IsRunning
-                                             ? "Currently **server backup** is in progress. :wrench:"
-                                             : "Server is **dead** :skull:");
+                                             ? Localization.Get("disc_cmd_server_status_backup")
+                                             : Localization.Get("disc_cmd_server_status_dead"));
     }
 
     [Command("restart_time")]
@@ -33,7 +33,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
         var timestamp = new DateTimeOffset(Scheduler.GetItem("ServerRestart").NextExecuteTime).ToUnixTimeSeconds();
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format("Server will be restarted <t:{0}:R>.", timestamp));
+        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_restart_time_text"), timestamp));
     }
 
     [Command("game_date")]
@@ -47,7 +47,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[UserCommand - game_date] Couldn't find path: ", mapTimeFile));
             
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format("Couldn't find the time file."));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_game_date_warn_file"));
             return;
         }
 
@@ -75,11 +75,9 @@ public class UserCommands : ModuleBase<SocketCommandContext>
                   | yearBytes[3] << 0;
 
         string responseText = string.Format(
-            "```" +
-            "Current in-game date: {0}/{1}/{2}" +
-            "```" + 
-            "*(Date is in DD-MM-YYYY aka European format)*", 
-            day.ToString().PadLeft(2, '0'), month.ToString().PadLeft(2, '0'), year.ToString());
+            Localization.Get("disc_cmd_game_date_response"), 
+            day.ToString().PadLeft(2, '0'), month.ToString().PadLeft(2, '0'), year.ToString()
+        );
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         await Context.Channel.SendMessageAsync(responseText);

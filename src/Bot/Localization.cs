@@ -113,6 +113,22 @@ public static class Localization
         { "disc_cmd_perk_info_result_title", "Perk Information of **{0}**:" },
         { "disc_cmd_perk_info_last_cache", "Last cache was at **{0}**." },
 
+        // ---- User Commands
+        // -------- !bot_info
+        { "disc_cmd_bot_info_text", "This bot is written for people to easily manage their server using Discord. Source code and bot files can be reached from {0}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:." },
+
+        // -------- !server_status
+        { "disc_cmd_server_status_running", "Server is **running** :hamster:" },
+        { "disc_cmd_server_status_backup", "Currently **server backup** is in progress. :wrench:" },
+        { "disc_cmd_server_status_dead", "Server is **dead** :skull:" },
+
+        // -------- !restart_time
+        { "disc_cmd_restart_time_text", "Server will be restarted <t:{0}:R>." },
+
+        // -------- !game_date
+        { "disc_cmd_game_date_warn_file", "Couldn't find the time file." },
+        { "disc_cmd_game_date_response", "```Current in-game date: {0}/{1}/{2}```*(Date is in DD-MM-YYYY aka European format)*" },
+
         // -------- !
         { "", "" },
     };
@@ -139,6 +155,6 @@ public static class Localization
             return defaultLocalization[key];
 
         Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
-        return $"LOCALIZATION EROR ({key})";
+        return $"LOCALIZATION ERROR ({key})";
     }
 }
