@@ -26,6 +26,7 @@ namespace Settings
     {
         [JsonIgnore]
         public const string SettingsFile = ".\\pzdiscordbot.conf";
+        
         public ulong        GuildId;
         public ulong        CommandChannelId;
         public ulong        LogChannelId;
@@ -34,6 +35,8 @@ namespace Settings
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();
         public BotFeatureSettings      BotFeatureSettings      = new BotFeatureSettings();
+
+        public string LocalizationFileName = "";
 
         public void Save()
         {

@@ -15,19 +15,22 @@ public static class Localization
         public string Name { get; private set; }
         public SemanticVersion Version { get; private set; }
         public string Description { get; private set; }
+        public string File { get; private set; }
 
-        public LocalizationInfo(string name, string version, string desc)
+        public LocalizationInfo(string name, string version, string desc, string file)
         {
             Name = name;
             Version = SemanticVersion.TryParse(version, out SemanticVersion versionResult) ? versionResult : new SemanticVersion(0, 0, 0);
             Description = desc;
+            File = file;
         }
     }
 
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
     
-    private const string localizationListURL = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/list.json";
+    private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/";
+    private const string localizationListURL = localizationDirURL + "list.json";
     
     public static DateTime? LastCacheTime { get; private set; } = null;
     private const int cacheDurationMin = 15;
@@ -152,6 +155,10 @@ public static class Localization
         { "disc_cmd_localization_embed_language", "Language" },
         { "disc_cmd_localization_embed_version", "Version" },
         { "disc_cmd_localization_embed_desc", "Description" },
+        { "disc_cmd_localization_upd_ok", "Localization successfully updated to **{localization}**." },
+        { "disc_cmd_localization_upd_exception", "An unknown error occured while updating localization!" },
+        { "disc_cmd_localization_not_found", "Couldn't find **{localization}** localization!" },
+        { "disc_cmd_localization_download_fail", "Couldn't download localization! Please try again later..." },
 
         // ---- PZ Server Commands
         // -------- !start_server
@@ -212,6 +219,89 @@ public static class Localization
         { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
     };
 
+    public static void ExportDefault()
+    {
+        if(Directory.Exists(exportPath))
+        {
+            File.WriteAllText($"{exportPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
+            
+        #if DEBUG
+            Console.WriteLine(Get("info_export_localization"));
+        #endif
+            return;
+        }
+
+    #if DEBUG
+        Console.WriteLine(Get("err_export_localization"));
+    #endif
+    }
+    
+    public static async Task<(bool, string)> Load(string language = null)
+    {
+        if(language == null
+        || language == "default")
+        {
+            localization = null;
+            return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", "default")));
+        }
+
+        // Update cache if expired.
+        await GetAvailableLocalizationList();
+
+        LocalizationInfo selectedLocalization = lastLocalizationInfoCache.FirstOrDefault(x => x.Name.ToLower() == language);
+        if(selectedLocalization == null)
+            return (false, Get("disc_cmd_localization_not_found").KeyFormat(("localization", language)));
+
+        try
+        {
+            // TODO: Do version checking with existing
+
+            string localizationFileURL = localizationDirURL + selectedLocalization.File;
+            string localizationContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationFileURL);
+
+            if(string.IsNullOrEmpty(localizationContent))
+                return (false, Get("disc_cmd_localization_download_fail"));
+
+            localization = JObject.Parse(localizationContent).ToObject<Dictionary<string, string>>();
+
+            string localizationNewFileName = $"{Path.GetFileName(selectedLocalization.File)}_{selectedLocalization.Version}.{Path.GetExtension(selectedLocalization.File)}";
+            File.WriteAllText(
+                $"{LocalizationPath}{localizationNewFileName}", 
+                localizationContent
+            );
+
+            Application.BotSettings.LocalizationFileName = localizationNewFileName;
+            Application.BotSettings.Save();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogException(ex, "Localization - Load()");
+            return (false, Get("disc_cmd_localization_upd_exception"));
+        }
+
+        return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", language)));
+    }
+
+    public static string Get(string key)
+    {
+        if(localization != null
+        && localization.ContainsKey(key))
+            return localization[key];
+        else if(defaultLocalization.ContainsKey(key))
+            return defaultLocalization[key];
+
+        Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
+        return $"LOCALIZATION ERROR ({key})";
+    }
+
+    public static LocalizationInfo GetCurrentLocalizationInfo()
+    {
+        if(localization == null)
+            return new LocalizationInfo("Default", "0.0.0", "English translation of the bot.", "-");
+
+        return null;
+    }
+
     public static async Task<List<LocalizationInfo>> GetAvailableLocalizationList()
     {
         if(LastCacheTime != null
@@ -236,8 +326,9 @@ public static class Localization
                 string name = x.Key;
                 string version = x.Value["version"];
                 string desc = x.Value["desc"];
+                string file = x.Value["file"];
 
-                return new LocalizationInfo(name, version, desc);
+                return new LocalizationInfo(name, version, desc, file);
             }).ToList());
 
             lastLocalizationInfoCache = localizationInfoList;
@@ -248,55 +339,5 @@ public static class Localization
         
         lastLocalizationInfoCache = null;
         return lastLocalizationInfoCache;
-    }
-
-    public static void ExportDefault()
-    {
-        if(Directory.Exists(exportPath))
-        {
-            File.WriteAllText($"{exportPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
-            
-        #if DEBUG
-            Console.WriteLine(Get("info_export_localization"));
-        #endif
-            return;
-        }
-
-    #if DEBUG
-        Console.WriteLine(Get("err_export_localization"));
-    #endif
-    }
-    
-    // TODO
-    public static void Load(string language = null)
-    {
-        //try
-        //{
-            
-        //}
-        //catch(Exception ex)
-        //{ 
-        //    Logger.LogException(ex, "Localization - Load()"); 
-        //}
-    }
-
-    public static string Get(string key)
-    {
-        if(localization != null
-        && localization.ContainsKey(key))
-            return localization[key];
-        else if(defaultLocalization.ContainsKey(key))
-            return defaultLocalization[key];
-
-        Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
-        return $"LOCALIZATION ERROR ({key})";
-    }
-
-    public static LocalizationInfo GetLocalizationInfo()
-    {
-        if(localization == null)
-            return new LocalizationInfo("Default", "0.0.0", "English translation of the bot.");
-
-        return null;
     }
 }
