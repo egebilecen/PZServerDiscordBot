@@ -68,7 +68,7 @@ public static class DiscordUtility
         if(Application.BotSettings.CommandChannelId == 0)
         {
             warningMessage = true;
-            await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to work in using **!set_command_channel <channel tag>** command.");
+            await guild.TextChannels.ElementAt(0).SendMessageAsync(Localization.Get("warn_bot_conf_cmd_chan"));
         }
         else
         {
@@ -86,7 +86,7 @@ public static class DiscordUtility
         if(Application.BotSettings.LogChannelId == 0)
         {
             warningMessage = true;
-            await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to write logs using **!set_log_channel <channel tag>** command.");
+            await guild.TextChannels.ElementAt(0).SendMessageAsync(Localization.Get("warn_bot_conf_log_chan"));
         }
         else
         {
@@ -99,14 +99,14 @@ public static class DiscordUtility
                 goto logChannelCheck;
             }
 
-            await textChannel.SendMessageAsync(string.Format("Bot (**{0}**) is started. :zombie:", Application.BotVersion));
+            await textChannel.SendMessageAsync(string.Format(Localization.Get("info_bot_started"), Application.BotVersion));
         }
 
     publicChannelCheck:
         if(Application.BotSettings.PublicChannelId == 0)
         {
             warningMessage = true;
-            await guild.TextChannels.ElementAt(0).SendMessageAsync("Please set the channel for the bot to accept commands in a public channel using **!set_public_channel <channel tag>** command.");
+            await guild.TextChannels.ElementAt(0).SendMessageAsync(Localization.Get("warn_bot_conf_pub_chan"));
         }
         else
         {
@@ -122,8 +122,8 @@ public static class DiscordUtility
 
         if(warningMessage)
         {
-            Console.WriteLine("Bot is missing configuration. Please refer to "+Application.BotRepoURL+"#bot-configuration.");
-            await guild.TextChannels.ElementAt(0).SendMessageAsync("Bot won't accept any other commands until the steps above step(s) are completed. @everyone");
+            Console.WriteLine(string.Format(Localization.Get("warn_console_missing_conf"), Application.BotRepoURL));
+            await guild.TextChannels.ElementAt(0).SendMessageAsync(Localization.Get("warn_bot_wont_accept_cmd"));
         }
     }
 
@@ -141,7 +141,7 @@ public static class DiscordUtility
             if(!commandList.ContainsKey(moduleName))
                 commandList.Add(moduleName, new List<KeyValuePair<string, string>>());
 
-            commandList[moduleName].Add(new KeyValuePair<string, string>("!"+command.Name, command.Summary ?? "No description available\n"));
+            commandList[moduleName].Add(new KeyValuePair<string, string>("!"+command.Name, command.Summary ?? Localization.Get("gen_no_desc") + "\n"));
         }
     }
 

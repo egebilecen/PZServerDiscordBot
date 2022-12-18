@@ -82,7 +82,7 @@ public class CommandHandler
                     List<KeyValuePair<string, string>> commandList = DiscordUtility.GetCommandModule(commandModule);
 
                     await context.Message.AddReactionAsync(EmojiList.GreenCheck);
-                    await context.Channel.SendMessageAsync("Here is the command list:");
+                    await context.Channel.SendMessageAsync(Localization.Get("disc_cmd_help_user_cmds_title"));
                     await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, commandList);
                     return;
                 }
@@ -99,19 +99,19 @@ public class CommandHandler
 
                     if(adminCommandModule != null)
                     {
-                        await context.Channel.SendMessageAsync("Admin command list:");
+                        await context.Channel.SendMessageAsync(Localization.Get("disc_cmd_help_admin_cmds_title"));
                         await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, adminCommandModule);
                     }
 
                     if(botCommandModule != null)
                     {
-                        await context.Channel.SendMessageAsync("Bot command list:");
+                        await context.Channel.SendMessageAsync(Localization.Get("disc_cmd_help_bot_cmds_title"));
                         await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, botCommandModule);
                     }
 
                     if(pzserverCommandModule != null)
                     {
-                        await context.Channel.SendMessageAsync("Project Zomboid server command list:");
+                        await context.Channel.SendMessageAsync(Localization.Get("disc_cmd_help_pzs_cmds_title"));
                         await DiscordUtility.SendEmbeddedMessage(context.Message.Channel, pzserverCommandModule);        
                     }
                     return;
@@ -122,7 +122,7 @@ public class CommandHandler
         else if(!isBotConfigured && commandModule != "BotCommands")
         {
             await context.Message.AddReactionAsync(EmojiList.RedCross);
-            await context.Channel.SendMessageAsync("Bot configuration haven't done yet.");
+            await context.Channel.SendMessageAsync(Localization.Get("warn_bot_conf_not_done"));
             return;
         }
         // If the channel that the command has been sent doesn't match with the
@@ -137,7 +137,7 @@ public class CommandHandler
 
     unknownCommand:
         await context.Message.AddReactionAsync(EmojiList.RedCross);
-        await context.Channel.SendMessageAsync("Unknown command.");
+        await context.Channel.SendMessageAsync(Localization.Get("warn_unknown_cmd"));
         return;
     }
 }

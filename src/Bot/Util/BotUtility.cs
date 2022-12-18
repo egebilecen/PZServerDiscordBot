@@ -98,35 +98,35 @@ public static class BotUtility
         double delta = Math.Abs(ts.TotalSeconds);  
   
         if (delta < 1 * MINUTE)  
-          return ts.Seconds == 1 ? "one second ago" : ts.Seconds + " seconds ago";  
+          return ts.Seconds == 1 ? Localization.Get("gen_past_rel_time_one_sec") : string.Format(Localization.Get("gen_past_rel_time_secs"), ts.Seconds);  
   
         if (delta < 2 * MINUTE)  
-          return "a minute ago";  
+          return Localization.Get("gen_past_rel_time_one_min");  
   
         if (delta < 45 * MINUTE)  
-          return ts.Minutes + " minutes ago";  
+          return string.Format(Localization.Get("gen_past_rel_time_mins"), ts.Minutes);  
   
         if (delta < 90 * MINUTE)  
-          return "an hour ago";  
+          return Localization.Get("gen_past_rel_time_one_hour");  
   
         if (delta < 24 * HOUR)  
-          return ts.Hours + " hours ago";  
+          return string.Format(Localization.Get("gen_past_rel_time_hours"), ts.Hours);  
   
         if (delta < 48 * HOUR)  
-          return "yesterday";  
+          return Localization.Get("gen_past_rel_time_yest");  
   
         if (delta < 30 * DAY)  
-          return ts.Days + " days ago";  
+          return string.Format(Localization.Get("gen_past_rel_time_days"), ts.Days);  
   
         if (delta < 12 * MONTH)  
         {  
           int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));  
-          return months <= 1 ? "one month ago" : months + " months ago";  
+          return months <= 1 ? Localization.Get("gen_past_rel_time_one_month") : string.Format(Localization.Get("gen_past_rel_time_months"), months);  
         }  
         else  
         {  
           int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));  
-          return years <= 1 ? "one year ago" : years + " years ago";  
+          return years <= 1 ? Localization.Get("gen_past_rel_time_one_year") : string.Format(Localization.Get("gen_past_rel_time_years"), years);  
         }  
     }
 }

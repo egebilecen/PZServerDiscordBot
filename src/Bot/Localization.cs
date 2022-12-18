@@ -15,13 +15,33 @@ public static class Localization
         { "gen_disa_up", "Disabled" },
         { "gen_hours_text", "hour(s)" },
         { "gen_minutes_text", "minute(s)" },
+        { "gen_past_rel_time_one_sec", "one second ago" },
+        { "gen_past_rel_time_secs", "{0} seconds ago" },
+        { "gen_past_rel_time_one_min", "a minute ago" },
+        { "gen_past_rel_time_mins", "{0} minutes ago" },
+        { "gen_past_rel_time_one_hour", "an hour ago" },
+        { "gen_past_rel_time_hours", "{0} hours ago" },
+        { "gen_past_rel_time_yest", "yesterday" },
+        { "gen_past_rel_time_days", "{0} days ago" },
+        { "gen_past_rel_time_one_month", "one month ago" },
+        { "gen_past_rel_time_months", "{0} months ago" },
+        { "gen_past_rel_time_one_year", "one year ago" },
+        { "gen_past_rel_time_years", "{0} years ago" },
+        { "gen_no_desc", "No description available" },
 
         // Success Messages
         { "bot_disc_chan_set_ok", "Channel <#{0}> successfully configured for the bot to work in." },
 
         // Warning Messages
         { "warn_debug_mode", "WARNING: Bot is running in DEBUG configuration." },
+        { "warn_console_missing_conf", "Bot is missing configuration. Please refer to {0}#bot-configuration." },
         { "warn_server_not_running", "Server is not running." },
+        { "warn_bot_conf_not_done", "Bot configuration haven't done yet." },
+        { "warn_bot_conf_cmd_chan", "Please set a channel for bot to work in using **!set_command_channel <channel tag>** command." },
+        { "warn_bot_conf_log_chan", "Please set a channel for bot to write logs using **!set_log_channel <channel tag>** command." },
+        { "warn_bot_conf_pub_chan", "Please set a channel for bot to accept commands in a public channel using **!set_public_channel <channel tag>** command." },
+        { "warn_bot_wont_accept_cmd", "Bot won't accept any other commands until the steps above step(s) are completed. @everyone" },
+        { "warn_unknown_cmd", "Unknown command." },
 
         // Error Messages
         { "err_bot_token", "Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to \"{0}#writing-the-discord-bot-token-into-file\"." },
@@ -32,10 +52,17 @@ public static class Localization
 
         // Info Messages
         { "info_disc_act_bot_ver", "Bot Version: {0}" },
+        { "info_bot_started", "Bot (**{0}**) is started. :zombie:" },
         { "info_bot_new_version", "There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:." },
         { "info_bot_new_early_version", "There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section." },
 
         // Discord Commands
+        // ---- !help
+        { "disc_cmd_help_user_cmds_title", "Here is the command list:" },
+        { "disc_cmd_help_admin_cmds_title", "Admin command list:" },
+        { "disc_cmd_help_bot_cmds_title", "Bot command list:" },
+        { "disc_cmd_help_pzs_cmds_title", "Project Zomboid server command list:" },
+
         // ---- Admin Commands
         // -------- !set_command_channel
         { "disc_cmd_set_command_channel_warn", "Channel <#{0}> is configured to be log channel. Please select a different channel." },
