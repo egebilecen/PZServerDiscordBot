@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
@@ -270,5 +271,56 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         _ = Task.Run(async () => await ServerBackupCreator.Start());
 
         await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_backup_server_ok").KeyFormat(("channel_id", Application.BotSettings.LogChannelId)));
+    }
+
+    [Command("localization")]
+    [Summary("Get/update current localization. (!localization <(optional) new localization name>)")]
+    public async Task Localization_(string localizationName = null)
+    {
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+
+        Localization.LocalizationInfo localizationInfo = Localization.GetLocalizationInfo();
+
+        var embed = new EmbedBuilder()
+        {
+            Title = Localization.Get("disc_cmd_localization_embed_title"),
+            Color = Color.Green
+        };
+
+        embed.AddField(Localization.Get("disc_cmd_localization_embed_language"), localizationInfo.Name);
+        embed.AddField(Localization.Get("disc_cmd_localization_embed_version"), localizationInfo.Version);
+        embed.AddField(Localization.Get("disc_cmd_localization_embed_desc"), localizationInfo.Description);
+
+        await Context.Channel.SendMessageAsync(" ", embed: embed.Build());
+
+        if(string.IsNullOrEmpty(localizationName))
+        {
+            List<Localization.LocalizationInfo> localizationList = await Localization.GetAvailableLocalizationList();
+            
+            if(localizationList != null)
+            {
+                List<KeyValuePair<string, string>> availableLocalizations = localizationList
+                    .Select(x => new KeyValuePair<string, string>(x.Name, $"{x.Description} ({x.Version})"))
+                    .ToList();
+
+                await Context.Channel.SendMessageAsync("Available localization list:");
+                await DiscordUtility.SendEmbeddedMessage(Context.Channel, availableLocalizations);
+                await Context.Channel.SendMessageAsync("Please use `!localization <localization name>` command to update current localization. You can set localization back to default by using `!localization default` command.");
+            }
+            else await Context.Channel.SendMessageAsync("There are no other available localizations at the moment.");
+
+            var lastCacheTime = Localization.LastCacheTime;
+
+            if(lastCacheTime != null)
+            {
+                await Context.Channel.SendMessageAsync(
+                    Localization.Get("gen_last_cache_text").KeyFormat(("relative_time", BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)))
+                );
+            }
+        }
+        else
+        {
+            
+        }
     }
 }

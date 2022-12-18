@@ -89,21 +89,12 @@ public static class Application
 
         if(!File.Exists(Settings.BotSettings.SettingsFile))
         {
-            BotSettings = new Settings.BotSettings
-            {
-                Version = BotVersion
-            };
+            BotSettings = new Settings.BotSettings();
             BotSettings.Save();
         }
         else
         {
             BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
-        }
-
-        if(BotSettings.Version == null)
-        {
-            BotSettings.Version = BotVersion;
-            BotSettings.Save();
         }
 
         if(!Directory.Exists(Localization.LocalizationPath))
@@ -144,7 +135,7 @@ public static class Application
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
     #endif
 
-        Client   = new DiscordSocketClient();
+        Client   = new DiscordSocketClient(new DiscordSocketConfig() { GatewayIntents = GatewayIntents.All });
         Commands = new CommandService();
         Services = null;
         CommandHandler = new CommandHandler(Client, Commands, Services);
@@ -160,6 +151,9 @@ public static class Application
         {
             await DiscordUtility.DoChannelCheck();
             await BotUtility.NotifyLatestBotVersion();
+            
+            // REMOVE LATER
+            await Localization.GetAvailableLocalizationList();
         };
 
         Client.Disconnected += async (ex) =>

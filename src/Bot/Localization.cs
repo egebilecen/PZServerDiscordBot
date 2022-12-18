@@ -26,7 +26,12 @@ public static class Localization
 
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
+    
     private const string localizationListURL = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/list.json";
+    
+    public static DateTime? LastCacheTime { get; private set; } = null;
+    private const int cacheDurationMin = 15;
+    private static List<LocalizationInfo> lastLocalizationInfoCache = null;
 
     private static Dictionary<string, string> localization = null;
     private static readonly Dictionary<string, string> defaultLocalization = new Dictionary<string, string>
@@ -49,6 +54,7 @@ public static class Localization
         { "gen_past_rel_time_one_year", "one year ago" },
         { "gen_past_rel_time_years", "{years} years ago" },
         { "gen_no_desc", "No description available" },
+        { "gen_last_cache_text", "Last cache was at **{relative_time}**." },
 
         // Success Messages
         { "bot_disc_chan_set_ok", "Channel <#{channel_id}> successfully configured for the bot to work in." },
@@ -140,7 +146,13 @@ public static class Localization
         { "disc_cmd_backup_server_start", "Server backup started. Total of **{folder_count} folder(s)** will be backed up." },
         { "disc_cmd_backup_server_item_done", "Backup of `{folder_name}` is completed. **({remaining_folder_count} folder left)**" },
         { "disc_cmd_backup_server_finish", "Server backup is completed!" },
-        
+
+        // -------- !localization
+        { "disc_cmd_localization_embed_title", "Current Localization Information" },
+        { "disc_cmd_localization_embed_language", "Language" },
+        { "disc_cmd_localization_embed_version", "Version" },
+        { "disc_cmd_localization_embed_desc", "Description" },
+
         // ---- PZ Server Commands
         // -------- !start_server
         { "disc_cmd_start_server_warn_running", "Server is already running." },
@@ -165,7 +177,6 @@ public static class Localization
         // -------- !perk_info
         { "disc_cmd_perk_info_no_result", "Couldn't find any perk log related to username **{username}**." },
         { "disc_cmd_perk_info_result_title", "Perk Information of **{username}**:" },
-        { "disc_cmd_perk_info_last_cache", "Last cache was at **{relative_time}**." },
 
         // ---- User Commands
         // -------- !bot_info
@@ -203,17 +214,24 @@ public static class Localization
 
     public static async Task<List<LocalizationInfo>> GetAvailableLocalizationList()
     {
-        string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationListURL);
+        if(LastCacheTime != null
+        && DateTime.Now.Subtract((DateTime)LastCacheTime).TotalMinutes <= cacheDurationMin)
+            return lastLocalizationInfoCache;
+
+        //string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationListURL);
+
+        // REMOVE LATER, UNCOMMENT ABOVE
+        string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/v1.8.x/localization/list.json");
         
         if(listContent != null)
         {
-            List<LocalizationInfo> localizationList = new List<LocalizationInfo>();
+            List<LocalizationInfo> localizationInfoList = new List<LocalizationInfo>();
 
             JObject json = JObject.Parse(listContent);
             if(json.Count < 1) return null;
 
             Dictionary<string, Dictionary<string, string>> dict = json.ToObject<Dictionary<string, Dictionary<string, string>>>();
-            localizationList.AddRange(dict.Select(x =>
+            localizationInfoList.AddRange(dict.Select(x =>
             {
                 string name = x.Key;
                 string version = x.Value["version"];
@@ -222,10 +240,14 @@ public static class Localization
                 return new LocalizationInfo(name, version, desc);
             }).ToList());
 
-            return localizationList;
+            lastLocalizationInfoCache = localizationInfoList;
+            LastCacheTime = DateTime.Now;
+
+            return lastLocalizationInfoCache;
         }
         
-        return null;
+        lastLocalizationInfoCache = null;
+        return lastLocalizationInfoCache;
     }
 
     public static void ExportDefault()
@@ -268,5 +290,13 @@ public static class Localization
 
         Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
         return $"LOCALIZATION ERROR ({key})";
+    }
+
+    public static LocalizationInfo GetLocalizationInfo()
+    {
+        if(localization == null)
+            return new LocalizationInfo("Default", "0.0.0", "English translation of the bot.");
+
+        return null;
     }
 }

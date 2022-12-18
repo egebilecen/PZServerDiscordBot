@@ -177,7 +177,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(lastCacheTime != null)
         {
             await Context.Channel.SendMessageAsync(
-                Localization.Get("disc_cmd_perk_info_last_cache").KeyFormat(("relative_time", BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)))
+                Localization.Get("gen_last_cache_text").KeyFormat(("relative_time", BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)))
             );
         }
     }
