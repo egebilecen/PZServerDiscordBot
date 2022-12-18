@@ -5,7 +5,7 @@ using System.IO;
 
 public static class Localization
 {
-    private const string localizationFolder = "./localization/";
+    public const string LocalizationPath = "./localization/";
 
     private static Dictionary<string, string> localization = null;
     private static readonly Dictionary<string, string> defaultLocalization = new Dictionary<string, string>
@@ -176,13 +176,16 @@ public static class Localization
         { "sch_workshopitemupdatechecker_log_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Preparing to restart server in {0} minute(s)." },
         { "sch_workshopitemupdatechecker_pub_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in {0} minute(s)." },
         { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {0} minute(s)." },
-
-        //
-        { "", "" },
     };
+
+    public static void ExportDefault()
+    {
+        if(Directory.Exists(LocalizationPath))
+            File.WriteAllText($"{LocalizationPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
+    }
     
     // TODO
-    private static void Load(string language = null)
+    public static void Load(string language = null)
     {
         //try
         //{

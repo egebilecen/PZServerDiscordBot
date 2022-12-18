@@ -104,6 +104,9 @@ public static class Application
             BotSettings.Save();
         }
 
+        if(!Directory.Exists(Localization.LocalizationPath))
+            Directory.CreateDirectory(Localization.LocalizationPath);
+
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            "Server Restart",
                                            BotSettings.ServerScheduleSettings.ServerRestartSchedule,
@@ -133,6 +136,8 @@ public static class Application
         
     #if !DEBUG
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
+    #else
+        Localization.ExportDefault();
     #endif
 
         Client   = new DiscordSocketClient();
