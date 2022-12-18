@@ -1,6 +1,10 @@
 {
-	"default" : {
+	"Turkish" : {
 		"version" : "1.0.0",
-		"desc" : "Default English translation."
+		"desc" : "Test language."
+	},
+	"Japanese" : {
+		"version" : "1.0.0",
+		"desc" : "Test purpose language."
 	}
 }
