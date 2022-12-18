@@ -186,11 +186,16 @@ public static class Localization
         if(Directory.Exists(exportPath))
         {
             File.WriteAllText($"{exportPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
+            
+        #if DEBUG
             Console.WriteLine(Get("info_export_localization"));
+        #endif
             return;
         }
 
+    #if DEBUG
         Console.WriteLine(Get("err_export_localization"));
+    #endif
     }
     
     // TODO
