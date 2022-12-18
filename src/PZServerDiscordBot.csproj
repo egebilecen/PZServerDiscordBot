@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot\Localization.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="PZServer\ServerBackupCreator.cs" />
     <Compile Include="Bot\Util\BotUtility.cs" />
     <Compile Include="Bot\CommandHandler.cs" />
