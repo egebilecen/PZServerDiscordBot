@@ -12,5 +12,6 @@ public class AdminCommands : ModuleBase<SocketCommandContext>
     [Remarks("skip")]
     public async Task Debug(string param1="", string param2="", string param3="")
     {
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
 }
