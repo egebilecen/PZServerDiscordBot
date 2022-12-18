@@ -1,10 +1,12 @@
 {
 	"Turkish" : {
 		"version" : "1.0.0",
-		"desc" : "Test language."
+		"desc" : "Test language.",
+		"file" : "turkish.json"
 	},
 	"Japanese" : {
 		"version" : "1.0.0",
-		"desc" : "Test purpose language."
+		"desc" : "Test purpose language.",
+		"file" : "japanese.json"
 	}
 }
