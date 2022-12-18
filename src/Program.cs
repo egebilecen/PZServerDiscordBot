@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿#define EXPORT_DEFAULT_LOCALIZATION
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -107,6 +109,10 @@ public static class Application
         if(!Directory.Exists(Localization.LocalizationPath))
             Directory.CreateDirectory(Localization.LocalizationPath);
 
+    #if EXPORT_DEFAULT_LOCALIZATION
+        Localization.ExportDefault();
+    #endif
+
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            "Server Restart",
                                            BotSettings.ServerScheduleSettings.ServerRestartSchedule,
@@ -136,8 +142,6 @@ public static class Application
         
     #if !DEBUG
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
-    #else
-        Localization.ExportDefault();
     #endif
 
         Client   = new DiscordSocketClient();

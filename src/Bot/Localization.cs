@@ -6,6 +6,7 @@ using System.IO;
 public static class Localization
 {
     public const string LocalizationPath = "./localization/";
+    private const string exportPath = "../../../localization/";
 
     private static Dictionary<string, string> localization = null;
     private static readonly Dictionary<string, string> defaultLocalization = new Dictionary<string, string>
@@ -49,12 +50,14 @@ public static class Localization
         { "err_serv_bat", "Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes." },
         { "err_disc_auth_fail", "Authentication failed! Be sure your discord bot token is valid." },
         { "err_disc_disconn", "An error occured and discord bot has been disconnected! Error details are saved into {0} file.\nPlease refer to \"{1}/issues\" and create an issue about this with the log file." },
+        { "err_export_localization", "ERROR: Couldn't export default localization file!" },
 
         // Info Messages
         { "info_disc_act_bot_ver", "Bot Version: {0}" },
         { "info_bot_started", "Bot (**{0}**) is started. :zombie:" },
         { "info_bot_new_version", "There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:." },
         { "info_bot_new_early_version", "There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section." },
+        { "info_export_localization", "INFO: Default localization successfully exported!" },
 
         // Discord Commands
         // ---- !help
@@ -180,8 +183,14 @@ public static class Localization
 
     public static void ExportDefault()
     {
-        if(Directory.Exists(LocalizationPath))
-            File.WriteAllText($"{LocalizationPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
+        if(Directory.Exists(exportPath))
+        {
+            File.WriteAllText($"{exportPath}/default.json", JsonConvert.SerializeObject(defaultLocalization, Formatting.Indented));
+            Console.WriteLine(Get("info_export_localization"));
+            return;
+        }
+
+        Console.WriteLine(Get("err_export_localization"));
     }
     
     // TODO
