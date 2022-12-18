@@ -17,20 +17,20 @@ public static class Localization
         public string Description { get; private set; }
         public string File { get; private set; }
 
-        public LocalizationInfo(string name, string version, string desc, string file)
+        public LocalizationInfo(string name, string version, string description, string file)
         {
             Name = name;
             Version = SemanticVersion.TryParse(version, out SemanticVersion versionResult) ? versionResult : new SemanticVersion(0, 0, 0);
-            Description = desc;
+            Description = description;
             File = file;
         }
 
         [JsonConstructor]
-        public LocalizationInfo(string name, SemanticVersion version, string desc, string file)
+        public LocalizationInfo(string name, SemanticVersion version, string description, string file)
         {
             Name = name;
             Version = version;
-            Description = desc;
+            Description = description;
             File = file;
         }
     }
@@ -298,6 +298,7 @@ public static class Localization
 
         try
         {
+            // TODO: Don't download if already exist in local
             // TODO: Do version checking with existing
 
             string localizationFileURL = localizationDirURL + selectedLocalization.File;
