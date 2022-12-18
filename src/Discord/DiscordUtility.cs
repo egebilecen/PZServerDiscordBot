@@ -99,7 +99,7 @@ public static class DiscordUtility
                 goto logChannelCheck;
             }
 
-            await textChannel.SendMessageAsync(string.Format(Localization.Get("info_bot_started"), Application.BotVersion));
+            await textChannel.SendMessageAsync(Localization.Get("info_bot_started").KeyFormat(("version", Application.BotVersion)));
         }
 
     publicChannelCheck:
@@ -122,7 +122,7 @@ public static class DiscordUtility
 
         if(warningMessage)
         {
-            Console.WriteLine(string.Format(Localization.Get("warn_console_missing_conf"), Application.BotRepoURL));
+            Console.WriteLine(Localization.Get("warn_console_missing_conf").KeyFormat(("repo_url", Application.BotRepoURL)));
             await guild.TextChannels.ElementAt(0).SendMessageAsync(Localization.Get("warn_bot_wont_accept_cmd"));
         }
     }

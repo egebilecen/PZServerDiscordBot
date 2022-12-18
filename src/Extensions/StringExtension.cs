@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-public static class StringExtension
+﻿public static class StringExtension
 {
     public static string KeyFormat(this string str, params (string, object)[] formatPair)
     {

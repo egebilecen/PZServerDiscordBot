@@ -34,14 +34,14 @@ public static class Application
         {
             if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
-                Console.WriteLine(string.Format(Localization.Get("err_bot_token"), BotRepoURL));
+                Console.WriteLine(Localization.Get("err_bot_token").KeyFormat(("repo_url", BotRepoURL)));
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine(string.Format(Localization.Get("err_retv_bot_token"), Logger.LogFile, BotRepoURL));
+            Console.WriteLine(Localization.Get("err_retv_bot_token").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
             await Task.Delay(-1);
         }
 
@@ -152,7 +152,7 @@ public static class Application
         await CommandHandler.SetupAsync();
         await Client.LoginAsync(TokenType.Bot, DiscordUtility.GetToken());
         await Client.StartAsync();
-        await Client.SetGameAsync(string.Format(Localization.Get("info_disc_act_bot_ver"), BotVersion));
+        await Client.SetGameAsync(Localization.Get("info_disc_act_bot_ver").KeyFormat(("version", BotVersion)));
 
         DiscordUtility.OrganizeCommands();
 
@@ -172,7 +172,7 @@ public static class Application
                 Console.WriteLine(Localization.Get("err_disc_auth_fail"));
                 await Task.Delay(-1);
             }
-            else Console.WriteLine(string.Format(Localization.Get("err_disc_disconn"), Logger.LogFile, BotRepoURL));
+            else Console.WriteLine(Localization.Get("err_disc_disconn").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
         };
 
         await Task.Delay(-1);

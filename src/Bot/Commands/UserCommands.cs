@@ -11,7 +11,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
     public async Task BotInfo()
     {
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_bot_info_text"), Application.BotRepoURL));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_bot_info_text").KeyFormat(("repo_url", Application.BotRepoURL)));
     }
 
     [Command("server_status")]
@@ -33,7 +33,7 @@ public class UserCommands : ModuleBase<SocketCommandContext>
         var timestamp = new DateTimeOffset(Scheduler.GetItem("ServerRestart").NextExecuteTime).ToUnixTimeSeconds();
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_restart_time_text"), timestamp));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_restart_time_text").KeyFormat(("timestamp", timestamp)));
     }
 
     [Command("game_date")]
@@ -74,9 +74,10 @@ public class UserCommands : ModuleBase<SocketCommandContext>
                   | yearBytes[2] << 8
                   | yearBytes[3] << 0;
 
-        string responseText = string.Format(
-            Localization.Get("disc_cmd_game_date_response"), 
-            day.ToString().PadLeft(2, '0'), month.ToString().PadLeft(2, '0'), year.ToString()
+        string responseText = Localization.Get("disc_cmd_game_date_response").KeyFormat(
+            ("day", day.ToString().PadLeft(2, '0')), 
+            ("month", month.ToString().PadLeft(2, '0')), 
+            ("year", year)
         );
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);

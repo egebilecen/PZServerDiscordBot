@@ -14,7 +14,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(Application.BotSettings.LogChannelId == channel.Id)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_set_command_channel_warn"), channel.Id.ToString()));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_command_channel_warn").KeyFormat(("channel_id", channel.Id)));
             return;
         }
 
@@ -23,7 +23,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_command_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(Localization.Get("bot_disc_chan_set_ok").KeyFormat(("channel_id", channel.Id)));
     }
 
     [Command("set_log_channel")]
@@ -33,7 +33,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(Application.BotSettings.CommandChannelId == channel.Id)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format(string.Format(Localization.Get("disc_cmd_set_log_channel_warn"), channel.Id.ToString())));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_log_channel_warn").KeyFormat(("channel_id", channel.Id)));
             return;
         }
 
@@ -42,7 +42,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_log_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(Localization.Get("bot_disc_chan_set_ok").KeyFormat(("channel_id", channel.Id)));
     }
 
     [Command("set_public_channel")]
@@ -54,7 +54,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         Logger.WriteLog(string.Format("[BotCommands - set_public_channel] Caller: {0}, Params: <#{1}>", Context.User.ToString(), channel.Id));
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("bot_disc_chan_set_ok"), channel.Id.ToString()));
+        await Context.Channel.SendMessageAsync(Localization.Get("bot_disc_chan_set_ok").KeyFormat(("channel_id", channel.Id)));
     }
 
     [Command("get_settings")]
@@ -65,25 +65,25 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
         
         string botSettings = "";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_serv_id"), Application.BotSettings.GuildId.ToString());
+        botSettings += Localization.Get("disc_cmd_get_settings_serv_id").KeyFormat(("server_id", Application.BotSettings.GuildId));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_cmd_chan_id"), Application.BotSettings.CommandChannelId.ToString(), Application.BotSettings.CommandChannelId.ToString());
+        botSettings += Localization.Get("disc_cmd_get_settings_cmd_chan_id").KeyFormat(("channel_id", Application.BotSettings.CommandChannelId));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_log_chan_id"), Application.BotSettings.LogChannelId.ToString(), Application.BotSettings.LogChannelId.ToString());
+        botSettings += Localization.Get("disc_cmd_get_settings_log_chan_id").KeyFormat(("channel_id", Application.BotSettings.LogChannelId));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_pub_chan_id"), Application.BotSettings.PublicChannelId.ToString(), Application.BotSettings.PublicChannelId.ToString());
+        botSettings += Localization.Get("disc_cmd_get_settings_pub_chan_id").KeyFormat(("channel_id", Application.BotSettings.PublicChannelId));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_perk_cac_dur"), Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration.ToString());
+        botSettings += Localization.Get("disc_cmd_get_settings_perk_cac_dur").KeyFormat(("minutes", Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_res_sch_int"), Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000));
+        botSettings += Localization.Get("disc_cmd_get_settings_res_sch_int").KeyFormat(("minutes", Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_sch_int"), Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000));
+        botSettings += Localization.Get("disc_cmd_get_settings_mod_sch_int").KeyFormat(("minutes", Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_rst_timer"), Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000));
+        botSettings += Localization.Get("disc_cmd_get_settings_mod_rst_timer").KeyFormat(("minutes", Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateRestartTimer / (60 * 1000)));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_serv_aut_strt"), Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up"));
+        botSettings += Localization.Get("disc_cmd_get_settings_serv_aut_strt").KeyFormat(("state", Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")));
         botSettings += "\n";
-        botSettings += string.Format(Localization.Get("disc_cmd_get_settings_mod_logging"), Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up"));
+        botSettings += Localization.Get("disc_cmd_get_settings_mod_logging").KeyFormat(("state", Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")));
         
         await Context.Channel.SendMessageAsync(botSettings);
     }
@@ -103,7 +103,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
             
             foreach((int i, ScheduleItem scheduleItem) in scheduleItems.Select((val, i) => (i, val)))
             {
-                schedules += string.Format(Localization.Get("disc_cmd_get_schedules_run"), scheduleItem.DisplayName, new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds());
+                schedules += Localization.Get("disc_cmd_get_schedules_run").KeyFormat(("name", scheduleItem.DisplayName), ("timestamp", new DateTimeOffset(scheduleItem.NextExecuteTime).ToUnixTimeSeconds()));
                 
                 if(i != scheduleItems.Count - 1) schedules += "\n";
             }
@@ -203,7 +203,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.BotFeatureSettings.NonPublicModLogging = !Application.BotSettings.BotFeatureSettings.NonPublicModLogging;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_toggle_non_public_mod_logging_ok"), (Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower()));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_toggle_non_public_mod_logging_ok").KeyFormat(("state", (Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower())));
     }
 
     [Command("set_perk_cache_duration")]
@@ -250,7 +250,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         ScheduleItem autoServerStartSchedule = Scheduler.GetItem("AutoServerStart");
         autoServerStartSchedule?.UpdateInterval();
 
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_toggle_server_auto_start_ok"), (Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower()));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_toggle_server_auto_start_ok").KeyFormat(("state", (Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")).ToLower())));
     }
 
     [Command("backup_server")]
@@ -269,6 +269,6 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         
         _ = Task.Run(async () => await ServerBackupCreator.Start());
 
-        await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_backup_server_ok"), Application.BotSettings.LogChannelId.ToString()));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_backup_server_ok").KeyFormat(("channel_id", Application.BotSettings.LogChannelId)));
     }
 }

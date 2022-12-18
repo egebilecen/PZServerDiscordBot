@@ -60,7 +60,7 @@ public static partial class Schedules
             && item.Result != 1
             && logChannel != null)
             {
-                logChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_details_fail"), item.PublishedFileId, item.Result.ToString(), "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId));
+                logChannel.SendMessageAsync(Localization.Get("sch_workshopitemupdatechecker_details_fail").KeyFormat(("id", item.PublishedFileId), ("code", item.Result), ("link", "https://steamcommunity.com/sharedfiles/filedetails/?id="+item.PublishedFileId)));
             }
 
             var updateDate = DateTimeOffset.FromUnixTimeSeconds(item.TimeUpdated);
@@ -72,7 +72,7 @@ public static partial class Schedules
 
                 if(logChannel != null)
                 {
-                    logChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_log_chan_text"), restartInMinutes.ToString()));
+                    logChannel.SendMessageAsync(Localization.Get("sch_workshopitemupdatechecker_log_chan_text").KeyFormat(("minutes", restartInMinutes)));
                 }
                 else
                 {
@@ -82,7 +82,7 @@ public static partial class Schedules
 
                 if(publicChannel != null)
                 {
-                    publicChannel.SendMessageAsync(string.Format(Localization.Get("sch_workshopitemupdatechecker_pub_chan_text"), restartInMinutes.ToString()));
+                    publicChannel.SendMessageAsync(Localization.Get("sch_workshopitemupdatechecker_pub_chan_text").KeyFormat(("minutes", restartInMinutes)));
                 }
                 else
                 {
@@ -90,7 +90,7 @@ public static partial class Schedules
                     return;
                 }
 
-                ServerUtility.Commands.ServerMsg(string.Format(Localization.Get("sch_workshopitemupdatechecker_server_announcement_text"), restartInMinutes.ToString()));
+                ServerUtility.Commands.ServerMsg(Localization.Get("sch_workshopitemupdatechecker_server_announcement_text").KeyFormat(("minutes", restartInMinutes)));
                 break;
             }
         }

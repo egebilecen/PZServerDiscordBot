@@ -98,10 +98,10 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[PZServerCommand - initiate_restart] Caller: {0}, Params: {1}", Context.User.ToString(), minutes));
             
             uint restartInMinutes = ServerUtility.InitiateServerRestart(minutes * (60 * 1000));
-            ServerUtility.Commands.ServerMsg(string.Format(Localization.Get("disc_cmd_initiate_restart_info_server_msg"), restartInMinutes));
+            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_initiate_restart_info_server_msg").KeyFormat(("minutes", restartInMinutes)));
 
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_initiate_restart_info_disc_msg"), restartInMinutes));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_initiate_restart_info_disc_msg").KeyFormat(("minutes", restartInMinutes)));
         }
         else
         {
@@ -120,7 +120,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[PZServerCommand - abort_restart] Caller: {0}", Context.User.ToString()));
             
             ServerUtility.ResetServerRestartInterval();
-            ServerUtility.Commands.ServerMsg(string.Format(Localization.Get("disc_cmd_abort_restart_ok_server"), Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes.ToString()));
+            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_abort_restart_ok_server").KeyFormat(("minutes", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes)));
 
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
             await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_abort_restart_ok_disc"));
@@ -155,7 +155,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         || !userPerkDataList.ContainsKey(username))
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_perk_info_no_result"), username));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_perk_info_no_result").KeyFormat(("username", username)));
         }
         else
         {
@@ -168,7 +168,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
-            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_perk_info_result_title"), username));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_perk_info_result_title").KeyFormat(("username", username)));
             await DiscordUtility.SendEmbeddedMessage(Context.Message.Channel, perkList);
         }
 
@@ -176,8 +176,9 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         if(lastCacheTime != null)
         {
-            await Context.Channel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_perk_info_last_cache"), 
-                                                   BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)));
+            await Context.Channel.SendMessageAsync(
+                Localization.Get("disc_cmd_perk_info_last_cache").KeyFormat(("relative_time", BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)))
+            );
         }
     }
 

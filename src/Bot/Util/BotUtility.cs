@@ -52,7 +52,7 @@ public static class BotUtility
             {
                 if(latestBotVersion.Stage == DevelopmentStage.Release)
                 {
-                    string warningText = string.Format(Localization.Get("info_bot_new_version"), latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = Localization.Get("info_bot_new_version").KeyFormat(("new_version", latestBotVersion), ("current_version", Application.BotVersion), ("repo_url", Application.BotRepoURL));
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
@@ -67,7 +67,7 @@ public static class BotUtility
                 }
                 else if(!announcedEarlyAccessVersion)
                 {
-                    string warningText = string.Format(Localization.Get("info_bot_new_early_version"), latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = Localization.Get("info_bot_new_early_version").KeyFormat(("new_version", latestBotVersion), ("current_version", Application.BotVersion), ("repo_url", Application.BotRepoURL));
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
@@ -98,35 +98,35 @@ public static class BotUtility
         double delta = Math.Abs(ts.TotalSeconds);  
   
         if (delta < 1 * MINUTE)  
-          return ts.Seconds == 1 ? Localization.Get("gen_past_rel_time_one_sec") : string.Format(Localization.Get("gen_past_rel_time_secs"), ts.Seconds);  
+          return ts.Seconds == 1 ? Localization.Get("gen_past_rel_time_one_sec") : Localization.Get("gen_past_rel_time_secs").KeyFormat(("seconds", ts.Seconds));  
   
         if (delta < 2 * MINUTE)  
           return Localization.Get("gen_past_rel_time_one_min");  
   
         if (delta < 45 * MINUTE)  
-          return string.Format(Localization.Get("gen_past_rel_time_mins"), ts.Minutes);  
+          return Localization.Get("gen_past_rel_time_mins").KeyFormat(("minutes", ts.Minutes));  
   
         if (delta < 90 * MINUTE)  
           return Localization.Get("gen_past_rel_time_one_hour");  
   
         if (delta < 24 * HOUR)  
-          return string.Format(Localization.Get("gen_past_rel_time_hours"), ts.Hours);  
+          return Localization.Get("gen_past_rel_time_hours").KeyFormat(("hours", ts.Hours));
   
         if (delta < 48 * HOUR)  
           return Localization.Get("gen_past_rel_time_yest");  
   
         if (delta < 30 * DAY)  
-          return string.Format(Localization.Get("gen_past_rel_time_days"), ts.Days);  
+          return Localization.Get("gen_past_rel_time_days").KeyFormat(("days", ts.Days));  
   
         if (delta < 12 * MONTH)  
         {  
           int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));  
-          return months <= 1 ? Localization.Get("gen_past_rel_time_one_month") : string.Format(Localization.Get("gen_past_rel_time_months"), months);  
+          return months <= 1 ? Localization.Get("gen_past_rel_time_one_month") : Localization.Get("gen_past_rel_time_months").KeyFormat(("months", months));  
         }  
         else  
         {  
           int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));  
-          return years <= 1 ? Localization.Get("gen_past_rel_time_one_year") : string.Format(Localization.Get("gen_past_rel_time_years"), years);  
+          return years <= 1 ? Localization.Get("gen_past_rel_time_one_year") : Localization.Get("gen_past_rel_time_years").KeyFormat(("years", years));  
         }  
     }
 }

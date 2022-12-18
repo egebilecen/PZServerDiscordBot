@@ -34,7 +34,7 @@ public static class ServerBackupCreator
             Directory.CreateDirectory(backupPath);
 
         if(logChannel != null)
-            await logChannel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_backup_server_start"), backupNamePathList.Count.ToString()));
+            await logChannel.SendMessageAsync(Localization.Get("disc_cmd_backup_server_start").KeyFormat(("folder_count", backupNamePathList.Count)));
 
         int i=0;
         foreach(KeyValuePair<string, string> namePathPair in backupNamePathList)
@@ -51,7 +51,7 @@ public static class ServerBackupCreator
             ZipFile.CreateFromDirectory(namePathPair.Value, backupPath+"/"+namePathPair.Key);
 
             if(logChannel != null)
-                await logChannel.SendMessageAsync(string.Format(Localization.Get("disc_cmd_backup_server_item_done"), namePathPair.Value, (backupNamePathList.Count - ++i).ToString()));
+                await logChannel.SendMessageAsync(Localization.Get("disc_cmd_backup_server_item_done").KeyFormat(("folder_name", namePathPair.Value), ("remaining_folder_count", backupNamePathList.Count - ++i)));
         }
 
         IsRunning = false;
