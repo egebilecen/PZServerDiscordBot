@@ -36,7 +36,7 @@ namespace Settings
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();
         public BotFeatureSettings      BotFeatureSettings      = new BotFeatureSettings();
 
-        public string LocalizationFileName = "";
+        public Localization.LocalizationInfo LocalizationInfo = null;
 
         public void Save()
         {

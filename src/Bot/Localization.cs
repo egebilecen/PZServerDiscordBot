@@ -24,12 +24,24 @@ public static class Localization
             Description = desc;
             File = file;
         }
+
+        [JsonConstructor]
+        public LocalizationInfo(string name, SemanticVersion version, string desc, string file)
+        {
+            Name = name;
+            Version = version;
+            Description = desc;
+            File = file;
+        }
     }
 
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
     
-    private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/";
+    //private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/";
+
+    // REMOVE LATER, UNCOMMENT ABOVE
+    private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/v1.8.x/localization/";
     private const string localizationListURL = localizationDirURL + "list.json";
     
     public static DateTime? LastCacheTime { get; private set; } = null;
@@ -155,8 +167,8 @@ public static class Localization
         { "disc_cmd_localization_embed_language", "Language" },
         { "disc_cmd_localization_embed_version", "Version" },
         { "disc_cmd_localization_embed_desc", "Description" },
-        { "disc_cmd_localization_upd_ok", "Localization successfully updated to **{localization}**." },
-        { "disc_cmd_localization_upd_exception", "An unknown error occured while updating localization!" },
+        { "disc_cmd_localization_upd_ok", "Localization successfully changed to **{localization}**." },
+        { "disc_cmd_localization_upd_exception", "An unknown error occured while changing localization!" },
         { "disc_cmd_localization_not_found", "Couldn't find **{localization}** localization!" },
         { "disc_cmd_localization_download_fail", "Couldn't download localization! Please try again later..." },
 
@@ -219,6 +231,18 @@ public static class Localization
         { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
     };
 
+    public static string Get(string key)
+    {
+        if(localization != null
+        && localization.ContainsKey(key))
+            return localization[key];
+        else if(defaultLocalization.ContainsKey(key))
+            return defaultLocalization[key];
+
+        Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
+        return $"LOCALIZATION ERROR ({key})";
+    }
+
     public static void ExportDefault()
     {
         if(Directory.Exists(exportPath))
@@ -236,12 +260,32 @@ public static class Localization
     #endif
     }
     
-    public static async Task<(bool, string)> Load(string language = null)
+    public static void Load()
+    {
+        if(Application.BotSettings.LocalizationInfo != null)
+        {
+            try
+            {
+                string localizationFile = $"{LocalizationPath}{Application.BotSettings.LocalizationInfo.File}";
+                localization = JObject.Parse(File.ReadAllText(localizationFile)).ToObject<Dictionary<string, string>>();
+            }
+            catch(Exception ex) 
+            {
+                Logger.LogException(ex, "Localization.Load()");    
+            }
+        }
+    }
+
+    public static async Task<(bool, string)> Download(string language = null)
     {
         if(language == null
         || language == "default")
         {
             localization = null;
+            
+            Application.BotSettings.LocalizationInfo = null;
+            Application.BotSettings.Save();
+
             return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", "default")));
         }
 
@@ -264,42 +308,35 @@ public static class Localization
 
             localization = JObject.Parse(localizationContent).ToObject<Dictionary<string, string>>();
 
-            string localizationNewFileName = $"{Path.GetFileName(selectedLocalization.File)}_{selectedLocalization.Version}.{Path.GetExtension(selectedLocalization.File)}";
+            string localizationNewFileName = $"{Path.GetFileNameWithoutExtension(selectedLocalization.File)}_{selectedLocalization.Version}{Path.GetExtension(selectedLocalization.File)}";
             File.WriteAllText(
                 $"{LocalizationPath}{localizationNewFileName}", 
                 localizationContent
             );
 
-            Application.BotSettings.LocalizationFileName = localizationNewFileName;
+            Application.BotSettings.LocalizationInfo = new LocalizationInfo(
+                selectedLocalization.Name, 
+                selectedLocalization.Version, 
+                selectedLocalization.Description, 
+                localizationNewFileName
+            );
             Application.BotSettings.Save();
         }
         catch (Exception ex)
         {
-            Logger.LogException(ex, "Localization - Load()");
+            Logger.LogException(ex, "Localization.Download()");
             return (false, Get("disc_cmd_localization_upd_exception"));
         }
 
         return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", language)));
     }
 
-    public static string Get(string key)
-    {
-        if(localization != null
-        && localization.ContainsKey(key))
-            return localization[key];
-        else if(defaultLocalization.ContainsKey(key))
-            return defaultLocalization[key];
-
-        Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
-        return $"LOCALIZATION ERROR ({key})";
-    }
-
     public static LocalizationInfo GetCurrentLocalizationInfo()
     {
-        if(localization == null)
-            return new LocalizationInfo("Default", "0.0.0", "English translation of the bot.", "-");
+        if(Application.BotSettings.LocalizationInfo != null)
+            return Application.BotSettings.LocalizationInfo;
 
-        return null;
+        return new LocalizationInfo("Default", "0.0.0", "English translation of the bot.", "-");
     }
 
     public static async Task<List<LocalizationInfo>> GetAvailableLocalizationList()

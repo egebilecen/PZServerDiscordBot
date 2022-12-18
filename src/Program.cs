@@ -26,6 +26,21 @@ public static class Application
 
     private static async Task MainAsync()
     {
+        if(!File.Exists(Settings.BotSettings.SettingsFile))
+        {
+            BotSettings = new Settings.BotSettings();
+            BotSettings.Save();
+        }
+        else
+        {
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
+        }
+
+        Localization.Load();
+    #if EXPORT_DEFAULT_LOCALIZATION
+        Localization.ExportDefault();
+    #endif
+
     #if DEBUG
         Console.WriteLine(Localization.Get("warn_debug_mode"));
     #endif
@@ -87,22 +102,8 @@ public static class Application
         }
     #endif
 
-        if(!File.Exists(Settings.BotSettings.SettingsFile))
-        {
-            BotSettings = new Settings.BotSettings();
-            BotSettings.Save();
-        }
-        else
-        {
-            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
-        }
-
         if(!Directory.Exists(Localization.LocalizationPath))
             Directory.CreateDirectory(Localization.LocalizationPath);
-
-    #if EXPORT_DEFAULT_LOCALIZATION
-        Localization.ExportDefault();
-    #endif
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            "Server Restart",
@@ -151,9 +152,6 @@ public static class Application
         {
             await DiscordUtility.DoChannelCheck();
             await BotUtility.NotifyLatestBotVersion();
-            
-            // REMOVE LATER
-            await Localization.GetAvailableLocalizationList();
         };
 
         Client.Disconnected += async (ex) =>

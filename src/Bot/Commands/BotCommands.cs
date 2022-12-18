@@ -281,7 +281,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         if(!string.IsNullOrEmpty(localizationName))
         {
-            (bool, string) result = await Localization.Load(localizationName);
+            (bool, string) result = await Localization.Download(localizationName);
             
             if(result.Item1)
                 await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
