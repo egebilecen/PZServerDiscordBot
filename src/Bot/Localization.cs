@@ -2,11 +2,31 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+
+using EB_Utility;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 
 public static class Localization
 {
+    public class LocalizationInfo
+    {
+        public string Name { get; private set; }
+        public SemanticVersion Version { get; private set; }
+        public string Description { get; private set; }
+
+        public LocalizationInfo(string name, string version, string desc)
+        {
+            Name = name;
+            Version = SemanticVersion.TryParse(version, out SemanticVersion versionResult) ? versionResult : new SemanticVersion(0, 0, 0);
+            Description = desc;
+        }
+    }
+
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
+    private const string localizationListURL = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/list.json";
 
     private static Dictionary<string, string> localization = null;
     private static readonly Dictionary<string, string> defaultLocalization = new Dictionary<string, string>
@@ -180,6 +200,33 @@ public static class Localization
         { "sch_workshopitemupdatechecker_pub_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
         { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
     };
+
+    public static async Task<List<LocalizationInfo>> GetAvailableLocalizationList()
+    {
+        string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationListURL);
+        
+        if(listContent != null)
+        {
+            List<LocalizationInfo> localizationList = new List<LocalizationInfo>();
+
+            JObject json = JObject.Parse(listContent);
+            if(json.Count < 1) return null;
+
+            Dictionary<string, Dictionary<string, string>> dict = json.ToObject<Dictionary<string, Dictionary<string, string>>>();
+            localizationList.AddRange(dict.Select(x =>
+            {
+                string name = x.Key;
+                string version = x.Value["version"];
+                string desc = x.Value["desc"];
+
+                return new LocalizationInfo(name, version, desc);
+            }).ToList());
+
+            return localizationList;
+        }
+        
+        return null;
+    }
 
     public static void ExportDefault()
     {

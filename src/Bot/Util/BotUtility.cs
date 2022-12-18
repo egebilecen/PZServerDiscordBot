@@ -44,6 +44,13 @@ public static class BotUtility
         }
 
         Tuple<string, string> lastReleaseResult = await GetLatestBotVersion();
+        
+        if(lastReleaseResult == null)
+        {
+            Logger.WriteLog("NotifyLatestBotVersion() - lastReleaseResult is null!");
+            return;
+        }
+
         bool parseResult = SemanticVersion.TryParse(lastReleaseResult.Item1, out SemanticVersion latestBotVersion);
 
         if(parseResult)
