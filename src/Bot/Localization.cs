@@ -39,10 +39,7 @@ public static class Localization
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
     
-    //private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/";
-
-    // REMOVE LATER, UNCOMMENT ABOVE
-    private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/v1.8.x/localization/";
+    private const string localizationDirURL  = "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/main/localization/";
     private const string localizationListURL = localizationDirURL + "list.json";
     
     public static DateTime? LastCacheTime { get; private set; } = null;
@@ -410,11 +407,8 @@ public static class Localization
         && DateTime.Now.Subtract((DateTime)LastCacheTime).TotalMinutes <= cacheDurationMin)
             return lastLocalizationInfoCache;
 
-        //string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationListURL);
+        string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationListURL);
 
-        // REMOVE LATER, UNCOMMENT ABOVE
-        string listContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, "https://raw.githubusercontent.com/egebilecen/PZServerDiscordBot/v1.8.x/localization/list.json");
-        
         if(listContent != null)
         {
             List<LocalizationInfo> localizationInfoList = new List<LocalizationInfo>();
