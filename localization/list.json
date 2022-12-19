@@ -1,6 +1,6 @@
 {
 	"Türkçe" : {
-		"version" : "1.0.0",
+		"version" : "1.0.1",
 		"desc" : "Yarısı makine çevirili Türkçe dil tercümesi.",
 		"file" : "turkish_half_robot.json"
 	}
