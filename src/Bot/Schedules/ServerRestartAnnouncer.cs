@@ -48,9 +48,12 @@ public static partial class Schedules
         var announcementPair = intervalList[index];
         var publicChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.PublicChannelId);
 
-        string message = string.Format("Server will be restarted in {0} {1}.", 
-                                        announcementPair.Key >= 60 ? announcementPair.Key / 60 : announcementPair.Key,
-                                        announcementPair.Key >= 60 ? "hour(s)" : "minute(s)");
+        string message = Localization
+            .Get("sch_serverrestartannouncer_text")
+            .KeyFormat(
+                ("time_value", announcementPair.Key >= 60 ? announcementPair.Key / 60 : announcementPair.Key), 
+                ("time_text", announcementPair.Key >= 60 ? Localization.Get("gen_hours_text") : Localization.Get("gen_minutes_text"))
+            );
 
         intervalList[index] = new KeyValuePair<int, bool>(announcementPair.Key, true);
 

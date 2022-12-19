@@ -13,7 +13,7 @@ public static class Logger
     public static void WriteLog(string text)
     {
         var file = File.AppendText(LogFile);
-        file.WriteLine("["+GetLoggingDate()+"]" + text);
+        file.WriteLine("["+GetLoggingDate()+"] " + text);
         file.Close();
     }
 

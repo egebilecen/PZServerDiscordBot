@@ -81,7 +81,18 @@ public static class Scheduler
             && now >= item.NextExecuteTime)
             {
                 try { item.Function(item.Args); }
-                catch(Exception ex) { Logger.LogException(ex, "Exception occured in ScheduleItem callback function. ScheduleItem: "+item.Name); }
+                catch(Exception ex) 
+                { 
+                    string exceptionMessage = $"Exception occured in ScheduleItem callback function. ScheduleItem: {item.Name}";
+
+                    if(ex is AggregateException aggregateEx)
+                    {
+                        int i=0;
+                        foreach(Exception innerEx in aggregateEx.InnerExceptions)
+                            Logger.LogException(innerEx, $"{exceptionMessage}\n(THIS IS AN INNER EXCEPTION, NUMBER {++i})");
+                    }
+                    else Logger.LogException(ex, exceptionMessage);
+                }
                     
                 item.UpdateInterval();
             }

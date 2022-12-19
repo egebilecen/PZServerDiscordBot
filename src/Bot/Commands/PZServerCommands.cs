@@ -22,12 +22,12 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is already running.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_start_server_warn_running"));
         }
         else if(ServerBackupCreator.IsRunning)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Cannot start the server during backup in progress. Please wait until backup finishes.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_start_server_warn_backup"));
         }
         else
         {
@@ -35,7 +35,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             
             Logger.WriteLog(string.Format("[PZServerCommand - start_server] Caller: {0}", Context.User.ToString()));
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync("Server should be on it's way to get started. This process may take a while. Please check the server status in 1 or 2 minute(s).");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_start_server_ok"));
         }
     }
 
@@ -46,7 +46,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(!ServerUtility.IsServerRunning())
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is already stopped.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_stop_server_warn"));
             return;
         }
 
@@ -65,7 +65,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[PZServerCommand - restart_server] Caller: {0}", Context.User.ToString()));
             
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync("Restarting server.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_restart_server_ok"));
 
             await StopServer();
 
@@ -77,7 +77,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         else
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is not running.");
+            await Context.Channel.SendMessageAsync(Localization.Get("warn_server_not_running"));
             return;
         }
     }
@@ -89,7 +89,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if(minutes == 0)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Minutes cannot be 0. Use `!restart_server` instead.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_initiate_restart_warn_min"));
             return;
         }
 
@@ -98,15 +98,15 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[PZServerCommand - initiate_restart] Caller: {0}, Params: {1}", Context.User.ToString(), minutes));
             
             uint restartInMinutes = ServerUtility.InitiateServerRestart(minutes * (60 * 1000));
-            ServerUtility.Commands.ServerMsg(string.Format("A manual server restart has been initiated. Server will be restarted in {0} minute(s).", restartInMinutes));
+            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_initiate_restart_info_server_msg").KeyFormat(("minutes", restartInMinutes)));
 
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync(string.Format("Manual restart has been initiated. Server will be restarted in **{0} minute(s)**.", restartInMinutes));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_initiate_restart_info_disc_msg").KeyFormat(("minutes", restartInMinutes)));
         }
         else
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is not running.");
+            await Context.Channel.SendMessageAsync(Localization.Get("warn_server_not_running"));
             return;
         }
     }
@@ -120,15 +120,15 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             Logger.WriteLog(string.Format("[PZServerCommand - abort_restart] Caller: {0}", Context.User.ToString()));
             
             ServerUtility.ResetServerRestartInterval();
-            ServerUtility.Commands.ServerMsg(string.Format("Upcoming restart has been aborted. Next restart will happen in {0} minutes.", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes.ToString()));
+            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_abort_restart_ok_server").KeyFormat(("minutes", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes)));
 
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
-            await Context.Channel.SendMessageAsync("Upcoming restart has been aborted.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_abort_restart_ok_disc"));
         }
         else
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Server is not running.");
+            await Context.Channel.SendMessageAsync(Localization.Get("warn_server_not_running"));
             return;
         }
     }
@@ -155,7 +155,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         || !userPerkDataList.ContainsKey(username))
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync(string.Format("Couldn't find any perk log related to username **{0}**.", username));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_perk_info_no_result").KeyFormat(("username", username)));
         }
         else
         {
@@ -168,7 +168,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             foreach(KeyValuePair<string, int> perk in userPerkData.Perks)
                 perkList.Add(new KeyValuePair<string, string>(perk.Key, perk.Value.ToString()));
 
-            await Context.Channel.SendMessageAsync(string.Format("Perk Information of **{0}**:", username));
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_perk_info_result_title").KeyFormat(("username", username)));
             await DiscordUtility.SendEmbeddedMessage(Context.Message.Channel, perkList);
         }
 
@@ -176,8 +176,9 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         if(lastCacheTime != null)
         {
-            await Context.Channel.SendMessageAsync(string.Format("Last cache was at **{0}**.", 
-                                                   BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)));
+            await Context.Channel.SendMessageAsync(
+                Localization.Get("gen_last_cache_text").KeyFormat(("relative_time", BotUtility.GetPastRelativeTimeStr(DateTime.Now, (DateTime)lastCacheTime)))
+            );
         }
     }
 

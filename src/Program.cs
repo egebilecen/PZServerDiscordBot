@@ -1,4 +1,6 @@
-﻿using Discord;
+﻿#define EXPORT_DEFAULT_LOCALIZATION
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
-    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 7, 0, DevelopmentStage.Release);
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 8, 0, DevelopmentStage.Release);
     public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
@@ -24,18 +26,37 @@ public static class Application
 
     private static async Task MainAsync()
     {
+        if(!File.Exists(Settings.BotSettings.SettingsFile))
+        {
+            BotSettings = new Settings.BotSettings();
+            BotSettings.Save();
+        }
+        else
+        {
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
+        }
+
+        Localization.Load();
+    #if EXPORT_DEFAULT_LOCALIZATION
+        Localization.ExportDefault();
+    #endif
+
+    #if DEBUG
+        Console.WriteLine(Localization.Get("warn_debug_mode"));
+    #endif
+
         try
         {
             if(string.IsNullOrEmpty(DiscordUtility.GetToken()))
             {
-                Console.WriteLine("Couldn't retrieve bot token from \"bot_token.txt\" file.\nPlease refer to "+BotRepoURL+" and see README.md file about setting up bot token.");
+                Console.WriteLine(Localization.Get("err_bot_token").KeyFormat(("repo_url", BotRepoURL)));
                 await Task.Delay(-1);
             }
         }
         catch(Exception ex)
         {
             Logger.LogException(ex);
-            Console.WriteLine("An error occured while retrieving bot token. Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
+            Console.WriteLine(Localization.Get("err_retv_bot_token").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
             await Task.Delay(-1);
         }
 
@@ -44,7 +65,7 @@ public static class Application
 
         if(!File.Exists(serverFile))
         {
-            Console.WriteLine("Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes.");
+            Console.WriteLine(Localization.Get("err_serv_bat"));
             await Task.Delay(-1);
         }
         else
@@ -81,57 +102,42 @@ public static class Application
         }
     #endif
 
-        if(!File.Exists(Settings.BotSettings.SettingsFile))
-        {
-            BotSettings = new Settings.BotSettings
-            {
-                Version = BotVersion
-            };
-            BotSettings.Save();
-        }
-        else
-        {
-            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
-        }
-
-        if(BotSettings.Version == null)
-        {
-            BotSettings.Version = BotVersion;
-            BotSettings.Save();
-        }
+        if(!Directory.Exists(Localization.LocalizationPath))
+            Directory.CreateDirectory(Localization.LocalizationPath);
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
-                                           "Server Restart",
+                                           Localization.Get("sch_name_serverrestart"),
                                            BotSettings.ServerScheduleSettings.ServerRestartSchedule,
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           "Server Restart Announcer",
+                                           Localization.Get("sch_name_serverrestartannouncer"),
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
-                                           "Workshop Mod Update Checker",
+                                           Localization.Get("sch_name_workshopitemupdatechecker"),
                                            BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
         Scheduler.AddItem(new ScheduleItem("AutoServerStart",
-                                           "Auto Server Starter",
+                                           Localization.Get("sch_name_autoserverstarter"),
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.AutoServerStart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
-                                           "Bot New Version Checker",
+                                           Localization.Get("sch_name_botnewversioncchecker"),
                                            Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
+        Localization.AddSchedule();
         Scheduler.Start(1000);
         
     #if !DEBUG
         ServerUtility.ServerProcess = ServerUtility.Commands.StartServer();
     #endif
 
-        Client   = new DiscordSocketClient();
+        Client   = new DiscordSocketClient(new DiscordSocketConfig() { GatewayIntents = GatewayIntents.All });
         Commands = new CommandService();
         Services = null;
         CommandHandler = new CommandHandler(Client, Commands, Services);
@@ -139,7 +145,7 @@ public static class Application
         await CommandHandler.SetupAsync();
         await Client.LoginAsync(TokenType.Bot, DiscordUtility.GetToken());
         await Client.StartAsync();
-        await Client.SetGameAsync("Bot Version: "+BotVersion);
+        await Client.SetGameAsync(Localization.Get("info_disc_act_bot_ver").KeyFormat(("version", BotVersion)));
 
         DiscordUtility.OrganizeCommands();
 
@@ -147,6 +153,7 @@ public static class Application
         {
             await DiscordUtility.DoChannelCheck();
             await BotUtility.NotifyLatestBotVersion();
+            await Localization.CheckUpdate();
         };
 
         Client.Disconnected += async (ex) =>
@@ -156,10 +163,10 @@ public static class Application
 
             if(ex.InnerException.Message.Contains("Authentication failed"))
             {
-                Console.WriteLine("Authentication failed! Be sure your discord bot token is valid.");
+                Console.WriteLine(Localization.Get("err_disc_auth_fail"));
                 await Task.Delay(-1);
             }
-            else Console.WriteLine("An error occured and discord bot has been disconnected! Error details are saved into "+Logger.LogFile+" file.\nPlease refer to "+BotRepoURL+" and create an issue about this with the log file.");
+            else Console.WriteLine(Localization.Get("err_disc_disconn").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
         };
 
         await Task.Delay(-1);

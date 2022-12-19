@@ -25,16 +25,18 @@ namespace Settings
     public class BotSettings
     {
         [JsonIgnore]
-        public const string    SettingsFile = ".\\pzdiscordbot.conf";
-        public ulong           GuildId;
-        public ulong           CommandChannelId;
-        public ulong           LogChannelId;
-        public ulong           PublicChannelId;
-        public SemanticVersion Version;
+        public const string SettingsFile = ".\\pzdiscordbot.conf";
+        
+        public ulong        GuildId;
+        public ulong        CommandChannelId;
+        public ulong        LogChannelId;
+        public ulong        PublicChannelId;
 
         public ServerLogParserSettings ServerLogParserSettings = new ServerLogParserSettings();
         public ServerScheduleSettings  ServerScheduleSettings  = new ServerScheduleSettings();
         public BotFeatureSettings      BotFeatureSettings      = new BotFeatureSettings();
+
+        public Localization.LocalizationInfo LocalizationInfo = null;
 
         public void Save()
         {

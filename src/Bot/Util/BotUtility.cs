@@ -44,6 +44,13 @@ public static class BotUtility
         }
 
         Tuple<string, string> lastReleaseResult = await GetLatestBotVersion();
+        
+        if(lastReleaseResult == null)
+        {
+            Logger.WriteLog("NotifyLatestBotVersion() - lastReleaseResult is null!");
+            return;
+        }
+
         bool parseResult = SemanticVersion.TryParse(lastReleaseResult.Item1, out SemanticVersion latestBotVersion);
 
         if(parseResult)
@@ -52,7 +59,7 @@ public static class BotUtility
             {
                 if(latestBotVersion.Stage == DevelopmentStage.Release)
                 {
-                    string warningText = string.Format("There is a new version (**{0}**) of bot! Current version: **{1}**. Please consider to update from {2}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = Localization.Get("info_bot_new_version").KeyFormat(("new_version", latestBotVersion), ("current_version", Application.BotVersion), ("repo_url", Application.BotRepoURL));
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
@@ -67,7 +74,7 @@ public static class BotUtility
                 }
                 else if(!announcedEarlyAccessVersion)
                 {
-                    string warningText = string.Format("There is a new **early access** version (**{0}**) of bot! Current version: **{1}**. This early access version can be downloaded from **Releases** section of the repo. Repo link: {2}. This version may not be stable as it is not extensively tested (which I also have no means to test it as I don't own a server so any help is appreciated) but it offers early access to the new features. If any problem occurs, you can always switch back to old version from the **Releases** section. If you observe any problem, please report it in **Issues** section.", latestBotVersion, Application.BotVersion, Application.BotRepoURL);
+                    string warningText = Localization.Get("info_bot_new_early_version").KeyFormat(("new_version", latestBotVersion), ("current_version", Application.BotVersion), ("repo_url", Application.BotRepoURL));
                     var lastMessages = await commandChannel.GetMessagesAsync(1).FlattenAsync();
 
                     if(!lastMessages.First().Content.Equals(warningText))
@@ -98,35 +105,35 @@ public static class BotUtility
         double delta = Math.Abs(ts.TotalSeconds);  
   
         if (delta < 1 * MINUTE)  
-          return ts.Seconds == 1 ? "one second ago" : ts.Seconds + " seconds ago";  
+          return ts.Seconds == 1 ? Localization.Get("gen_past_rel_time_one_sec") : Localization.Get("gen_past_rel_time_secs").KeyFormat(("seconds", ts.Seconds));  
   
         if (delta < 2 * MINUTE)  
-          return "a minute ago";  
+          return Localization.Get("gen_past_rel_time_one_min");  
   
         if (delta < 45 * MINUTE)  
-          return ts.Minutes + " minutes ago";  
+          return Localization.Get("gen_past_rel_time_mins").KeyFormat(("minutes", ts.Minutes));  
   
         if (delta < 90 * MINUTE)  
-          return "an hour ago";  
+          return Localization.Get("gen_past_rel_time_one_hour");  
   
         if (delta < 24 * HOUR)  
-          return ts.Hours + " hours ago";  
+          return Localization.Get("gen_past_rel_time_hours").KeyFormat(("hours", ts.Hours));
   
         if (delta < 48 * HOUR)  
-          return "yesterday";  
+          return Localization.Get("gen_past_rel_time_yest");  
   
         if (delta < 30 * DAY)  
-          return ts.Days + " days ago";  
+          return Localization.Get("gen_past_rel_time_days").KeyFormat(("days", ts.Days));  
   
         if (delta < 12 * MONTH)  
         {  
           int months = Convert.ToInt32(Math.Floor((double)ts.Days / 30));  
-          return months <= 1 ? "one month ago" : months + " months ago";  
+          return months <= 1 ? Localization.Get("gen_past_rel_time_one_month") : Localization.Get("gen_past_rel_time_months").KeyFormat(("months", months));  
         }  
         else  
         {  
           int years = Convert.ToInt32(Math.Floor((double)ts.Days / 365));  
-          return years <= 1 ? "one year ago" : years + " years ago";  
+          return years <= 1 ? Localization.Get("gen_past_rel_time_one_year") : Localization.Get("gen_past_rel_time_years").KeyFormat(("years", years));  
         }  
     }
 }
