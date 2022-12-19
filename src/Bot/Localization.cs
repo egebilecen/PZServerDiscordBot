@@ -35,6 +35,7 @@ public static class Localization
         }
     }
 
+    public const string ScheduleName = "LocalizationVersionChecker";
     public const string LocalizationPath = "./localization/";
     private const string exportPath = "../../../localization/";
     
@@ -167,10 +168,11 @@ public static class Localization
         { "disc_cmd_localization_embed_language", "Language" },
         { "disc_cmd_localization_embed_version", "Version" },
         { "disc_cmd_localization_embed_desc", "Description" },
-        { "disc_cmd_localization_upd_ok", "Localization successfully changed to **{localization}**." },
+        { "disc_cmd_localization_upd_ok", "Localization successfully changed to **{localization}** ({version})." },
         { "disc_cmd_localization_upd_exception", "An unknown error occured while changing localization!" },
         { "disc_cmd_localization_not_found", "Couldn't find **{localization}** localization!" },
         { "disc_cmd_localization_download_fail", "Couldn't download localization! Please try again later..." },
+        { "disc_cmd_localization_update_text", "There is a new version for **{localization}** ({version})! Please use `!localization {localization}` command to update." },
 
         // ---- PZ Server Commands
         // -------- !start_server
@@ -214,6 +216,14 @@ public static class Localization
         { "disc_cmd_game_date_response", "```Current in-game date: {day}/{month}/{year}```*(Date is in DD-MM-YYYY aka European format)*" },
 
         // Schedules
+        // ---- Display Names
+        { "sch_name_serverrestart", "Server Restart" },
+        { "sch_name_serverrestartannouncer", "Server Restart Announcer" },
+        { "sch_name_workshopitemupdatechecker", "Workshop Mod Update Checker" },
+        { "sch_name_autoserverstarter", "Auto Server Starter" },
+        { "sch_name_botnewversioncchecker", "Bot New Version Checker" },
+        { "sch_name_localizationnewversioncchecker", "Localization New Version Checker" },
+
         // ---- AutoServerStart
         { "sch_autoserverstart_text", "**[Auto Server Starter]** Server is not running. Attempting to start the server." },
 
@@ -241,6 +251,22 @@ public static class Localization
 
         Logger.WriteLog($"[Localization] No localization found for key \"{key}\"");
         return $"LOCALIZATION ERROR ({key})";
+    }
+
+    public static void AddSchedule()
+    {
+        if(Scheduler.GetItem(ScheduleName) == null
+        && GetCurrentLocalizationInfo().Name.ToLower() != "default")
+        {
+            Scheduler.AddItem(new ScheduleItem(ScheduleName,
+                                               Get("sch_name_localizationnewversioncchecker"),
+                                               Convert.ToUInt64(TimeSpan.FromMinutes(cacheDurationMin).TotalMilliseconds),
+                                               (args) =>
+                                               {
+                                                   _ = Task.Run(async () => await CheckUpdate());
+                                               },
+                                               null));
+        }
     }
 
     public static void ExportDefault()
@@ -276,8 +302,38 @@ public static class Localization
         }
     }
 
+    public static async Task CheckUpdate()
+    {
+        LocalizationInfo currentLocalization = GetCurrentLocalizationInfo();
+
+        if(currentLocalization.Name.ToLower() == "default")
+            return;
+
+        var commandChannel = DiscordUtility.GetTextChannelById(Application.BotSettings.CommandChannelId);
+
+        if(commandChannel == null)
+        {
+            Logger.WriteLog("Localization.CheckUpdate() - commandChannel is null.");
+            return;
+        }
+
+        // Update cache if expired.
+        await GetAvailableLocalizationList();
+
+        LocalizationInfo newLocalizationInfo = lastLocalizationInfoCache.FirstOrDefault(x => x.Name == currentLocalization.Name);
+
+        if(newLocalizationInfo != null
+        && newLocalizationInfo.Version > currentLocalization.Version)
+        {
+            await commandChannel.SendMessageAsync(Get("disc_cmd_localization_update_text").KeyFormat(("localization", newLocalizationInfo.Name), ("version", newLocalizationInfo.Version)));
+            Scheduler.RemoveItem("LocalizationVersionChecker");
+        }
+    }
+
     public static async Task<(bool, string)> Download(string language = null)
     {
+        language = language?.ToLower();
+
         if(language == null
         || language == "default")
         {
@@ -286,7 +342,7 @@ public static class Localization
             Application.BotSettings.LocalizationInfo = null;
             Application.BotSettings.Save();
 
-            return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", "default")));
+            return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", "default"), ("version", "v0.0.0")));
         }
 
         // Update cache if expired.
@@ -298,28 +354,35 @@ public static class Localization
 
         try
         {
-            // TODO: Don't download if already exist in local
-            // TODO: Do version checking with existing
+            string localizationSaveFileName = GetLocalizationSaveFileName(selectedLocalization);
+            string localizationSavePath     = $"{LocalizationPath}{localizationSaveFileName}";
 
-            string localizationFileURL = localizationDirURL + selectedLocalization.File;
-            string localizationContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationFileURL);
+            // Don't download localization file if already exist in local.
+            if(!File.Exists(localizationSavePath))
+            {
+                string localizationFileURL = localizationDirURL + selectedLocalization.File;
+                string localizationContent = await WebRequest.GetAsync(SteamWebAPI.HttpClient, localizationFileURL);
 
-            if(string.IsNullOrEmpty(localizationContent))
-                return (false, Get("disc_cmd_localization_download_fail"));
+                if(string.IsNullOrEmpty(localizationContent))
+                    return (false, Get("disc_cmd_localization_download_fail"));
 
-            localization = JObject.Parse(localizationContent).ToObject<Dictionary<string, string>>();
+                localization = JObject.Parse(localizationContent).ToObject<Dictionary<string, string>>();
 
-            string localizationNewFileName = $"{Path.GetFileNameWithoutExtension(selectedLocalization.File)}_{selectedLocalization.Version}{Path.GetExtension(selectedLocalization.File)}";
-            File.WriteAllText(
-                $"{LocalizationPath}{localizationNewFileName}", 
-                localizationContent
-            );
+                File.WriteAllText(
+                    localizationSavePath, 
+                    localizationContent
+                );
+            }
+            else
+            {
+                localization = JObject.Parse(File.ReadAllText(localizationSavePath)).ToObject<Dictionary<string, string>>();
+            }
 
             Application.BotSettings.LocalizationInfo = new LocalizationInfo(
                 selectedLocalization.Name, 
                 selectedLocalization.Version, 
                 selectedLocalization.Description, 
-                localizationNewFileName
+                localizationSaveFileName
             );
             Application.BotSettings.Save();
         }
@@ -329,7 +392,8 @@ public static class Localization
             return (false, Get("disc_cmd_localization_upd_exception"));
         }
 
-        return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", language)));
+        AddSchedule();
+        return (true, Get("disc_cmd_localization_upd_ok").KeyFormat(("localization", selectedLocalization.Name), ("version", selectedLocalization.Version)));
     }
 
     public static LocalizationInfo GetCurrentLocalizationInfo()
@@ -377,5 +441,10 @@ public static class Localization
         
         lastLocalizationInfoCache = null;
         return lastLocalizationInfoCache;
+    }
+
+    public static string GetLocalizationSaveFileName(LocalizationInfo localizationInfo)
+    {
+        return $"{Path.GetFileNameWithoutExtension(localizationInfo.File)}_{localizationInfo.Version}{Path.GetExtension(localizationInfo.File)}";
     }
 }

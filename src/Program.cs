@@ -106,30 +106,31 @@ public static class Application
             Directory.CreateDirectory(Localization.LocalizationPath);
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
-                                           "Server Restart",
+                                           Localization.Get("sch_name_serverrestart"),
                                            BotSettings.ServerScheduleSettings.ServerRestartSchedule,
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
-                                           "Server Restart Announcer",
+                                           Localization.Get("sch_name_serverrestartannouncer"),
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.ServerRestartAnnouncer,
                                            null));
         Scheduler.AddItem(new ScheduleItem("WorkshopItemUpdateChecker",
-                                           "Workshop Mod Update Checker",
+                                           Localization.Get("sch_name_workshopitemupdatechecker"),
                                            BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule,
                                            Schedules.WorkshopItemUpdateChecker,
                                            null));
         Scheduler.AddItem(new ScheduleItem("AutoServerStart",
-                                           "Auto Server Starter",
+                                           Localization.Get("sch_name_autoserverstarter"),
                                            Convert.ToUInt64(TimeSpan.FromSeconds(30).TotalMilliseconds),
                                            Schedules.AutoServerStart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("BotVersionChecker",
-                                           "Bot New Version Checker",
+                                           Localization.Get("sch_name_botnewversioncchecker"),
                                            Convert.ToUInt64(TimeSpan.FromMinutes(5).TotalMilliseconds),
                                            Schedules.BotVersionChecker,
                                            null));
+        Localization.AddSchedule();
         Scheduler.Start(1000);
         
     #if !DEBUG
@@ -152,6 +153,7 @@ public static class Application
         {
             await DiscordUtility.DoChannelCheck();
             await BotUtility.NotifyLatestBotVersion();
+            await Localization.CheckUpdate();
         };
 
         Client.Disconnected += async (ex) =>

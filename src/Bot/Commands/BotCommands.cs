@@ -277,8 +277,6 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Get/update current localization. (!localization <(optional) new localization name>)")]
     public async Task Localization_(string localizationName = null)
     {
-        localizationName = localizationName?.ToLower();
-
         if(!string.IsNullOrEmpty(localizationName))
         {
             (bool, string) result = await Localization.Download(localizationName);
