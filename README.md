@@ -172,7 +172,7 @@ After translation:
 ```
 
 **Warning:** 
-There might be cases where you may see some weird expressions like `{log_file}`, `{current_version}`, `{state}` etc. These are special expressions that will be replaced with related value before displaying the text. Do **not** translate these. However, you can move them freely in a sentence and match them with your own language's sentence structure.
+There might be cases where you can see some weird expressions like `{log_file}`, `{current_version}`, `{state}` etc. These are special expressions that will be replaced with related value before displaying the text. Do **not** translate these. However, you can move them freely in a sentence and match them with your own language's sentence structure.
 
 Some examples of how some of the expressions will look like after the related value replacement:
 ```
