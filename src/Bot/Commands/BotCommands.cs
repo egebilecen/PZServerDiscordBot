@@ -314,11 +314,11 @@ public class BotCommands : ModuleBase<SocketCommandContext>
                 .Select(x => new KeyValuePair<string, string>(x.Name, $"{x.Description} ({x.Version})"))
                 .ToList();
 
-            await Context.Channel.SendMessageAsync("Available localization list:");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_localization_avaib_list"));
             await DiscordUtility.SendEmbeddedMessage(Context.Channel, availableLocalizations);
-            await Context.Channel.SendMessageAsync("Please use `!localization <localization name>` command to update current localization. You can set localization back to default by using `!localization default` command.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_localization_usage"));
         }
-        else await Context.Channel.SendMessageAsync("There are no other available localizations at the moment.");
+        else await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_localization_no_localization"));
 
         var lastCacheTime = Localization.LastCacheTime;
 

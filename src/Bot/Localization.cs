@@ -170,6 +170,9 @@ public static class Localization
         { "disc_cmd_localization_not_found", "Couldn't find **{localization}** localization!" },
         { "disc_cmd_localization_download_fail", "Couldn't download localization! Please try again later..." },
         { "disc_cmd_localization_update_text", "There is a new version for **{localization}** ({version})! Please use `!localization {localization}` command to update." },
+        { "disc_cmd_localization_avaib_list", "Available localization list:" },
+        { "disc_cmd_localization_usage", "Please use `!localization <localization name>` command to update current localization. You can set localization back to default by using `!localization default` command." },
+        { "disc_cmd_localization_no_localization", "There are no other available localizations at the moment." },
 
         // ---- PZ Server Commands
         // -------- !start_server
