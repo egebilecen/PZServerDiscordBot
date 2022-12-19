@@ -11,6 +11,7 @@ This bot is written for people to easily manage their Project Zomboid server usi
 * [Bot Commands](#bot-commands)
   * [Public Channel](#public-channel)
   * [Command Channel](#command-channel)
+* [Localization](#localization)
 
 # Features
 - Automated server restart schedule with ingame and discord warning. (Warnings are announced when 1 hour, 30 min, 15 min, 5 min and 1 min left until server restart. Restart interval can be configured with bot commands.)
@@ -28,6 +29,8 @@ This bot is written for people to easily manage their Project Zomboid server usi
 - `!backup_server` command for backing up the server easily.
 ![Backup Command Example 1](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_7.png)
 ![Backup Command Example 2](https://github.com/egebilecen/PZServerDiscordBot/blob/main/readme_images/bot%20features/Screenshot_8.png)
+- Localization system! You can check available localizations using `!localization` command.  See the [Localization](#localization) section about how to translate the bot.
+<i>**Note:** It is not possible to translate commands and their descriptions at the moment. It might change in future, though.</i>
 
 # Installation
 #### Creating the Discord Bot
@@ -106,6 +109,7 @@ Bot Commands:
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
 - `!toggle_server_auto_start` Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)<br>
 - `!backup_server` Creates a backup of the server. Backup files can be found in "server_backup" folder in the directory where bot has been launched. (!backup_server)<br>
+- `!localization` Get/change current localization. (!localization [*(optional)* new localization name])<br>
   
 Server Commands:
 - `!server_msg` Broadcasts a message to all players in the server. (!server_msg "[message]")<br>
@@ -137,3 +141,52 @@ Server Commands:
 - `!noclip` Allows a player to pass through solid objects. (!noclip "[username]")<br>
 - `!show_options` Shows a list of current server options and values. (Prints to the server console) (!show_options)<br>
 - `!reload_options` Reloads server options. (!reload_options)<br>
+
+# Localization
+You can find the default localization file in [here](https://github.com/egebilecen/PZServerDiscordBot/blob/main/localization/default.json). All you need to do is downloading it and translating the all words/sentences in the right side of **":"** between **two quote marks**. Example below will illustrate how it should look like after the translation:
+
+Before translation:
+```
+{
+  "gen_enab_up": "Enabled",
+  "gen_disa_up": "Disabled",
+  "gen_hours_text": "hour(s)",
+  ...
+  "warn_server_not_running": "Server is not running.",
+  "warn_bot_conf_not_done": "Bot configuration haven't done yet.",
+  ...
+}
+```
+
+After translation:
+```
+{
+  "gen_enab_up": "Aktif",
+  "gen_disa_up": "Pasif",
+  "gen_hours_text": "saat",
+  ...
+  "warn_server_not_running": "Server çalışmıyor.",
+  "warn_bot_conf_not_done": "Bot ayarları henüz tamamlanmadı.",
+  ...
+}
+```
+
+**Warning:** 
+There might be cases where you may see some weird expressions like `{log_file}`, `{current_version}`, `{state}` etc. These are special expressions that will be replaced with related value before displaying the text. Do **not** translate these. However, you can move them freely in a sentence and match them with your own language's sentence structure.
+
+Some examples of how some of the expressions will look like after the related value replacement:
+```
+{day}/{month}/{year} -> 19/12/2022
+{year}-{month}-{day} -> 2022-12-19
+
+Bot Version: {version}  -> Bot Version: v1.8.0
+Bot Version ({version}) -> Bot Version (v1.8.0)
+
+Server auto start feature has been {state}.      -> Server auto start feature has been enabled.
+Non-public mod logging feature has been {state}. -> Non-public mod logging feature has been disabled.
+
+{hours} hours ago -> 10 hours ago
+hours ago {hours} -> hours ago 10
+```
+
+After you have completed translating all words/sentences, please create an [Issue](https://github.com/egebilecen/PZServerDiscordBot/issues) with the title of `Localization of <language here>` and attach the translated `.json` file in a **zip archive**. I will add it to available localizations.

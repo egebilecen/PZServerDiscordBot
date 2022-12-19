@@ -274,7 +274,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("localization")]
-    [Summary("Get/update current localization. (!localization <(optional) new localization name>)")]
+    [Summary("Get/change current localization. (!localization <(optional) new localization name>)")]
     public async Task Localization_(string localizationName = null)
     {
         if(!string.IsNullOrEmpty(localizationName))
