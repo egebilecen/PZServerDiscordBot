@@ -189,4 +189,4 @@ Non-public mod logging feature has been {state}. -> Non-public mod logging featu
 hours ago {hours} -> hours ago 10
 ```
 
-After you have completed translating all words/sentences, please create an [Issue](https://github.com/egebilecen/PZServerDiscordBot/issues) with the title of `Localization of <language here>` and attach the translated `.json` file in a **zip archive**. I will add it to available localizations.
+After you have completed translating all words/sentences, please create an [Issue](https://github.com/egebilecen/PZServerDiscordBot/issues) with the title of `Localization of <language here>` and attach the translated `.json` file in a **zip archive**. I will add it to available localizations. Also, when a new version of the bot released, there might be new added text so it is good to keep an eye on updates. If your current localization is missing the new added text, bot will use the default localization for these.
