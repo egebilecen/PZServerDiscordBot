@@ -85,8 +85,10 @@ public static class SteamWebAPI
         {
             JArray workshopItems = (JArray)jsonData["publishedfiledetails"];
 
+            int i=-1;
             foreach(JToken elem in workshopItems)
             {
+                Logger.WriteLog($"SteamWebAPI.GetWorkshopItemDetails() - Workshop Item ID: {idList[++i]}");
                 Model.WorkshopItemDetails itemDetails = elem.ToObject<Model.WorkshopItemDetails>();
                 itemDetailsList.Add(itemDetails);
             }
