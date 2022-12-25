@@ -52,6 +52,7 @@ namespace EB_Utility
             if(response.IsSuccessStatusCode)
                 return await response.Content.ReadAsStringAsync();
 
+            Logger.WriteLog($"WebRequest.PostAsync() - Response status code is not 200. Status code: {response.StatusCode} | URL: {url}");
             return null;
         }
     }
