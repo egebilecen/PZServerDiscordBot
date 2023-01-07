@@ -3,5 +3,10 @@
 		"version" : "1.0.1",
 		"desc" : "Yarısı makine çevirili Türkçe dil tercümesi.",
 		"file" : "turkish_half_robot.json"
+	},
+	"Português Brasileiro" : {
+		"version" : "1.0.0",
+		"desc" : "Tradução do bot para Português do Brasil.",
+		"file" : "brazilian_portuguese.json"
 	}
 }
