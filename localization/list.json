@@ -8,5 +8,10 @@
 		"version" : "1.0.0",
 		"desc" : "Tradução do bot para Português do Brasil.",
 		"file" : "brazilian_portuguese.json"
+	},
+	"한국어" : {
+		"version" : "1.0.0",
+		"desc" : "이 봇의 한국어 번역입니다.",
+		"file" : "korean.json"
 	}
 }
