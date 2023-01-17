@@ -7,7 +7,7 @@ using System.Windows.Forms;
 public class PZServerCommands : ModuleBase<SocketCommandContext>
 {
     [Command("server_cmd")]
-    [Summary("Allows you to send inputs to the server console. (!server_cmd <command>)")]
+    [Summary("Allows you to send inputs to the server console. (!server_cmd <text>)")]
     public async Task ServerCommand(params string[] strList)
     {
         try
