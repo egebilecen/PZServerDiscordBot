@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
-    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 8, 1, DevelopmentStage.Release);
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 8, 2, DevelopmentStage.Release);
     public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
@@ -21,6 +21,8 @@ public static class Application
     public static IServiceProvider     Services;
     public static CommandHandler       CommandHandler;
     public static DateTime             StartTime = DateTime.UtcNow;
+
+    private static bool botInitialCheck = false;
 
     private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
@@ -151,9 +153,14 @@ public static class Application
 
         Client.Ready += async () =>
         {
-            await DiscordUtility.DoChannelCheck();
-            await BotUtility.NotifyLatestBotVersion();
-            await Localization.CheckUpdate();
+            if(!botInitialCheck)
+            {
+                botInitialCheck = true;
+
+                await DiscordUtility.DoChannelCheck();
+                await BotUtility.NotifyLatestBotVersion();
+                await Localization.CheckUpdate();
+            }
         };
 
         Client.Disconnected += async (ex) =>
