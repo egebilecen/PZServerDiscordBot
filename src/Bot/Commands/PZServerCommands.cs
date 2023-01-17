@@ -373,7 +373,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("show_options")]
-    [Summary("Shows a list of current server options and values. (Prints to the server console)")]
+    [Summary("Shows a list of current server options and values. (Prints to the server console) (!show_options)")]
     public async Task ShowOptions()
     {
         ServerUtility.Commands.ShowOptions();
@@ -383,7 +383,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("reload_options")]
-    [Summary("Reloads server options.")]
+    [Summary("Reloads server options. (!reload_options)")]
     public async Task ReloadOptions()
     {
         ServerUtility.Commands.ReloadOptions();
