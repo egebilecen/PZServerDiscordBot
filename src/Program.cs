@@ -22,6 +22,8 @@ public static class Application
     public static CommandHandler       CommandHandler;
     public static DateTime             StartTime = DateTime.UtcNow;
 
+    private static bool botInitialCheck = false;
+
     private static void Main(string[] _) => MainAsync().GetAwaiter().GetResult();
 
     private static async Task MainAsync()
@@ -151,9 +153,14 @@ public static class Application
 
         Client.Ready += async () =>
         {
-            await DiscordUtility.DoChannelCheck();
-            await BotUtility.NotifyLatestBotVersion();
-            await Localization.CheckUpdate();
+            if(!botInitialCheck)
+            {
+                botInitialCheck = true;
+
+                await DiscordUtility.DoChannelCheck();
+                await BotUtility.NotifyLatestBotVersion();
+                await Localization.CheckUpdate();
+            }
         };
 
         Client.Disconnected += async (ex) =>
