@@ -112,6 +112,7 @@ Bot Commands:
 - `!localization` Get/change current localization. (!localization [*(optional)* new localization name])<br>
   
 Server Commands:
+- `!server_cmd` Allows you to send inputs to the server console. (!server_cmd [text])<br>
 - `!server_msg` Broadcasts a message to all players in the server. (!server_msg "[message]")<br>
 - `!start_server` Starts the server. (!start_server)<br>
 - `!stop_server` Saves and stops the server. (!stop_server)<br>

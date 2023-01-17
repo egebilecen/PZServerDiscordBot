@@ -2,9 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 public class PZServerCommands : ModuleBase<SocketCommandContext>
 {
+    [Command("server_cmd")]
+    [Summary("Allows you to send inputs to the server console. (!server_cmd <text>)")]
+    public async Task ServerCommand(params string[] strList)
+    {
+        try
+        {
+            ServerUtility.ServerProcess.StandardInput.WriteLine(string.Format("{0}", string.Join(" ", strList)));
+            ServerUtility.ServerProcess.StandardInput.Flush();
+        }
+        catch(Exception ex)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(ex.Message);
+            return;
+        }
+        
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
     [Command("server_msg")]
     [Summary("Broadcasts a message to all players in the server. (!server_msg \"<message>\")")]
     public async Task ServerMessage(string message)
@@ -373,7 +393,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("show_options")]
-    [Summary("Shows a list of current server options and values. (Prints to the server console)")]
+    [Summary("Shows a list of current server options and values. (Prints to the server console) (!show_options)")]
     public async Task ShowOptions()
     {
         ServerUtility.Commands.ShowOptions();
@@ -383,7 +403,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("reload_options")]
-    [Summary("Reloads server options.")]
+    [Summary("Reloads server options. (!reload_options)")]
     public async Task ReloadOptions()
     {
         ServerUtility.Commands.ReloadOptions();
