@@ -54,7 +54,8 @@ public class CommandHandler
 
         if(!message.HasCharPrefix('!', ref argPos) 
         ||  message.HasMentionPrefix(_client.CurrentUser, ref argPos)
-        ||  message.Author.IsBot)
+        //||  message.Author.IsBot
+        )
             return;
 
         string command         = message.Content.Split(' ')[0];
