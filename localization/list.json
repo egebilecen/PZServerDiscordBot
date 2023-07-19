@@ -18,5 +18,10 @@
 		"version" : "1.0.0",
 		"desc" : "Русский перевод Бота. (Robot Translate)",
 		"file" : "russian_robot.json"
+	},
+	"Español" : {
+		"version" : "1.0.0",
+		"desc" : "Traducción del bot al español.",
+		"file" : "espanol.json"
 	}
 }
