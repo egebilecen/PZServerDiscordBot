@@ -410,4 +410,14 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
+
+    [Command("change_option")]
+    [Summary("Changes a server option. (!change_option <option> \"<newOption>\")")]
+    public async Task ChangeOption(string option, string newOption)
+    {
+        ServerUtility.Commands.ChangeOption(option, newOption);
+        Logger.WriteLog(string.Format("[PZServerCommand - change_option] Caller: {0}, Params: {1}", Context.User.ToString(), option + "," + newOption));
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
 }
