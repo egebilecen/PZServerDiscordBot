@@ -364,5 +364,16 @@ public static class ServerUtility
             catch(Exception)
             {}
         }
+
+        public static void ChangeOption(string option, string newOption)
+        {
+            try
+            {
+                ServerProcess.StandardInput.WriteLine(string.Format("changeoption {0} \"{1}\"", option, newOption));
+                ServerProcess.StandardInput.Flush();
+            }
+            catch (Exception)
+            {}
+        }
     }
 }
