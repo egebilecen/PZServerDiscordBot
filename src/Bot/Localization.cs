@@ -174,6 +174,13 @@ public static class Localization
         { "disc_cmd_localization_usage", "Please use `!localization \"<localization name>\"` command to update current localization. You can set localization back to default by using `!localization default` command." },
         { "disc_cmd_localization_no_localization", "There are no other available localizations at the moment." },
 
+        // -------- !workshop_mod
+        { "disc_cmd_workshop_mod_change_type", "Change type must be \"add\" or \"remove\"." },
+        { "disc_cmd_workshop_mod_config_err", "Couldn't find the config path." },
+        { "disc_cmd_workshop_mod_ini_err", "Couldn't read the config content." },
+        { "disc_cmd_workshop_mod_add_ok", "A server restart is needed to finish adding mods." },
+        { "disc_cmd_workshop_mod_remove_ok", "A server restart is needed to finish removing mods." },
+
         // ---- PZ Server Commands
         // -------- !start_server
         { "disc_cmd_start_server_warn_running", "Server is already running." },

@@ -1,6 +1,8 @@
 ﻿using Discord.Commands;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 public class PZServerCommands : ModuleBase<SocketCommandContext>
@@ -412,7 +414,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("change_option")]
-    [Summary("Changes a server option. (!change_option <option> \"<newOption>\")")]
+    [Summary("Changes a server option. (!change_option \"<option>\" \"<newOption>\")")]
     public async Task ChangeOption(string option, string newOption)
     {
         ServerUtility.Commands.ChangeOption(option, newOption);
@@ -422,13 +424,14 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("workshop_mod")]
-    [Summary("Adds or removes a workshop mod from a workshop url(!workshop_mod <add|remove> <links to workshop mods>)")]
+    [Summary("Adds or removes a workshop mod from a workshop url. (!workshop_mod <add|remove> <links to workshop mods>)")]
+    [Remarks("skip")]
     public async Task WorkshopMod(string type, params string[] workshopModUrls)
     {
         if (type.ToLower() != "add" && type.ToLower() != "remove")
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("Change type must be \"add\" or \"remove\".");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_change_type"));
             return;
         }
 
@@ -436,7 +439,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if (string.IsNullOrEmpty(configFilePath))
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("configFilePath is null or empty.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_config_err"));
             return;
         }
 
@@ -444,7 +447,7 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         if (iniData == null)
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            await Context.Channel.SendMessageAsync("iniData is null.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_ini_err"));
             return;
         }
 
@@ -486,16 +489,16 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         ServerUtility.Commands.ChangeOption("Mods", string.Join(";", modIdList.Distinct()).TrimStart(';'));
         ServerUtility.Commands.ChangeOption("WorkshopItems", string.Join(";", workshopIdList.Distinct()).TrimStart(';'));
+
         Logger.WriteLog(string.Format("[PZServerCommand - add_workshop_mod] Caller: {0}, Params: {1}", Context.User.ToString(), string.Join(", ", workshopModUrls)));
 
         if (type.ToLower()=="add")
         {
-            await Context.Channel.SendMessageAsync("A server restart is needed to finish adding mods.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_add_ok"));
         }
-
         else if (type.ToLower() == "remove")
         {
-            await Context.Channel.SendMessageAsync("A server restart is needed to finish removing mods.");
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_remove_ok"));
         }
 
 
@@ -503,14 +506,14 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("add_workshop_mod")]
-    [Summary("Adds a workshop mod from the workshop url(!add_workshop_mod <links to workshop mods>)")]
+    [Summary("Adds a workshop mod from the workshop mod url. (!add_workshop_mod <workshop mod urls with spaces in-between>)")]
     public async Task AddWorkshopMod(params string[] workshopModUrls)
     {
         await WorkshopMod("add", workshopModUrls);
     }
 
     [Command("remove_workshop_mod")]
-    [Summary("Removes a workshop mod from the workshop url(!remove_workshop_mod <links to workshop mods>)")]
+    [Summary("Removes a workshop mod from the workshop mod url. (!remove_workshop_mod <workshop mod urls with spaces in-between>)")]
     public async Task RemoveWorkshopMod(params string[] workshopModUrls)
     {
         await WorkshopMod("remove", workshopModUrls);
