@@ -142,6 +142,9 @@ Server Commands:
 - `!noclip` Allows a player to pass through solid objects. (!noclip "[username]")<br>
 - `!show_options` Shows a list of current server options and values. (Prints to the server console) (!show_options)<br>
 - `!reload_options` Reloads server options. (!reload_options)<br>
+- `!change_option` Changes a server option. (!change_option "[option]" "[newOption]")<br>
+- `!add_workshop_mod` Adds a workshop mod from the workshop mod url. (!add_workshop_mod [workshop mod urls with spaces in-between])<br>
+- `!remove_workshop_mod` Removes a workshop mod from the workshop mod url. (!remove_workshop_mod [workshop mod urls with spaces in-between])<br>
 
 # Localization
 You can find the default localization file in [here](https://github.com/egebilecen/PZServerDiscordBot/blob/main/localization/default.json). All you need to do is downloading it and translating the all words/sentences in the right side of **":"** between **two quote marks**. Example below will illustrate how it should look like after the translation:

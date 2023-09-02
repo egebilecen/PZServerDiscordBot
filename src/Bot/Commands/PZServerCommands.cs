@@ -1,6 +1,8 @@
 ﻿using Discord.Commands;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 public class PZServerCommands : ModuleBase<SocketCommandContext>
@@ -409,5 +411,111 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
         Logger.WriteLog(string.Format("[PZServerCommand - reload_options] Caller: {0}", Context.User.ToString()));
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("change_option")]
+    [Summary("Changes a server option. (!change_option \"<option>\" \"<newOption>\")")]
+    public async Task ChangeOption(string option, string newOption)
+    {
+        ServerUtility.Commands.ChangeOption(option, newOption);
+        Logger.WriteLog(string.Format("[PZServerCommand - change_option] Caller: {0}, Params: {1}", Context.User.ToString(), option + "," + newOption));
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("workshop_mod")]
+    [Summary("Adds or removes a workshop mod from a workshop url. (!workshop_mod <add|remove> <links to workshop mods>)")]
+    [Remarks("skip")]
+    public async Task WorkshopMod(string type, params string[] workshopModUrls)
+    {
+        if (type.ToLower() != "add" && type.ToLower() != "remove")
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_change_type"));
+            return;
+        }
+
+        string configFilePath = ServerUtility.GetServerConfigIniFilePath();
+        if (string.IsNullOrEmpty(configFilePath))
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_config_err"));
+            return;
+        }
+
+        IniParser.IniData iniData = IniParser.Parse(configFilePath);
+        if (iniData == null)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_ini_err"));
+            return;
+        }
+
+        // Store the current mod Ids in lists
+        List<string> workshopIdList = new List<string>(iniData.GetValue("WorkshopItems").Split(';'));
+        List<string> modIdList = new List<string>(iniData.GetValue("Mods").Split(';'));
+
+        List<string> workshopModIdList = new List<string>();
+
+        string pattern = @"id=\d*";
+        Regex rg = new Regex(pattern);
+
+        foreach (string workshopModUrl in workshopModUrls)
+        {
+            MatchCollection matchedId = rg.Matches(workshopModUrl);
+            workshopModIdList.Add(matchedId[0].Value.Replace("id=",""));
+        }
+
+        string[] workshopModIds = workshopModIdList.ToArray();
+
+        var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopModIds));
+        var itemDetails = fetchDetails.Result;
+
+        pattern = @"Mod ID: .*(?!Mod ID: )";
+        rg = new Regex(pattern);
+
+        foreach (var item in itemDetails)
+        {
+            if (type.ToLower()=="add") { workshopIdList.Add(item.PublishedFileId); }
+            else if (type.ToLower() == "remove") { workshopIdList.Remove(item.PublishedFileId); }
+            MatchCollection matchedId = rg.Matches(item.Description);
+            foreach (Match match in matchedId)
+            {
+                string matchStr = match.Value.Replace("Mod ID: ", "").TrimEnd(new char[] { '\r', '\n' });
+                if (type.ToLower() == "add") { modIdList.Add(matchStr); }
+                else if (type.ToLower() == "remove") { modIdList.Remove(matchStr); }
+            }
+        }
+
+        ServerUtility.Commands.ChangeOption("Mods", string.Join(";", modIdList.Distinct()).TrimStart(';'));
+        ServerUtility.Commands.ChangeOption("WorkshopItems", string.Join(";", workshopIdList.Distinct()).TrimStart(';'));
+
+        Logger.WriteLog(string.Format("[PZServerCommand - add_workshop_mod] Caller: {0}, Params: {1}", Context.User.ToString(), string.Join(", ", workshopModUrls)));
+
+        if (type.ToLower()=="add")
+        {
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_add_ok"));
+        }
+        else if (type.ToLower() == "remove")
+        {
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_workshop_mod_remove_ok"));
+        }
+
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("add_workshop_mod")]
+    [Summary("Adds a workshop mod from the workshop mod url. (!add_workshop_mod <workshop mod urls with spaces in-between>)")]
+    public async Task AddWorkshopMod(params string[] workshopModUrls)
+    {
+        await WorkshopMod("add", workshopModUrls);
+    }
+
+    [Command("remove_workshop_mod")]
+    [Summary("Removes a workshop mod from the workshop mod url. (!remove_workshop_mod <workshop mod urls with spaces in-between>)")]
+    public async Task RemoveWorkshopMod(params string[] workshopModUrls)
+    {
+        await WorkshopMod("remove", workshopModUrls);
     }
 }
