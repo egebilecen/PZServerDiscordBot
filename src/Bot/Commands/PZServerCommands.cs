@@ -420,4 +420,99 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
 
         await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
     }
+
+    [Command("workshop_mod")]
+    [Summary("Adds or removes a workshop mod from a workshop url(!workshop_mod <add|remove> <links to workshop mods>)")]
+    public async Task WorkshopMod(string type, params string[] workshopModUrls)
+    {
+        if (type.ToLower() != "add" && type.ToLower() != "remove")
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("Change type must be \"add\" or \"remove\".");
+            return;
+        }
+
+        string configFilePath = ServerUtility.GetServerConfigIniFilePath();
+        if (string.IsNullOrEmpty(configFilePath))
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("configFilePath is null or empty.");
+            return;
+        }
+
+        IniParser.IniData iniData = IniParser.Parse(configFilePath);
+        if (iniData == null)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync("iniData is null.");
+            return;
+        }
+
+        // Store the current mod Ids in lists
+        List<string> workshopIdList = new List<string>(iniData.GetValue("WorkshopItems").Split(';'));
+        List<string> modIdList = new List<string>(iniData.GetValue("Mods").Split(';'));
+
+        List<string> workshopModIdList = new List<string>();
+
+        string pattern = @"id=\d*";
+        Regex rg = new Regex(pattern);
+
+        foreach (string workshopModUrl in workshopModUrls)
+        {
+            MatchCollection matchedId = rg.Matches(workshopModUrl);
+            workshopModIdList.Add(matchedId[0].Value.Replace("id=",""));
+        }
+
+        string[] workshopModIds = workshopModIdList.ToArray();
+
+        var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopModIds));
+        var itemDetails = fetchDetails.Result;
+
+        pattern = @"Mod ID: .*(?!Mod ID: )";
+        rg = new Regex(pattern);
+
+        foreach (var item in itemDetails)
+        {
+            if (type.ToLower()=="add") { workshopIdList.Add(item.PublishedFileId); }
+            else if (type.ToLower() == "remove") { workshopIdList.Remove(item.PublishedFileId); }
+            MatchCollection matchedId = rg.Matches(item.Description);
+            foreach (Match match in matchedId)
+            {
+                string matchStr = match.Value.Replace("Mod ID: ", "").TrimEnd(new char[] { '\r', '\n' });
+                if (type.ToLower() == "add") { modIdList.Add(matchStr); }
+                else if (type.ToLower() == "remove") { modIdList.Remove(matchStr); }
+            }
+        }
+
+        ServerUtility.Commands.ChangeOption("Mods", string.Join(";", modIdList.Distinct()).TrimStart(';'));
+        ServerUtility.Commands.ChangeOption("WorkshopItems", string.Join(";", workshopIdList.Distinct()).TrimStart(';'));
+        Logger.WriteLog(string.Format("[PZServerCommand - add_workshop_mod] Caller: {0}, Params: {1}", Context.User.ToString(), string.Join(", ", workshopModUrls)));
+
+        if (type.ToLower()=="add")
+        {
+            await Context.Channel.SendMessageAsync("A server restart is needed to finish adding mods.");
+        }
+
+        else if (type.ToLower() == "remove")
+        {
+            await Context.Channel.SendMessageAsync("A server restart is needed to finish removing mods.");
+        }
+
+
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+    }
+
+    [Command("add_workshop_mod")]
+    [Summary("Adds a workshop mod from the workshop url(!add_workshop_mod <links to workshop mods>)")]
+    public async Task AddWorkshopMod(params string[] workshopModUrls)
+    {
+        await WorkshopMod("add", workshopModUrls);
+    }
+
+    [Command("remove_workshop_mod")]
+    [Summary("Removes a workshop mod from the workshop url(!remove_workshop_mod <links to workshop mods>)")]
+    public async Task RemoveWorkshopMod(params string[] workshopModUrls)
+    {
+        await WorkshopMod("remove", workshopModUrls);
+    }
 }
