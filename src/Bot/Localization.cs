@@ -118,6 +118,8 @@ public static class Localization
         { "disc_cmd_get_settings_log_chan_id", "**Log Channel ID:** `{channel_id}` (<#{channel_id}>)" },
         { "disc_cmd_get_settings_pub_chan_id", "**Public Channel ID:** `{channel_id}` (<#{channel_id}>)" },
         { "disc_cmd_get_settings_perk_cac_dur", "**Perk Parser Cache Duration:** {minutes} minute(s)" },
+        { "disc_cmd_get_settings_res_serv_sch_type", "**Restart Server Schedule Type:** {type}"},
+        { "disc_cmd_get_settings_serv_res_times", "**Server Restart Time(s):** {timeList}"},
         { "disc_cmd_get_settings_res_sch_int", "**Restart Schedule Interval:** {minutes} minute(s)" },
         { "disc_cmd_get_settings_mod_sch_int", "**Workshop Mod Update Checker Interval:** {minutes} minute(s)" },
         { "disc_cmd_get_settings_mod_rst_timer", "**Workshop Mod Update Restart Timer:** {minutes} minute(s)" },
@@ -137,11 +139,8 @@ public static class Localization
         { "disc_cmd_set_restart_interval_int_ok", "Server restart schedule is updated." },
 
         // -------- !set_restart_time
-        {"disc_cmd_set_restart_time_warn","{time} is an invalid time." },
-        {"disc_cmd_set_restart_time_ok","The server will restart at: {timeList}." },
-
-        // -------- !get_restart_time
-        {"disc_cmd_get_restart_time_ok","The server will restart at: {timeList}." },
+        { "disc_cmd_set_restart_time_warn","{time} is an invalid time." },
+        { "disc_cmd_set_restart_time_ok","The server will restart at: {timeList}." },
 
         // -------- !set_mod_update_check_interval
         { "disc_cmd_set_mod_update_check_interval_int_warn", "Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking." },
