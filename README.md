@@ -95,17 +95,19 @@ This bot uses 3 different channels to operate. First channel is *Public* channel
 
 #### Command Channel
 Bot Commands:
-- `!set_command_channel` Sets the channel for bot to work in. (!set_command_channel <channel tag>)<br>
-- `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel <channel tag>)<br>
-- `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel <channel tag>)<br>
+- `!set_command_channel` Sets the channel for bot to work in. (!set_command_channel [channel tag>)<br>
+- `!set_log_channel` Sets the channel for bot to work in. (!set_log_channel [channel tag])<br>
+- `!set_public_channel` Sets the channel for bot to work in. (!set_public_channel [channel tag])<br>
 - `!get_settings` Gets the bot settings. (!get_settings)<br>
 - `!get_schedules` Gets the remaining times until schedules to be executed. (!get_schedules)<br>
 - `!get_ram_cpu` Gets the total RAM and CPU usage of the machine. (!get_ram_cpu)<br>
-- `!set_restart_interval` Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)<br>
-- `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval <interval in minutes>)<br>
-- `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer <timer in minutes>)<br>
+- `!set_restart_schedule_type` Set the server's restart schedule type. (!set_restart_schedule_type ["interval"|"time"])<br>
+- `!set_restart_time` Set the server's restart time(s). Restart schedule type must be "time". (!set_restart_time [times separated by space])<br>
+- `!set_restart_interval` Set the server's restart schedule interval. Restart schedule type must be "interval". (in minutes!) (!set_restart_interval [interval in minutes])<br>
+- `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval [interval in minutes])<br>
+- `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer [timer in minutes])<br>
 - `!toggle_non_public_mod_logging` Bot will print out non-public mods to log channel if enabled. (!toggle_non_public_mod_logging)<br>
-- `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration <duration in minutes>)<br>
+- `!set_perk_cache_duration` Set the perk cache duration. (in minutes!) (!set_perk_cache_duration [duration in minutes])<br>
 - `!reset_perk_cache` Reset the perk cache. (!reset_perk_cache)<br>
 - `!toggle_server_auto_start` Enables/Disables the server auto start feature if server is not running. (!toggle_server_auto_start)<br>
 - `!backup_server` Creates a backup of the server. Backup files can be found in "server_backup" folder in the directory where bot has been launched. (!backup_server)<br>
