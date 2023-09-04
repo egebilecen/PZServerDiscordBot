@@ -137,8 +137,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         if(scheduleType.ToLower() != "interval" && scheduleType.ToLower()!="time")
         {
             await Context.Message.AddReactionAsync(EmojiList.RedCross);
-            //await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_warn"));
-            await Context.Channel.SendMessageAsync( "Schedule type must be either \"Interval\" or \"Time\"." );
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_schedule_type_warn"));
             return;
         }
 
@@ -150,8 +149,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 
         ServerUtility.ResetServerRestartInterval();
 
-        //await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_ok"));
-        await Context.Channel.SendMessageAsync(String.Format("Updated the Server Restart Schedule type to {0}.",scheduleType));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_schedule_type_ok").KeyFormat(("type", scheduleType)));
 
     }
 
@@ -177,8 +175,20 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_ok"));
     }
 
-    [Command("set_restart_times")]
-    [Summary("Set the server's restart times. (!set_restart_times <times separated by space>)")]
+    [Command("get_restart_time")]
+    [Summary("Get the server's restart time(s). (!get_restart_time)")]
+    public async Task GetRestartTime()
+    {
+
+        Logger.WriteLog(string.Format("[BotCommands - get_restart_time] Caller: {0}", Context.User.ToString()));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+
+        List<string> timeList = new List<string>(Application.BotSettings.ServerScheduleSettings.ServerRestartTimes);
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_get_restart_time_ok").KeyFormat(("timeList", String.Join(", ", timeList))));
+    }
+
+    [Command("set_restart_time")]
+    [Summary("Set the server's restart time(s). (!set_restart_time <times separated by space>)")]
     public async Task SetRestartTimes(params string[] timeArray)
     {
         List<string> timeList = new List<string>(timeArray);
@@ -192,8 +202,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
 	        catch (Exception)
 	        {
                 await Context.Message.AddReactionAsync(EmojiList.RedCross);
-                //Localization needed
-                await Context.Channel.SendMessageAsync(string.Format("{0} is an invalid time.", time));
+                await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn").KeyFormat(("time", time)));
                 return;
 	        }
         }
@@ -206,7 +215,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.ServerScheduleSettings.ServerRestartTimes = timeList;
         Application.BotSettings.Save();
 
-        await Context.Channel.SendMessageAsync(string.Format("Set restart times to {0}.", String.Join(",",timeList)));
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_ok").KeyFormat(("timeList", String.Join(", ",timeList))));
     }
 
     [Command("set_mod_update_check_interval")]

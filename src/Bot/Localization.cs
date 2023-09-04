@@ -128,9 +128,20 @@ public static class Localization
         { "disc_cmd_get_schedules_run", "**{name}** schedule will run <t:{timestamp}:R>." },
         { "disc_cmd_get_schedules_not_fnd", "No schedule found." },
 
+        // -------- !set_restart_schedule_type
+        { "disc_cmd_set_restart_schedule_type_warn", "Schedule type must be \"interval\" or \"time\"." },
+        { "disc_cmd_set_restart_schedule_type_ok", "Updated the server restart schedule type to {type}." },
+
         // -------- !set_restart_interval
         { "disc_cmd_set_restart_interval_int_warn", "Restart interval must be at least 60 minutes." },
         { "disc_cmd_set_restart_interval_int_ok", "Server restart schedule is updated." },
+
+        // -------- !set_restart_time
+        {"disc_cmd_set_restart_time_warn","{time} is an invalid time." },
+        {"disc_cmd_set_restart_time_ok","The server will restart at: {timeList}." },
+
+        // -------- !get_restart_time
+        {"disc_cmd_get_restart_time_ok","The server will restart at: {timeList}." },
 
         // -------- !set_mod_update_check_interval
         { "disc_cmd_set_mod_update_check_interval_int_warn", "Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking." },
