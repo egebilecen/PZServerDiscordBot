@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -76,6 +77,10 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += "\n";
         botSettings += Localization.Get("disc_cmd_get_settings_perk_cac_dur").KeyFormat(("minutes", Application.BotSettings.ServerLogParserSettings.PerkParserCacheDuration));
         botSettings += "\n";
+        botSettings += Localization.Get("disc_cmd_get_settings_res_serv_sch_type").KeyFormat(("type", Application.BotSettings.ServerScheduleSettings.ServerRestartScheduleType));
+        botSettings += "\n";
+        botSettings += Localization.Get("disc_cmd_get_settings_serv_res_times").KeyFormat(("timeList", String.Join(", ", Application.BotSettings.ServerScheduleSettings.ServerRestartTimes)));
+        botSettings += "\n";
         botSettings += Localization.Get("disc_cmd_get_settings_res_sch_int").KeyFormat(("minutes", Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule / (60 * 1000)));
         botSettings += "\n";
         botSettings += Localization.Get("disc_cmd_get_settings_mod_sch_int").KeyFormat(("minutes", Application.BotSettings.ServerScheduleSettings.WorkshopItemUpdateSchedule / (60 * 1000)));
@@ -85,7 +90,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         botSettings += Localization.Get("disc_cmd_get_settings_serv_aut_strt").KeyFormat(("state", Application.BotSettings.BotFeatureSettings.AutoServerStart ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")));
         botSettings += "\n";
         botSettings += Localization.Get("disc_cmd_get_settings_mod_logging").KeyFormat(("state", Application.BotSettings.BotFeatureSettings.NonPublicModLogging ? Localization.Get("gen_enab_up") : Localization.Get("gen_disa_up")));
-        
+
         await Context.Channel.SendMessageAsync(botSettings);
     }
 
@@ -130,6 +135,28 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         await Context.Channel.SendMessageAsync(progressBarStr);
     }
 
+    [Command("set_restart_schedule_type")]
+    [Summary("Set the server's restart schedule type. (\"Interval\" or \"Time\") (!set_restart_schedule_type <\"interval\"|\"time\">)")]
+    public async Task SetRestartScheduleType(string scheduleType)
+    {
+        if(scheduleType.ToLower() != "interval" && scheduleType.ToLower()!="time")
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_schedule_type_warn"));
+            return;
+        }
+
+        Logger.WriteLog(string.Format("[BotCommands - set_restart_schedule_type] Caller: {0}, Params: {1}", Context.User.ToString(), scheduleType));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+
+        Application.BotSettings.ServerScheduleSettings.ServerRestartScheduleType = scheduleType.ToLower();
+        Application.BotSettings.Save();
+
+        ServerUtility.ResetServerRestartInterval();
+
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_schedule_type_ok").KeyFormat(("type", scheduleType)));
+    }
+
     [Command("set_restart_interval")]
     [Summary("Set the server's restart schedule interval. (in minutes!) (!set_restart_interval <interval in minutes>)")]
     public async Task SetRestartInterval(uint intervalMinute)
@@ -150,6 +177,44 @@ public class BotCommands : ModuleBase<SocketCommandContext>
         Application.BotSettings.Save();
 
         await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_interval_int_ok"));
+    }
+
+    [Command("set_restart_time")]
+    [Summary("Set the server's restart time(s). The time format must be \"HH:mm\" (using 24-hour time). (!set_restart_time <times separated by space>)")]
+    public async Task SetRestartTimes(params string[] timeArray)
+    {
+        if (timeArray.Count() == 0)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn_miss_param"));
+            return;
+        }
+
+        List<string> timeList = new List<string>(timeArray);
+        foreach (string time in timeList)
+        {
+            DateTime timeDT;
+            try 
+	        {	        
+                timeDT = DateTime.ParseExact(time, "HH:mm", CultureInfo.InvariantCulture);
+	        }
+	        catch (Exception)
+	        {
+                await Context.Message.AddReactionAsync(EmojiList.RedCross);
+                await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn_invld_time").KeyFormat(("time", time)));
+                return;
+	        }
+        }
+
+        Logger.WriteLog(string.Format("[BotCommands - set_restart_times] Caller: {0}, Params: {1}", Context.User.ToString(), timeList));
+        await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
+        
+        Scheduler.GetItem("ServerRestart").UpdateInterval(Scheduler.GetIntervalFromTimes(timeList));
+
+        Application.BotSettings.ServerScheduleSettings.ServerRestartTimes = timeList;
+        Application.BotSettings.Save();
+
+        await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_ok").KeyFormat(("timeList", String.Join(", ",timeList))));
     }
 
     [Command("set_mod_update_check_interval")]

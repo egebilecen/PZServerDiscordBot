@@ -104,4 +104,61 @@ public static class Scheduler
         if(clock != null)
             clock.Dispose();
     }
+
+    public static uint GetIntervalFromTimes(List<string> scheduleTimes)
+    {
+        scheduleTimes.Sort();
+
+        DateTime now = DateTime.Now;
+		string nowString = now.ToString("HH:mm");
+
+        DateTime nextRestartTimeDT = new DateTime();
+        string nextRestartTime = "";
+
+        if (scheduleTimes.Count == 0) return 999999999;
+        
+		foreach (string time in scheduleTimes)
+		{
+            DateTime timeDT;
+            try 
+	        {	        
+		        timeDT = DateTime.Parse(time);
+	        }
+	        catch (Exception)
+	        {
+                Logger.WriteLog(string.Format("Scheduler.GetIntervalFromTimes() - ERROR: \"{0}\" is an invalid time.", time));
+                continue;
+	        }
+
+			if (DateTime.Compare(timeDT, now) > 0)
+			{
+				nextRestartTimeDT = timeDT;
+                break;
+			}
+		}
+
+        try 
+	    {	
+            TimeSpan interval;
+
+            if (nextRestartTimeDT == DateTime.MinValue)
+            {
+                interval = DateTime.Parse(scheduleTimes[0]).AddDays(1) - DateTime.Now;
+                nextRestartTime = nextRestartTimeDT.ToString("HH:mm");
+                nextRestartTime = string.Format("Tomorrow, {0}", scheduleTimes[0]);
+            }
+            else
+            {
+                interval = nextRestartTimeDT - DateTime.Parse(nowString);
+            }
+
+            Logger.WriteLog(string.Format("[GetIntervalFromTimes] - Next Restart Time: {0}", nextRestartTime));
+            return Convert.ToUInt32(interval.TotalMilliseconds);
+	    }
+	    catch (Exception)
+	    {
+		    Logger.WriteLog(string.Format("[Scheduler.GetIntervalFromTimes] - Error. Next restart time: {0}, Current time: {1}", nextRestartTime, nowString));
+            return 4294967295;
+	    }
+    }
 }

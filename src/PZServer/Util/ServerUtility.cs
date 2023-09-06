@@ -47,7 +47,7 @@ public static class ServerUtility
 
     public static void ResetServerRestartInterval()
     {
-        Scheduler.GetItem("ServerRestart")?.UpdateInterval(Application.BotSettings.ServerScheduleSettings.ServerRestartSchedule);
+        Scheduler.GetItem("ServerRestart")?.UpdateInterval(Application.BotSettings.ServerScheduleSettings.GetServerRestartSchedule());
         ResetServerRestartAnnouncerInterval();
     }
 

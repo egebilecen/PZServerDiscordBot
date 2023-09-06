@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 public static class Application
 {
     public const string                    BotRepoURL = "https://github.com/egebilecen/PZServerDiscordBot";
-    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 10, 0, DevelopmentStage.Release);
+    public static readonly SemanticVersion BotVersion = new SemanticVersion(1, 11, 0, DevelopmentStage.Release);
     public static Settings.BotSettings     BotSettings;
 
     public static DiscordSocketClient  Client;
@@ -35,7 +35,8 @@ public static class Application
         }
         else
         {
-            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile), 
+                new JsonSerializerSettings{ObjectCreationHandling = ObjectCreationHandling.Replace});
         }
 
         Localization.Load();
@@ -109,7 +110,7 @@ public static class Application
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            Localization.Get("sch_name_serverrestart"),
-                                           BotSettings.ServerScheduleSettings.ServerRestartSchedule,
+                                           BotSettings.ServerScheduleSettings.GetServerRestartSchedule(),
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
