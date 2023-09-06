@@ -102,7 +102,7 @@ Bot Commands:
 - `!get_schedules` Gets the remaining times until schedules to be executed. (!get_schedules)<br>
 - `!get_ram_cpu` Gets the total RAM and CPU usage of the machine. (!get_ram_cpu)<br>
 - `!set_restart_schedule_type` Set the server's restart schedule type. (!set_restart_schedule_type ["interval"|"time"])<br>
-- `!set_restart_time` Set the server's restart time(s). Restart schedule type must be "time". (!set_restart_time [times separated by space])<br>
+- `!set_restart_time` Set the server's restart time(s). The time format is "HH:mm" (using 24-hour time). Server restart schedule type must be "time". (!set_restart_time [times separated by space])<br>
 - `!set_restart_interval` Set the server's restart schedule interval. Restart schedule type must be "interval". (in minutes!) (!set_restart_interval [interval in minutes])<br>
 - `!set_mod_update_check_interval` Set the workshop mod update check schedule interval. (in minutes!) (!set_mod_update_check_interval [interval in minutes])<br>
 - `!set_mod_update_restart_timer` Sets the restart timer for server when mod update detected. (in minutes!) (!set_mod_update_restart_timer [timer in minutes])<br>

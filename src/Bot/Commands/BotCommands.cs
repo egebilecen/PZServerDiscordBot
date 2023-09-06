@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -182,18 +183,25 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     [Summary("Set the server's restart time(s). (!set_restart_time <times separated by space>)")]
     public async Task SetRestartTimes(params string[] timeArray)
     {
+        if (timeArray.Count() == 0)
+        {
+            await Context.Message.AddReactionAsync(EmojiList.RedCross);
+            await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn_miss_param"));
+            return;
+        }
+
         List<string> timeList = new List<string>(timeArray);
         foreach (string time in timeList)
         {
             DateTime timeDT;
             try 
 	        {	        
-		        timeDT = DateTime.Parse(time);
+                timeDT = DateTime.ParseExact(time, "HH:mm", CultureInfo.InvariantCulture);
 	        }
 	        catch (Exception)
 	        {
                 await Context.Message.AddReactionAsync(EmojiList.RedCross);
-                await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn").KeyFormat(("time", time)));
+                await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_set_restart_time_warn_invld_time").KeyFormat(("time", time)));
                 return;
 	        }
         }

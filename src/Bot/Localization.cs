@@ -139,8 +139,9 @@ public static class Localization
         { "disc_cmd_set_restart_interval_int_ok", "Server restart schedule is updated." },
 
         // -------- !set_restart_time
-        { "disc_cmd_set_restart_time_warn","{time} is an invalid time." },
-        { "disc_cmd_set_restart_time_ok","The server will restart at: {timeList}." },
+        { "disc_cmd_set_restart_time_warn_miss_param", "\"Time\" is a missing parameter." },
+        { "disc_cmd_set_restart_time_warn_invld_time", "\"{time}\" is an invalid time.\nThe time format must be \"HH:mm\" (using 24-hour time) and times must be separated with a space." },
+        { "disc_cmd_set_restart_time_ok", "The server will restart at: {timeList}." },
 
         // -------- !set_mod_update_check_interval
         { "disc_cmd_set_mod_update_check_interval_int_warn", "Interval minutes cannot be smaller than 0. But it can be 0 which means there won't be any workshop mod update checking." },
