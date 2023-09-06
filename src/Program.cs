@@ -35,7 +35,8 @@ public static class Application
         }
         else
         {
-            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile));
+            BotSettings = JsonConvert.DeserializeObject<Settings.BotSettings>(File.ReadAllText(Settings.BotSettings.SettingsFile), 
+                new JsonSerializerSettings{ObjectCreationHandling = ObjectCreationHandling.Replace});
         }
 
         Localization.Load();
@@ -109,7 +110,7 @@ public static class Application
 
         Scheduler.AddItem(new ScheduleItem("ServerRestart",
                                            Localization.Get("sch_name_serverrestart"),
-                                           BotSettings.ServerScheduleSettings.ServerRestartSchedule,
+                                           BotSettings.ServerScheduleSettings.GetServerRestartSchedule(),
                                            Schedules.ServerRestart,
                                            null));
         Scheduler.AddItem(new ScheduleItem("ServerRestartAnnouncer",
