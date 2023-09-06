@@ -180,7 +180,7 @@ public class BotCommands : ModuleBase<SocketCommandContext>
     }
 
     [Command("set_restart_time")]
-    [Summary("Set the server's restart time(s). (!set_restart_time <times separated by space>)")]
+    [Summary("Set the server's restart time(s). The time format must be \"HH:mm\" (using 24-hour time). (!set_restart_time <times separated by space>)")]
     public async Task SetRestartTimes(params string[] timeArray)
     {
         if (timeArray.Count() == 0)
