@@ -28,5 +28,10 @@
 		"version" : "1.0.0",
 		"desc" : "繁體中文的本地化翻譯版本",
 		"file" : "traditional_chinese.json"
+	},
+	"Français" : {
+		"version" : "1.0.0",
+		"desc" : "Traduction française du bot.",
+		"file" : "french.json"
 	}
 }
