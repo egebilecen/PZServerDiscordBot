@@ -101,6 +101,8 @@ public static class ServerUtility
 
         public static void StopServer()
         {
+            SaveServer();
+
             try
             {
                 ServerProcess.StandardInput.WriteLine("quit");
