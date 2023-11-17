@@ -25,7 +25,7 @@
 		"file" : "espanol.json"
 	},
 	"繁體中文" : {
-		"version" : "1.0.0",
+		"version" : "1.0.1",
 		"desc" : "繁體中文的本地化翻譯版本",
 		"file" : "traditional_chinese.json"
 	},
