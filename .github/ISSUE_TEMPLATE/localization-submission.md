@@ -15,3 +15,5 @@ e.g. Türkçe
 
 **A brief description of the translation in the translated language:**
 e.g. Bot'un Türkçe çevirisi. (Which is translated as "Turkish translation of the bot.")
+
+*Do not forget to attach the zip file that contains the translation.*
