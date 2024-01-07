@@ -149,9 +149,9 @@ Server Commands:
 - `!remove_workshop_mod` Removes a workshop mod from the workshop mod url. (!remove_workshop_mod [workshop mod urls with spaces in-between])<br>
 
 # Localization
-You can find the default localization file in [here](https://github.com/egebilecen/PZServerDiscordBot/blob/main/localization/default.json). All you need to do is downloading it and translating the all words/sentences in the right side of **":"** between **two quote marks**. Example below will illustrate how it should look like after the translation:
+You can find the default localization file in [here](https://github.com/egebilecen/PZServerDiscordBot/blob/main/localization/default.json). All you need to do is downloading it and translating the all words/sentences in the right side of **":"** between **two quote marks**. Example below will illustrate how it should look like after the translation.
 
-Before translation:
+**Before translation:**
 ```
 {
   "gen_enab_up": "Enabled",
@@ -164,7 +164,7 @@ Before translation:
 }
 ```
 
-After translation:
+**After translation:**
 ```
 {
   "gen_enab_up": "Aktif",
@@ -195,4 +195,4 @@ Non-public mod logging feature has been {state}. -> Non-public mod logging featu
 hours ago {hours} -> hours ago 10
 ```
 
-After you have completed translating all words/sentences, please create an [Issue](https://github.com/egebilecen/PZServerDiscordBot/issues) with the title of `Localization of <language here>` and attach the translated `.json` file in a **zip archive**. I will add it to available localizations. Also, when a new version of the bot released, there might be new added text so it is good to keep an eye on updates. If your current localization is missing the new added text, bot will use the default localization for these.
+After you have completed translating all words/sentences, please create an [issue](https://github.com/egebilecen/PZServerDiscordBot/issues) by selecting the **Localization Submission** temple with the title of `Localization of <language here>` and attaching the translated `.json` file in a **zip archive**. I will add it to available localizations. Also, when a new version of the bot released, there might be new added text so it is good to keep an eye on updates. If your current localization is missing the new added text, bot will use the default localization for these.

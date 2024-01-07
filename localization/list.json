@@ -33,5 +33,10 @@
 		"version" : "1.0.0",
 		"desc" : "Traduction française du bot.",
 		"file" : "french.json"
+	},
+	"Italiano" : {
+		"version" : "1.0.0",
+		"desc" : "Traduzione in Italiano del bot.",
+		"file" : "italian.json"
 	}
 }
