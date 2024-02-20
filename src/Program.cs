@@ -5,9 +5,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 public static class Application
@@ -64,45 +62,7 @@ public static class Application
         }
 
     #if !DEBUG
-        string serverFile = "./server.bat";
-
-        if(!File.Exists(serverFile))
-        {
-            Console.WriteLine(Localization.Get("err_serv_bat"));
-            await Task.Delay(-1);
-        }
-        else
-        {
-            string[] lines = File.ReadAllLines(serverFile);
-
-            for(int i=0; i < lines.Length; i++)
-            {
-                string line = lines[i];
-
-                if(line.Contains(@".\jre64\bin\java.exe"))
-                {
-                    string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
-
-                    foreach(string arg in args)
-                    {
-                        if(arg.Contains("user.home"))
-                        {
-                            ServerPath.BasePath = arg.Split('=').Last() + "\\";
-
-                            if(Directory.Exists(ServerPath.BasePath + "Zomboid\\"))
-                                ServerPath.BasePath += "Zomboid\\";
-                        }
-                    }
-                }
-                else if(line.Trim().ToLower() == "pause")
-                {
-                    List<string> newLines = new List<string>(lines);
-                    newLines.RemoveAt(i);
-                    File.WriteAllLines(serverFile, newLines);
-                    break;
-                }
-            }
-        }
+        ServerPath.CheckCustomBasePath();
     #endif
 
         if(!Directory.Exists(Localization.LocalizationPath))

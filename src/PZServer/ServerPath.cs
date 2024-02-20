@@ -1,8 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 public static class ServerPath
 {
     public static string BasePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Zomboid\\";
+
+    public static async void CheckCustomBasePath()
+    {
+        string serverFile = "./server.bat";
+
+        if(!File.Exists(serverFile))
+        {
+            Console.WriteLine(Localization.Get("err_serv_bat"));
+            await Task.Delay(-1);
+        }
+        else
+        {
+            string[] lines = File.ReadAllLines(serverFile);
+
+            for(int i=0; i < lines.Length; i++)
+            {
+                string line = lines[i];
+
+                if(line.Contains(@".\jre64\bin\java.exe"))
+                {
+                    string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
+
+                    foreach(string arg in args)
+                    {
+                        if(arg.Contains("user.home"))
+                        {
+                            BasePath = arg.Split('=').Last() + "\\";
+
+                            if(Directory.Exists(BasePath + "Zomboid\\"))
+                                BasePath += "Zomboid\\";
+                        }
+                    }
+                }
+                else if(line.Trim().ToLower() == "pause")
+                {
+                    List<string> newLines = new List<string>(lines);
+                    newLines.RemoveAt(i);
+                    File.WriteAllLines(serverFile, newLines);
+                    break;
+                }
+            }
+        }
+    }
 
     public static string ServerLogsPath()
     {
