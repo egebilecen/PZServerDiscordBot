@@ -134,7 +134,7 @@ public static class Application
                 Console.WriteLine(Localization.Get("err_disc_auth_fail"));
                 await Task.Delay(-1);
             }
-            else Console.WriteLine(Localization.Get("err_disc_disconn").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
+            //else Console.WriteLine(Localization.Get("err_disc_disconn").KeyFormat(("log_file", Logger.LogFile), ("repo_url", BotRepoURL)));
         };
 
         await Task.Delay(-1);
