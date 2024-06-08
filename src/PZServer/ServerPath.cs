@@ -17,36 +17,41 @@ public static class ServerPath
             Console.WriteLine(Localization.Get("err_serv_bat"));
             await Task.Delay(-1);
         }
-        else
+
+        string[] lines = File.ReadAllLines(serverFile);
+
+        for(int i=0; i < lines.Length; i++)
         {
-            string[] lines = File.ReadAllLines(serverFile);
+            string line = lines[i];
 
-            for(int i=0; i < lines.Length; i++)
+            // Look for strings that the command to start the Project Zomboid server may contain.
+            if(line.Contains(@".\jre64\bin\java.exe")
+            || line.Contains("zomboid.steam")
+            || line.Contains("-Xms")
+            || line.Contains("-Xmx"))
             {
-                string line = lines[i];
+                string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
 
-                if(line.Contains(@".\jre64\bin\java.exe"))
+                foreach(string arg in args)
                 {
-                    string[] args = line.Split(new string[] { " -" }, StringSplitOptions.None);
-
-                    foreach(string arg in args)
+                    if(arg.Contains("user.home"))
                     {
-                        if(arg.Contains("user.home"))
-                        {
-                            BasePath = arg.Split('=').Last() + "\\";
+                        BasePath = arg.Split('=').Last() + "\\";
 
-                            if(Directory.Exists(BasePath + "Zomboid\\"))
-                                BasePath += "Zomboid\\";
-                        }
+                        if(Directory.Exists(BasePath + "Zomboid\\"))
+                            BasePath += "Zomboid\\";
                     }
                 }
-                else if(line.Trim().ToLower() == "pause")
-                {
-                    List<string> newLines = new List<string>(lines);
-                    newLines.RemoveAt(i);
-                    File.WriteAllLines(serverFile, newLines);
-                    break;
-                }
+            }
+            else if(line.Trim().ToLower() == "pause")
+            {
+                // server.bat shouldn't contain more than one "pause" and
+                // it should be at the end of file so we can just break
+                // out of for loop after we remove it.
+                List<string> newLines = new List<string>(lines);
+                newLines.RemoveAt(i);
+                File.WriteAllLines(serverFile, newLines);
+                break;
             }
         }
     }
