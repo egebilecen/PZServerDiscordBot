@@ -15,7 +15,7 @@
 		"file" : "korean.json"
 	},
 	"Русский" : {
-		"version" : "1.0.0",
+		"version" : "1.0.1",
 		"desc" : "Русский перевод Бота. (Robot Translate)",
 		"file" : "russian_robot.json"
 	},
