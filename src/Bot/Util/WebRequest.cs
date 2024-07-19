@@ -48,11 +48,12 @@ namespace EB_Utility
         {
             var content = new FormUrlEncodedContent(paramList);
             HttpResponseMessage response = await httpClient.PostAsync(url, content);
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             if(response.IsSuccessStatusCode)
-                return await response.Content.ReadAsStringAsync();
+                return responseContent;
 
-            Logger.WriteLog($"WebRequest.PostAsync() - Response status code is not 200. Status code: {response.StatusCode} | URL: {url}");
+            Logger.WriteLog($"WebRequest.PostAsync() - Response status code is not 200. Status code: {response.StatusCode} | URL: {url} | Body: {responseContent}");
             return null;
         }
     }
