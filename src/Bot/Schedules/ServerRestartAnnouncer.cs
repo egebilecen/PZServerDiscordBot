@@ -11,6 +11,10 @@ public static partial class Schedules
     {
         if(!ServerUtility.IsServerRunning()) return;
 
+        if(Application.BotSettings.ServerScheduleSettings.ServerRestartScheduleType.ToLower() == "time"
+        && ServerUtility.AbortNextTimedServerRestart)
+            return;
+
         ScheduleItem serverRestartSchedule = Scheduler.GetItem("ServerRestart");
         ScheduleItem self = Scheduler.GetItem("ServerRestartAnnouncer");
 

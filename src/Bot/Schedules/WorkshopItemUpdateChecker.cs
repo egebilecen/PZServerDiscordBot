@@ -49,6 +49,12 @@ public static partial class Schedules
         }
 
         string[] workshopIdList = iniData.GetValue("WorkshopItems").Split(';');
+        if(workshopIdList.Length < 1)
+        {
+            Logger.WriteLog($"[Workshop Item Update Checker Schedule] Couldn't find any workshop items in iniData. configFilePath: {configFilePath}");
+            return;
+        }
+
         var fetchDetails = Task.Run(async () => await SteamWebAPI.GetWorkshopItemDetails(workshopIdList));
         var itemDetails  = fetchDetails.Result;
 

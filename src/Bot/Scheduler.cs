@@ -152,7 +152,7 @@ public static class Scheduler
                 interval = nextRestartTimeDT - DateTime.Parse(nowString);
             }
 
-            Logger.WriteLog(string.Format("[GetIntervalFromTimes] - Next Restart Time: {0}", nextRestartTime));
+            Logger.WriteLog(string.Format("[Scheduler.GetIntervalFromTimes] - Next Restart Time: {0}", nextRestartTime));
             return Convert.ToUInt32(interval.TotalMilliseconds);
 	    }
 	    catch (Exception)

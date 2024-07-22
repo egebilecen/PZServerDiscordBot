@@ -7,6 +7,7 @@ public static class ServerUtility
 {
     private const string  serverFile    = ".\\server.bat";
     public static Process ServerProcess = null;
+    public static bool AbortNextTimedServerRestart = false;
 
     public static bool CanStartServer()
     {
