@@ -145,7 +145,8 @@ public class PZServerCommands : ModuleBase<SocketCommandContext>
             else
                 ServerUtility.ResetServerRestartInterval();
             
-            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_abort_restart_ok_server").KeyFormat(("minutes", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes)));
+            // ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_abort_restart_ok_server").KeyFormat(("minutes", Scheduler.GetItem("ServerRestart").NextExecuteTime.Subtract(DateTime.Now).TotalMinutes)));
+            ServerUtility.Commands.ServerMsg(Localization.Get("disc_cmd_abort_restart_ok_disc"));
 
             await Context.Message.AddReactionAsync(EmojiList.GreenCheck);
             await Context.Channel.SendMessageAsync(Localization.Get("disc_cmd_abort_restart_ok_disc"));
