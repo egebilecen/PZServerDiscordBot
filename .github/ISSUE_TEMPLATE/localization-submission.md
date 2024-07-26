@@ -1,7 +1,7 @@
 ---
 name: Localization Submission
 about: Submit your localization.
-title: "[LOCALIZATION]"
+title: "[LOCALIZATION] <Translated language's name in English>"
 labels: localization
 assignees: ''
 
