@@ -1,6 +1,8 @@
 # Project Zomboid Discord Bot for Server Management
-<img alt="Passively Maintained" src="https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg" title="There are no plans for new features, but the bot is actively maintained." /><br>
 This bot is written for people to easily manage their Project Zomboid server using Discord. Please check the **Installation** and **Bot Configuration** section. Also this bot doesn't support multiple discord servers and only works on **Windows** operating system. Be sure to have **.NET Framework 4.7.2** installed on the machine.
+
+<img alt="Passively Maintained" src="https://img.shields.io/badge/maintenance-passively--maintained-yellowgreen.svg" title="There are no plans for new features, but the bot is actively maintained." /><br>
+*There are no plans for new features, but the bot is actively maintained.*
 
 ## Contents
 * [Features](#features)
@@ -8,6 +10,7 @@ This bot is written for people to easily manage their Project Zomboid server usi
   * [Creating the Discord Bot](#creating-the-discord-bot)
   * [Installing Bot Files](#installing-bot-files)
   * [Writing the Discord Bot Token Into File](#writing-the-discord-bot-token-into-file)
+    * [Warning](#warning)
 * [Bot Configuration](#bot-configuration)
 * [Bot Commands](#bot-commands)
   * [Public Channel](#public-channel)
@@ -71,10 +74,10 @@ To complete this step and next step, you must have remote access to your Windows
 Now all you need to do is running `PZServerDiscordBot.exe`. If you did setup everything correctly, program will automatically run the Discord bot at background and will show the Project Zomboid Server in the console. (Bot may not send the warning messages about the configuration if your discord server's last created channel is not accessable by the bot. You can just type configuration commands regardless.)
 ![](https://github.com/egebilecen/PZServerDiscordBot/blob/main/.github/images/bot%20demonstration/Screenshot_2.png)
 
-**Note:**<br>
+**Note**<br>
 If you never run the project zomboid server before, please run it without using bot. Because when you run the project zomboid server for the first time, it will ask you to setup an admin account. You can't send any key presses to console if you run the server through discord bot's exe file. This also means you can't execute servers commands directly using the console but I did setup all commands in discord bot.
 
-**Warning:**<br>
+#### Warning
 If bot doesn't respond to any commands, that could be mean two things: <br>
 * Bot doesn't have permission to see the channel. Be sure that bot has full access on the channel which also includes permission to send messages. After confirming bot has full access but still won't respond, see below.
 * Bot has missing *intents* configuration. Please head to [discord developer portal](https://discord.com/developers/applications) (which is the place you did create and set up your bot), select your bot, click to the `Bot` tab on left menu and be sure that all bot intentions are enabled under the `Privileged Gateway Intents` section.
@@ -146,7 +149,7 @@ Server Commands:
 - `!show_options` Shows a list of current server options and values. (Prints to the server console) (!show_options)<br>
 - `!reload_options` Reloads server options. (!reload_options)<br>
 - `!change_option` Changes a server option. (!change_option "[option]" "[newOption]")<br>
-- `!add_workshop_mod` Adds a workshop mod from the workshop mod url. (!add_workshop_mod [workshop mod urls with spaces in-between])<br>
+- `!add_workshop_mod` Adds a workshop mod from the workshop mod url. (!add_workshop_mod [workshop mod urls with spaces in-between]) **Check [here](https://github.com/egebilecen/PZServerDiscordBot/issues/152#issuecomment-2246117720) before using this command if you have/had multiple servers in the same machine.**<br>
 - `!remove_workshop_mod` Removes a workshop mod from the workshop mod url. (!remove_workshop_mod [workshop mod urls with spaces in-between])<br>
 
 # Localization
