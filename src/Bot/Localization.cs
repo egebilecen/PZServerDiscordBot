@@ -89,7 +89,7 @@ public static class Localization
         { "err_serv_bat", "Couldn't find \"server.bat\" file in the folder. Please rename the bat file you were using to start the server as \"server.bat\". For example, if you were using \"StartServer64.bat\", rename it as \"server.bat\" without quotes." },
         { "err_disc_auth_fail", "Authentication failed! Be sure your discord bot token is valid." },
         { "err_disc_disconn", "An error occured and discord bot has been disconnected! Error details are saved into {log_file} file.\nPlease refer to \"{repo_url}/issues\" and create an issue about this with the log file." },
-        { "err_export_localization", "ERROR: Couldn't export default localization file!" },
+        { "err_export_localization", "ERROR: Couldn't export default localization!" },
 
         // Info Messages
         { "info_disc_act_bot_ver", "Bot Version: {version}" },
@@ -139,7 +139,7 @@ public static class Localization
         { "disc_cmd_set_restart_interval_int_ok", "Server restart schedule is updated." },
 
         // -------- !set_restart_time
-        { "disc_cmd_set_restart_time_warn_miss_param", "\"Time\" is a missing parameter." },
+        { "disc_cmd_set_restart_time_warn_miss_param", "Missing time parameter(s)." },
         { "disc_cmd_set_restart_time_warn_invld_time", "\"{time}\" is an invalid time.\nThe time format must be \"HH:mm\" (using 24-hour time) and times must be separated with a space." },
         { "disc_cmd_set_restart_time_ok", "The server will restart at: {timeList}." },
 
@@ -148,7 +148,7 @@ public static class Localization
         { "disc_cmd_set_mod_update_check_interval_int_ok", "Workshop mod update check schedule is updated." },
 
         // -------- !set_mod_update_restart_timer
-        { "disc_cmd_set_mod_update_restart_timer_warn", "Interval must be at least 1 minute(s)." },
+        { "disc_cmd_set_mod_update_restart_timer_warn", "Interval must be at least 1 minute." },
         { "disc_cmd_set_mod_update_restart_timer_ok", "Workshop mod update restart timer is updated." },
 
         // -------- !toggle_non_public_mod_logging
@@ -182,13 +182,13 @@ public static class Localization
         { "disc_cmd_localization_download_fail", "Couldn't download localization! Please try again later..." },
         { "disc_cmd_localization_update_text", "There is a new version for **{localization}** ({version})! Please use `!localization \"{localization}\"` command to update." },
         { "disc_cmd_localization_avaib_list", "Available localization list:" },
-        { "disc_cmd_localization_usage", "Please use `!localization \"<localization name>\"` command to update current localization. You can set localization back to default by using `!localization default` command." },
+        { "disc_cmd_localization_usage", "Please use `!localization \"<localization name>\"` command to change current localization. You can set localization back to default by using `!localization default` command." },
         { "disc_cmd_localization_no_localization", "There are no other available localizations at the moment." },
 
         // -------- !workshop_mod
         { "disc_cmd_workshop_mod_change_type", "Change type must be \"add\" or \"remove\"." },
-        { "disc_cmd_workshop_mod_config_err", "Couldn't find the config path." },
-        { "disc_cmd_workshop_mod_ini_err", "Couldn't read the config content." },
+        { "disc_cmd_workshop_mod_config_err", "Couldn't find the config file." },
+        { "disc_cmd_workshop_mod_ini_err", "Couldn't read the content of the config file." },
         { "disc_cmd_workshop_mod_add_ok", "A server restart is needed to finish adding mods." },
         { "disc_cmd_workshop_mod_remove_ok", "A server restart is needed to finish removing mods." },
 
@@ -219,7 +219,7 @@ public static class Localization
 
         // ---- User Commands
         // -------- !bot_info
-        { "disc_cmd_bot_info_text", "This bot is written for people to easily manage their server using Discord. Source code and bot files can be reached from {repo_url}. If you enjoy the bot, please leave a :star: to repo if you haven't :relaxed:." },
+        { "disc_cmd_bot_info_text", "This bot is written for people to easily manage their server using Discord. Source code and files of the bot can be reached from {repo_url}. If you enjoy the bot, please leave a :star: to the repo if you haven't :relaxed:." },
 
         // -------- !server_status
         { "disc_cmd_server_status_running", "Server is **running** :hamster:" },
@@ -230,8 +230,8 @@ public static class Localization
         { "disc_cmd_restart_time_text", "Server will be restarted <t:{timestamp}:R>." },
 
         // -------- !game_date
-        { "disc_cmd_game_date_warn_file", "Couldn't find the time file." },
-        { "disc_cmd_game_date_response", "```Current in-game date: {day}/{month}/{year}```*(Date is in DD-MM-YYYY aka European format)*" },
+        { "disc_cmd_game_date_warn_file", "Couldn't find the in-game date file." },
+        { "disc_cmd_game_date_response", "```Current in-game date: {day}/{month}/{year}```*(Date is in \"DD-MM-YYYY\" aka European format)*" },
 
         // Schedules
         // ---- Display Names
@@ -253,10 +253,10 @@ public static class Localization
         { "sch_serverrestartannouncer_text", "Server will be restarted in {time_value} {time_text}." },
 
         // ---- WorkshopItemUpdateChecker
-        { "sch_workshopitemupdatechecker_details_fail", "**[Workshop Mod Update Checker]** Cannot get the details of mod with the ID of `{id}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {code})`\n**Mod Link:** {link}" },
+        { "sch_workshopitemupdatechecker_details_fail", "**[Workshop Mod Update Checker]** Cannot get the details of the mod with the ID of `{id}`. It is either set as unlisted or private in Steam Workshop. Steam doesn't allow getting details of unlisted/private workshop items so if it is updated, bot won't detect it. `(Result code: {code})`\n**Mod Link:** {link}" },
         { "sch_workshopitemupdatechecker_log_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Preparing to restart server in {minutes} minute(s)." },
         { "sch_workshopitemupdatechecker_pub_chan_text", "**[Workshop Mod Update Checker]** A workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
-        { "sch_workshopitemupdatechecker_server_announcement_text", "Workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
+        { "sch_workshopitemupdatechecker_server_announcement_text", "A workshop mod update has been detected. Server will be restarted in {minutes} minute(s)." },
     };
 
     public static string Get(string key)
