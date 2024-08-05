@@ -112,7 +112,7 @@
   "disc_cmd_server_status_running": "Sunucu **aktif** :hamster:",
   "disc_cmd_server_status_backup": "Şu anda **sunucu yedeklemesi** devam ediyor. :wrench:",
   "disc_cmd_server_status_dead": "Sunucu **kapalı** :skull:",
-  "disc_cmd_restart_time_text": "Sunucu <t:{timestamp}:R> sonra yeniden başlatılacak.",
+  "disc_cmd_restart_time_text": "Sunucu <t:{timestamp}:R> yeniden başlatılacak.",
   "disc_cmd_game_date_warn_file": "Oyun içi tarih dosyası bulunamadı.",
   "disc_cmd_game_date_response": "```Şu anki oyun içi tarih: {day}/{month}/{year}```*(Tarih \"DD-MM-YYYY\" formatında yani Avrupa formatında)*",
   "sch_name_serverrestart": "Sunucu Yeniden Başlatma",
