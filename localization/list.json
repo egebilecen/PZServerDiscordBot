@@ -1,8 +1,8 @@
 {
 	"Türkçe" : {
-		"version" : "1.0.1",
-		"desc" : "Yarısı makine çevirili Türkçe dil tercümesi.",
-		"file" : "turkish_half_robot.json"
+		"version" : "2.0.0",
+		"desc" : "Bot'un Türkçe dil tercümesi.",
+		"file" : "turkish.json"
 	},
 	"Português Brasileiro" : {
 		"version" : "1.0.0",
