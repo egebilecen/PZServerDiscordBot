@@ -26,8 +26,13 @@
 	},
 	"繁體中文" : {
 		"version" : "1.0.1",
-		"desc" : "繁體中文的本地化翻譯版本",
+		"desc" : "繁體中文的本地化翻譯版本。",
 		"file" : "traditional_chinese.json"
+	},
+	"简体中文" : {
+		"version" : "1.0.0",
+		"desc" : "简体中文本地汉化翻译。",
+		"file" : "simplified_chinese.json"
 	},
 	"Français" : {
 		"version" : "1.0.0",
