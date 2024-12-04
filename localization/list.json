@@ -48,5 +48,10 @@
 		"version" : "1.0.0",
 		"desc" : "Polska translacja bota.",
 		"file" : "polish.json"
-	}
+	},
+    "Tiếng Việt" : {
+		"version" : "1.0.0",
+		"desc" : "Bản dịch được dịch bởi Trum00thay. Chúc các bạn chơi game vui vẻ.",
+		"file" : "vietnamese.json"
+    }
 }
