@@ -4,7 +4,6 @@
 Looking for a Project Zomboid server? Give [Supercraft](https://supercraft.host/?fpr=egeb) a try. They’re ready to help!
 
 <br>
-<br>
 <hr>
 
 This bot is written for people to easily manage their Project Zomboid server using Discord. Please check the **Installation** and **Bot Configuration** section. Also, this bot doesn't support multiple Discord servers and only works on the **Windows** operating system. Be sure to have **.NET Framework 4.7.2** installed on the machine.
